@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <meta charset="UTF-8">
+        <meta name = "viewport" content="width=device-width, initial-scale=1.0">
+        <title>Cat Treat Dispenser</title>
+        <link href="https://vjs.zencdn.net/8.10.0/video-js.css" rel="stylesheet" />
+        <script src="https://vjs.zencdn.net/8.10.0/video.min.js"></script>
+        <style>
+            body {
+                font-family: 'Segoe UI', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                background-color: #f0f2f5;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                height: 100vh;
+                margin: 0;
+            }
+            .container {
+                background-color: white;
+                padding: 30px;
+                border-radius: 15px;
+                box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+                text-align: center;
+                max-width: 400px;
+                width: 100%;
+            }
+            h1 { color: #333; margin-bottom: 5px; }
+            .camera-placeholder {
+                width: 100%;
+                height: 220px;
+                background-color: #222;
+                border-radius: 10px;
+                margin: 20px 0;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: #666;
+                font-weight: bold;
+            }
+            .btn {
+                background-color: #ff4757;
+                color: white;
+                border: none;
+                padding: 15px 30px;
+                font-size: 18px;
+                border-radius: 25px;
+                cursor: pointer;
+                font-weight: bold;
+                transition: transform 0.1s, background-color 0.2s;
+                width: 100%;
+            }
+            .btn:hover { background-color: #ff6b81; }
+            .btn:active { transform: scale(0.98);}
+            .btn:disabled { background-color: #ccc; cursor: not-allowed}
+            #status-message {
+                margin-top: 15px;
+                font-weight: 500;
+                color: #555;
+            }
+        </style>
+</head>
+<body>
+    <div class="container">
+        <h1> Cat Cam</h1>
+        <p>Live from living room</p>
+
+        <video
+            id="'my-video"
+            class="video-js vjs-default-skin vjs-big-play-centered"
+            controls
+            preload="auto"
+            width="340"
+            height="220"
+            data-setup="{}">
+            <source src="https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" type="application/x-mpegURL">
+            <p class="vjs-no-js">
+                To view this video please enable JavaScript, and consider upgrading to a web browser that
+                <a href="https://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a>
+            </p>
+        </video>
+        <button class="btn" id="treat-button" onclick="dispenseTreat()">Disepense Treat </button>
+        <p id="status-message">Ready to feed!</p>
+    </div>
+    <script>
+        async function dispenseTreat() {
+            const button = document.getElementById('treat-button');
+            const statusText = document.getElementById('status-message');
+
+            button.disabled = true;
+            statusText.innerText = "Connecting to dispenser";
+            statusText.style.color = "#ffa502";
+
+            try {
+                const response = await fetch('/dispense');
+                const data = await response.json();
+
+                statusText.innerText = data.message;
+
+                if (data.status == "Success") {
+                    statusText.style.color = "#2ed573";
+                } else {
+                    statusText.style.color = "#ff4757";
+                }
+            } catch (error) {
+                statusText.innerText = "Error contacting server.";
+                statusText.style.color = "#ff4757";
+            }
+
+            setTimeout(() => {
+                button.disabled = false;
+            }, 3000);
+            
+        }
+    </script>
+</body>
+</html>
