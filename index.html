@@ -9,7 +9,6 @@
     <script src="https://vjs.zencdn.net/8.10.0/video.min.js"></script>
 
     <style>
-        /* CSS Variables - Think of these like constant macros in C (#define PRIMARY_COLOR) */
         :root {
             --bg-color: #719a72;
             --card-bg: #ffffff;
@@ -26,7 +25,6 @@
             padding: 20px;
         }
 
-        /* The Main Header */
         header {
             text-align: center;
             margin-bottom: 30px;
@@ -34,23 +32,20 @@
         header h1 { margin: 0; font-size: 2.5rem; color: var(--text-dark); }
         header p { margin: 5px 0 0 0; color: var(--text-light); font-size: 1.1rem; }
 
-        /* The Dashboard Grid Layout */
         .dashboard-grid {
             display: grid;
-            grid-template-columns: 1fr; /* Default to 1 column on small phone screens */
+            grid-template-columns: 1fr;
             gap: 25px;
             max-width: 1100px;
             margin: 0 auto;
         }
 
-        /* On screens larger than 800 pixels (tablets/PCs), split into 2 columns! */
         @media (min-width: 800px) {
             .dashboard-grid {
-                grid-template-columns: 1.2fr 1fr; /* Left column is slightly wider than right */
+                grid-template-columns: 1.2fr 1fr;
             }
         }
 
-        /* Card Styles (Universal container for blocks) */
         .card {
             background-color: var(--card-bg);
             border-radius: 16px;
@@ -59,7 +54,6 @@
             box-sizing: border-box;
         }
 
-        /* Left Side: Video & Button adjustments */
         .video-container {
             width: 100%;
             display: flex;
@@ -69,7 +63,7 @@
         .video-js {
             border-radius: 12px;
             overflow: hidden;
-            width: 100% !important; /* Make video scale to fit card width */
+            width: 100% !important;
             max-width: 550px;
         }
 
@@ -84,11 +78,18 @@
             font-weight: bold;
             transition: all 0.2s ease;
             width: 100%;
-            box-shadow: 0 4px 10px rgba(255, 71, 87, 0.3);
         }
-        .btn:hover { background-color: #ff6b81; transform: translateY(-1px); }
+        .btn:hover { background-color: #333333; transform: translateY(-1px); }
         .btn:active { transform: translateY(1px); }
         .btn:disabled { background-color: #ced6e0; cursor: not-allowed; box-shadow: none; }
+
+        /* Small header buttons styling */
+        .btn-sm {
+            width: auto;
+            padding: 8px 16px;
+            font-size: 0.9rem;
+            margin: 5px;
+        }
 
         #status-message {
             margin-top: 15px;
@@ -96,10 +97,9 @@
             text-align: center;
         }
 
-        /* Right Side: Scrollable Blog Feed */
         .blog-feed {
             max-height: 600px;
-            overflow-y: auto; /* Adds a scrollbar only if content spills over */
+            overflow-y: auto;
             padding-right: 10px;
         }
         .blog-post {
@@ -116,9 +116,50 @@
             border-radius: 10px;
             margin-top: 10px;
         }
+
+        /* --- POP-UP WINDOWS (MODALS) CSS --- */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(0,0,0,0.6); /* Darkens background */
+            display: none; /* Hidden by default */
+            justify-content: center; 
+            align-items: center;
+            z-index: 1000;
+        }
+        .modal-box {
+            background: white; 
+            padding: 30px; 
+            border-radius: 16px;
+            width: 90%; 
+            max-width: 400px; 
+            position: relative;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+        .modal-box form { display: flex; flex-direction: column; gap: 12px; }
+        .modal-box input { 
+            padding: 10px; 
+            border: 1px solid #ddd; 
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+        .close-modal { 
+            position: absolute; 
+            top: 15px; 
+            right: 15px; 
+            cursor: pointer; 
+            font-size: 1.5rem; 
+            font-weight: bold; 
+            color: var(--text-light); 
+        }
+        .close-modal:hover { color: red; }
     </style>
 </head>
 <body>
+
+    <div style="text-align: right; max-width: 1100px; margin: 0 auto 10px auto;">
+        REPLACE_ME
+    </div>
 
     <header>
         <h1>Feed a Goose 🐈‍⬛</h1>
@@ -144,20 +185,14 @@
                 <div class="blog-post">
                     <span class="date">JUNE 4, 2026</span>
                     <h3>The Audacity of an Empty Bowl</h3>
-                    <p>My human was 3 minutes late putting down the wet food today. I sat on his laptop and stared directly into his soul until he corrected his behavior. Here is a picture of my immense disappointment.</p>
+                    <p>My human was 3 minutes late putting down the wet food today. I sat on his laptop and stared directly into his soul until he corrected his behavior.</p>
                     <img src="https://placekitten.com/400/250" alt="Angry Cat">
                 </div>
 
                 <div class="blog-post">
                     <span class="date">MAY 28, 2026</span>
                     <h3>Dispenser Hack Discovered?</h3>
-                    <p>I have spent 4 hours today swatting the bottom of the plastic tube trying to bypass the software rate limiter. No luck yet. I will continue my data-gathering experiments tonight at 3:00 AM by sprinting across the hallway.</p>
-                </div>
-
-                <div class="blog-post">
-                    <span class="date">MAY 20, 2026</span>
-                    <h3>Current Status: Sleeping</h3>
-                    <p>If you click the treat button right now and I do not move, do not be alarmed. I am simply charging my battery for my scheduled 4:00 AM zoomies session.</p>
+                    <p>I have spent 4 hours today swatting the bottom of the plastic tube trying to bypass the software rate limiter. No luck yet.</p>
                 </div>
 
             </div>
@@ -165,7 +200,46 @@
 
     </div>
 
+    <div id="login-modal" class="modal-overlay" onclick="closeAuthModals()">
+        <div class="modal-box" onclick="event.stopPropagation()">
+            <span class="close-modal" onclick="closeAuthModals()">&times;</span>
+            <h3 style="margin-top:0;">🔑 Sign In</h3>
+            <form action="/login" method="post">
+                <input type="text" name="username" placeholder="Username" required>
+                <input type="password" name="password" placeholder="Password" required>
+                <button type="submit" class="btn">Login</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="register-modal" class="modal-overlay" onclick="closeAuthModals()">
+        <div class="modal-box" onclick="event.stopPropagation()">
+            <span class="close-modal" onclick="closeAuthModals()">&times;</span>
+            <h3 style="margin-top:0;">📝 Create Account</h3>
+            <p style="color: var(--text-light); font-size: 0.9rem; margin-top:-10px;">Get 3 Free 🐟 Tokens upon registration!</p>
+            <form action="/register" method="post">
+                <input type="text" name="username" placeholder="Username" required>
+                <input type="email" name="email" placeholder="Email" required>
+                <input type="password" name="password" placeholder="Password" required>
+                <button type="submit" class="btn" style="background-color: #2ed573;">Sign Up</button>
+            </form>
+        </div>
+    </div>
+
     <script>
+        // --- JAVASCRIPT TO SHOW/HIDE THE POPUPS ---
+        function openLogin() {
+            document.getElementById('login-modal').style.display = 'flex';
+        }
+        function openRegister() {
+            document.getElementById('register-modal').style.display = 'flex';
+        }
+        function closeAuthModals() {
+            document.getElementById('login-modal').style.display = 'none';
+            document.getElementById('register-modal').style.display = 'none';
+        }
+
+        // --- DISPENSER CODE ---
         async function dispenseTreat() {
             const button = document.getElementById('treat-button');
             const statusText = document.getElementById('status-message');
@@ -182,6 +256,7 @@
 
                 if (data.status == "Success") {
                     statusText.style.color = "#2ed573";
+                    setTimeout(() => {window.location.reload(); }, 1000);
                 } else {
                     statusText.style.color = "var(--accent-color)";
                 }

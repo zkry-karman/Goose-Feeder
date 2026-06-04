@@ -31,5 +31,12 @@ class BlogPost(Base):
     image_url = Column(String, nullable=True)
     author_id = Column(Integer)
 
+class SessionToken(Base):
+    __tablename__ = "session_tokens"
+
+    id = Column(Integer, primary_key=True, index=True)
+    token = Column(String, unique=True, index=True)
+    user_id = Column(Integer)
+
 def init_db():
     Base.metadata.create_all(bind=engine)
