@@ -1,8 +1,14 @@
 from fastapi import FastAPI
 from fastapi.responses import HTMLResponse
 import asyncio
+from database import init_db, SessionLocal, User, BlogPost
 
 app = FastAPI()
+
+@app.on_event("startup")
+def on_startup():
+        init_db()
+        print("Database initialized successfully!")
 
 motor_is_busy = False
 
