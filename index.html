@@ -15,6 +15,11 @@
             --accent-color: #000000;
             --text-dark: #2f3542;
             --text-light: #747d8c;
+            --like-color: #ff4757;
+        }
+
+        html, body, button, a, input {
+            cursor: url('https://img.icons8.com/ios-glyphs/30/000000/cat-footprint.png') 15 15, auto !important;
         }
 
         body {
@@ -23,6 +28,9 @@
             color: var(--text-dark);
             margin: 0;
             padding: 20px;
+            overflow-x: hidden;
+            position: relative;
+            min-height: 100vh;
         }
 
         header {
@@ -41,9 +49,7 @@
         }
 
         @media (min-width: 800px) {
-            .dashboard-grid {
-                grid-template-columns: 1.2fr 1fr;
-            }
+            .dashboard-grid { grid-template-columns: 1fr 1.3fr; }
         }
 
         .card {
@@ -52,6 +58,7 @@
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
             padding: 25px;
             box-sizing: border-box;
+            height: fit-content;
         }
 
         .video-container {
@@ -71,140 +78,189 @@
             background-color: var(--accent-color);
             color: white;
             border: none;
-            padding: 16px 32px;
-            font-size: 1.1rem;
+            padding: 12px 24px;
+            font-size: 1rem;
             border-radius: 30px;
             cursor: pointer;
             font-weight: bold;
             transition: all 0.2s ease;
-            width: 100%;
         }
         .btn:hover { background-color: #333333; transform: translateY(-1px); }
         .btn:active { transform: translateY(1px); }
-        .btn:disabled { background-color: #ced6e0; cursor: not-allowed; box-shadow: none; }
+        .btn:disabled { background-color: #ced6e0; cursor: not-allowed; }
 
-        /* Small header buttons styling */
-        .btn-sm {
-            width: auto;
-            padding: 8px 16px;
-            font-size: 0.9rem;
-            margin: 5px;
+        .btn-sm { padding: 6px 12px; font-size: 0.85rem; border-radius: 20px; }
+
+        /* --- NEW WALL & POST STYLING --- */
+        .wall-creator {
+            margin-bottom: 25px;
+            border-bottom: 2px solid #f1f2f6;
+            padding-bottom: 20px;
+        }
+        .wall-creator textarea {
+            width: 100%;
+            height: 80px;
+            border: 1px solid #ddd;
+            border-radius: 12px;
+            padding: 12px;
+            box-sizing: border-box;
+            resize: none;
+            font-family: inherit;
+            font-size: 0.95rem;
+            margin-bottom: 10px;
+        }
+        .creator-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .file-input-wrapper {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+        }
+        .file-input-wrapper input[type=file] {
+            position: absolute;
+            left: 0; top: 0; opacity: 0;
+            font-size: 100px; cursor: pointer;
         }
 
-        #status-message {
-            margin-top: 15px;
-            font-weight: 600;
-            text-align: center;
-        }
-
-        .blog-feed {
-            max-height: 600px;
+        .wall-feed {
+            max-height: 700px;
             overflow-y: auto;
             padding-right: 10px;
         }
-        .blog-post {
-            border-bottom: 1px solid #f1f2f6;
-            padding-bottom: 20px;
+        .wall-post {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
             margin-bottom: 20px;
+            border: 1px solid #e4e7eb;
         }
-        .blog-post:last-child { border: none; margin-bottom: 0; padding-bottom: 0; }
-        .blog-post .date { font-size: 0.85rem; color: var(--text-light); font-weight: bold; }
-        .blog-post h3 { margin: 5px 0 10px 0; font-size: 1.3rem; }
-        .blog-post p { margin: 0; color: #57606f; line-height: 1.5; }
-        .blog-post img {
+        .post-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        .post-author { font-weight: bold; color: var(--text-dark); }
+        .post-time { font-size: 0.8rem; color: var(--text-light); }
+        .post-content { line-height: 1.5; margin-bottom: 12px; white-space: pre-wrap; }
+        .post-img {
             width: 100%;
-            border-radius: 10px;
-            margin-top: 10px;
+            max-height: 350px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 12px;
+        }
+        
+        .post-actions {
+            display: flex;
+            gap: 15px;
+            border-top: 1px solid #e4e7eb;
+            border-bottom: 1px solid #e4e7eb;
+            padding: 8px 0;
+            margin-bottom: 12px;
+        }
+        .action-link {
+            background: none; border: none; font-weight: bold; color: var(--text-light);
+            display: flex; align-items: center; gap: 5px; font-size: 0.9rem;
+        }
+        .action-link:hover { color: var(--accent-color); }
+        .action-link.liked { color: var(--like-color); }
+
+        /* --- COMMENTS SECTION --- */
+        .comments-section { background: #ffffff; border-radius: 8px; padding: 12px; }
+        .comment-item {
+            font-size: 0.9rem; border-bottom: 1px dashed #e4e7eb;
+            padding: 6px 0; margin-bottom: 6px;
+        }
+        .comment-item:last-child { border: none; margin-bottom: 0; }
+        .comment-user { font-weight: bold; margin-right: 6px; }
+        
+        .comment-form { display: flex; gap: 8px; margin-top: 10px; }
+        .comment-form input {
+            flex: 1; border: 1px solid #ddd; border-radius: 20px; padding: 6px 12px; font-size: 0.85rem;
         }
 
-        /* --- POP-UP WINDOWS (MODALS) CSS --- */
+        /* --- AUTH MODALS --- */
         .modal-overlay {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background-color: rgba(0,0,0,0.6); /* Darkens background */
-            display: none; /* Hidden by default */
-            justify-content: center; 
-            align-items: center;
-            z-index: 1000;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(0,0,0,0.6); display: none;
+            justify-content: center; align-items: center; z-index: 1000;
         }
         .modal-box {
-            background: white; 
-            padding: 30px; 
-            border-radius: 16px;
-            width: 90%; 
-            max-width: 400px; 
-            position: relative;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            background: white; padding: 30px; border-radius: 16px;
+            width: 90%; max-width: 400px; position: relative;
         }
         .modal-box form { display: flex; flex-direction: column; gap: 12px; }
-        .modal-box input { 
-            padding: 10px; 
-            border: 1px solid #ddd; 
-            border-radius: 8px;
-            font-size: 1rem;
-        }
-        .close-modal { 
-            position: absolute; 
-            top: 15px; 
-            right: 15px; 
-            cursor: pointer; 
-            font-size: 1.5rem; 
-            font-weight: bold; 
-            color: var(--text-light); 
-        }
+        .modal-box input { padding: 10px; border: 1px solid #ddd; border-radius: 8px; }
+        .close-modal { position: absolute; top: 15px; right: 15px; font-size: 1.5rem; color: var(--text-light); }
         .close-modal:hover { color: red; }
     </style>
 </head>
 <body>
 
-    <div style="text-align: right; max-width: 1100px; margin: 0 auto 10px auto;">
-        REPLACE_ME
+    <div style="text-align: right; max-width: 1100px; margin: 0 auto 10px auto;" id="auth-nav-bar">
+        <span id="logged-out-zone">
+            <button class="btn btn-sm" onclick="openLogin()">🔑 Sign In</button>
+            <button class="btn btn-sm" style="background-color: #2ed573;" onclick="openRegister()">📝 Sign Up</button>
+        </span>
+        <span id="logged-in-zone" style="display: none;">
+            <style>
+                .user-badge {
+                    background: #2f3542; color: #fff; padding: 6px 14px; 
+                    border-radius: 20px; font-weight: bold; font-size: 0.85rem; margin-right: 10px;
+                }
+            </style>
+            <span class="user-badge" id="nav-username">🐾 User: Guest</span>
+            <button class="btn btn-sm" style="background-color: #ff4757;" onclick="handleLogout()">🚪 Log Out</button>
+        </span>
     </div>
 
     <header>
         <h1>Feed a Goose 🐈‍⬛</h1>
-        <p>Can you watch my cat while im out ?</p>
+        <p>Can you watch my cat while I'm out?</p>
     </header>
 
     <div class="dashboard-grid">
-        
         <div class="card">
             <div class="video-container">
-                <video id="my-video" class="video-js vjs-default-skin vjs-big-play-centered" controls preload="auto" height="300" data-setup='{}'>
+                <video id="my-video" class="video-js vjs-default-skin vjs-big-play-centered" controls preload="auto" height="250" data-setup='{}'>
                     <source src="https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" type="application/x-mpegURL">
                 </video>
             </div>
-            <button class="btn" id="treat-button" onclick="dispenseTreat()">Dispense Treat 🐟</button>
-            <p id="status-message">🟢 Dispenser is active and ready!</p>
+            <button class="btn" style="width: 100%;" id="treat-button" onclick="dispenseTreat()">Dispense Treat 🐟</button>
+            <p id="status-message" style="text-align: center; margin-top: 15px; font-weight: 600;">🟢 Dispenser active</p>
         </div>
 
         <div class="card">
-            <h2>📜 The Kitty Chronicles</h2>
-            <div class="blog-feed">
-                
-                <div class="blog-post">
-                    <span class="date">JUNE 4, 2026</span>
-                    <h3>The Audacity of an Empty Bowl</h3>
-                    <p>My human was 3 minutes late putting down the wet food today. I sat on his laptop and stared directly into his soul until he corrected his behavior.</p>
-                    <img src="https://placekitten.com/400/250" alt="Angry Cat">
-                </div>
+            <h2>📜 meow meow meow</h2>
+            
+            <div class="wall-creator">
+                <form id="postForm" onsubmit="submitPost(event)">
+                    <textarea name="content" placeholder="Share a picture, cat thought, or coordinate a community treat session..." required></textarea>
+                    <div class="creator-actions">
+                        <div class="file-input-wrapper">
+                            <button type="button" class="btn btn-sm" style="background-color: #747d8c;">📸 Add Photo</button>
+                            <input type="file" name="image" accept="image/*" onchange="updateFileLabel(this)">
+                            <span id="file-chosen" style="font-size: 0.8rem; margin-left: 5px; color: var(--text-light);"></span>
+                        </div>
+                        <button type="submit" class="btn">Broadcast Post</button>
+                    </div>
+                </form>
+            </div>
 
-                <div class="blog-post">
-                    <span class="date">MAY 28, 2026</span>
-                    <h3>Dispenser Hack Discovered?</h3>
-                    <p>I have spent 4 hours today swatting the bottom of the plastic tube trying to bypass the software rate limiter. No luck yet.</p>
-                </div>
-
+            <div class="wall-feed" id="wallFeed">
+                <p style="text-align: center; color: var(--text-light);">Gathering chronicles stream...</p>
             </div>
         </div>
-
     </div>
 
     <div id="login-modal" class="modal-overlay" onclick="closeAuthModals()">
         <div class="modal-box" onclick="event.stopPropagation()">
             <span class="close-modal" onclick="closeAuthModals()">&times;</span>
             <h3 style="margin-top:0;">🔑 Sign In</h3>
-            <form action="/login" method="post">
+            <form onsubmit="handleAuth(event, '/login')">
                 <input type="text" name="username" placeholder="Username" required>
                 <input type="password" name="password" placeholder="Password" required>
                 <button type="submit" class="btn">Login</button>
@@ -216,59 +272,243 @@
         <div class="modal-box" onclick="event.stopPropagation()">
             <span class="close-modal" onclick="closeAuthModals()">&times;</span>
             <h3 style="margin-top:0;">📝 Create Account</h3>
-            <p style="color: var(--text-light); font-size: 0.9rem; margin-top:-10px;">Get 3 Free 🐟 Tokens upon registration!</p>
-            <form action="/register" method="post">
+            <p style="color: var(--text-light); font-size: 0.9rem; margin-top:-10px;">Get 20 Free 🐟 Tokens upon registration!</p>
+            <form onsubmit="handleAuth(event, '/register')">
                 <input type="text" name="username" placeholder="Username" required>
-                <input type="email" name="email" placeholder="Email" required>
-                <input type="password" name="password" placeholder="Password" required>
+                <input type="email" name="email" placeholder="Email Address" required>
+                <input type="password" id="reg-password" name="password" placeholder="Password" required>
+                <input type="password" id="reg-confirm" name="confirmPassword" placeholder="Confirm Password" required>
                 <button type="submit" class="btn" style="background-color: #2ed573;">Sign Up</button>
             </form>
         </div>
     </div>
 
     <script>
-        // --- JAVASCRIPT TO SHOW/HIDE THE POPUPS ---
-        function openLogin() {
-            document.getElementById('login-modal').style.display = 'flex';
-        }
-        function openRegister() {
-            document.getElementById('register-modal').style.display = 'flex';
-        }
+        function openLogin() { document.getElementById('login-modal').style.display = 'flex'; }
+        function openRegister() { document.getElementById('register-modal').style.display = 'flex'; }
         function closeAuthModals() {
             document.getElementById('login-modal').style.display = 'none';
             document.getElementById('register-modal').style.display = 'none';
         }
+        function updateFileLabel(input) {
+            document.getElementById('file-chosen').innerText = input.files[0] ? input.files[0].name : "";
+        }
 
-        // --- DISPENSER CODE ---
+        // --- FIXED AUTH REQUEST DISPATCHER ---
+        async function handleAuth(event, endpoint) {
+            event.preventDefault();
+            const formData = new FormData(event.target);
+            const data = Object.fromEntries(formData);
+
+            // Client-Side Security Pass: Validate double-entry password logic for registrations
+            if (endpoint === '/register') {
+                const pass = document.getElementById('reg-password').value;
+                const confirmPass = document.getElementById('reg-confirm').value;
+                
+                if (pass !== confirmPass) {
+                    alert("Security Error: Passwords do not match! Please verify your inputs.");
+                    return;
+                }
+            }
+
+            try {
+                const response = await fetch(endpoint, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                
+                const resData = await response.json();
+                
+                // Read the actual error string message sent down from your Express server route
+                alert(resData.message || "An unexpected server event occurred.");
+                
+                if (response.ok) {
+                    event.target.reset();
+                    closeAuthModals();
+                    loadWall();
+                    checkUserSession(); 
+                }
+            } catch (err) {
+                alert("Network error: Failed to connect to the authentication server.");
+            }
+        }
+
+        // --- CORE WALL AJAX RENDERING ENGINE ---
+        async function loadWall() {
+            const feedContainer = document.getElementById('wallFeed');
+            try {
+                const response = await fetch('/api/posts');
+                const data = await response.json();
+                
+                if (data.status !== "Success") {
+                    feedContainer.innerHTML = `<p style="text-align:center; color:red;">${data.message}</p>`;
+                    return;
+                }
+
+                if (data.posts.length === 0) {
+                    feedContainer.innerHTML = `<p style="text-align:center; color:var(--text-light);">The wall is clean. Write the first chronicle!</p>`;
+                    return;
+                }
+
+                feedContainer.innerHTML = data.posts.map(post => `
+                    <div class="wall-post">
+                        <div class="post-header">
+                            <span class="post-author">🐾 ${escapeHTML(post.username)}</span>
+                            <span class="post-time">${new Date(post.timestamp).toLocaleDateString()}</span>
+                        </div>
+                        <div class="post-content">${escapeHTML(post.content)}</div>
+                        ${post.image_url ? `<img src="${post.image_url}" class="post-img" alt="Post attachment">` : ''}
+                        
+                        <div class="post-actions">
+                            <button class="action-link ${post.user_has_liked ? 'liked' : ''}" onclick="toggleLike(${post.id})">
+                                ❤️ Like (${post.total_likes})
+                            </button>
+                        </div>
+
+                        <div class="comments-section">
+                            <div id="comments-list-${post.id}">
+                                ${post.comments.map(c => `
+                                    <div class="comment-item">
+                                        <span class="comment-user">${escapeHTML(c.username)}:</span>
+                                        <span>${escapeHTML(c.content)}</span>
+                                    </div>
+                                `).join('')}
+                            </div>
+                            <form class="comment-form" onsubmit="submitComment(event, ${post.id})">
+                                <input type="text" name="content" placeholder="Write a comment..." required>
+                                <button type="submit" class="btn btn-sm">Reply</button>
+                            </form>
+                        </div>
+                    </div>
+                `).join('');
+            } catch (err) {
+                feedContainer.innerHTML = `<p style="text-align:center; color:red;">Could not load network wall stream.</p>`;
+            }
+        }
+
+        // --- SUBMIT COMPONENT HANDLING ---
+        async function submitPost(event) {
+            event.preventDefault();
+            const form = event.target;
+            const formData = new FormData(form);
+
+            try {
+                const response = await fetch('/api/posts', { method: 'POST', body: formData });
+                const data = await response.json();
+                
+                if (!response.ok) throw new Error(data.message);
+                
+                form.reset();
+                document.getElementById('file-chosen').innerText = "";
+                loadWall();
+            } catch (err) {
+                alert(err.message || "Failed to broadcast thread item.");
+            }
+        }
+
+        async function toggleLike(postId) {
+            try {
+                const response = await fetch(`/api/posts/${postId}/like`, { method: 'POST' });
+                if (response.status === 401) return alert("Please log in to like posts!");
+                loadWall();
+            } catch (err) {
+                console.error("Like toggle error tracking:", err);
+            }
+        }
+
+        async function submitComment(event, postId) {
+            event.preventDefault();
+            const form = event.target;
+            const input = form.querySelector('input[name="content"]');
+            
+            try {
+                const response = await fetch(`/api/posts/${postId}/comments`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ content: input.value })
+                });
+                
+                const data = await response.json();
+                if (!response.ok) throw new Error(data.message);
+                
+                form.reset();
+                loadWall();
+            } catch (err) {
+                alert(err.message || "Could not publish comment reply.");
+            }
+        }
+
+        // Security Helper: Sanitizes raw database output to neutralize HTML injection vulnerabilities
+        function escapeHTML(str) {
+            return str.replace(/[&<>'"]/g, 
+                tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)
+            );
+        }
+
         async function dispenseTreat() {
-            const button = document.getElementById('treat-button');
-            const statusText = document.getElementById('status-message');
-
-            button.disabled = true;
-            statusText.innerText = "Connecting to dispenser...";
-            statusText.style.color = "var(--text-light)";
-
+            const statusMsg = document.getElementById('status-message');
+            statusMsg.innerText = "🔄 Communicating with dispenser framework...";
+            
             try {
                 const response = await fetch('/dispense');
                 const data = await response.json();
-
-                statusText.innerText = data.message;
-
-                if (data.status == "Success") {
-                    statusText.style.color = "#2ed573";
-                    setTimeout(() => {window.location.reload(); }, 1000);
+                
+                alert(data.message);
+                
+                if (data.status === "Success") {
+                    statusMsg.innerText = "🟢 Dispense cycle complete!";
+                    // Refresh token layout instantly without breaking page flow
+                    checkUserSession();
                 } else {
-                    statusText.style.color = "var(--accent-color)";
+                    statusMsg.innerText = "⚠️ Action interrupted.";
                 }
-            } catch (error) {
-                statusText.innerText = "Error contacting server.";
-                statusText.style.color = "var(--accent-color)";
+            } catch (err) {
+                statusMsg.innerText = "❌ Network transport hardware failure.";
             }
-
-            setTimeout(() => {
-                button.disabled = false;
-            }, 3000);
         }
+
+// --- CHECK USER STATE ON RUNTIME LOADING ---
+        async function checkUserSession() {
+            try {
+                const response = await fetch('/api/me');
+                const data = await response.json();
+
+                const loggedOutZone = document.getElementById('logged-out-zone');
+                const loggedInZone = document.getElementById('logged-in-zone');
+                const navUsername = document.getElementById('nav-username');
+
+                if (data.loggedIn) {
+                    loggedOutZone.style.display = 'none';
+                    loggedInZone.style.display = 'inline-block';
+                    navUsername.innerText = `🐾 User: ${escapeHTML(data.username)} (🐟 ${data.tokens} Tokens)`;
+                } else {
+                    loggedOutZone.style.display = 'inline-block';
+                    loggedInZone.style.display = 'none';
+                }
+            } catch (err) {
+                console.error("Session runtime handshake failed:", err);
+            }
+        }
+
+        // --- DISPATCH TERMINATION LOGOUT REQUEST ---
+        async function handleLogout() {
+            try {
+                const response = await fetch('/logout', { method: 'POST' });
+                if (response.ok) {
+                    alert("Goodbye!");
+                    window.location.reload(); // Refresh screen to wipe cache
+                }
+            } catch (err) {
+                alert("Logout transmission routing error.");
+            }
+        }
+
+        // Modify your existing DOMContentLoaded listener to chain both commands together cleanly
+        window.addEventListener('DOMContentLoaded', () => {
+            loadWall();
+            checkUserSession(); // <-- Added to handle login state on page load!
+        });
     </script>
 </body>
 </html>
