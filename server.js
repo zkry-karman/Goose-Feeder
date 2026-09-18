@@ -197,11 +197,21 @@ app.post('/api/posts/:id/comments', requireAuth, async (req, res) => {
     }
 });
 
-let dispenserQueue = [];
+// --- SHARED DISPENSER LINE STATE (lives in memory, same for every visitor) ---
+let dispenserQueue = [];      // [{ ticket, userId, username }] — people waiting
+let nowServing = null;        // { ticket, userId, username } — whose treat is dropping
+let recentDrops = [];         // [{ ticket, username, at }] — newest first
 let isProcessingQueue = false;
-const userCooldowns = new Map();
-const MOTOR_DELAY = 3000;
-const SPAM_COOLDOWN = 10000;
+let ticketCounter = 1;
+
+const MOTOR_DELAY = 3000;     // physical dispenser cycle
+const RECENT_LIMIT = 12;      // how many past drops we keep for the "thank you" feed
+
+// One live ticket per person: you can't join the line twice.
+function userInLine(userId) {
+    if (nowServing && nowServing.userId === userId) return true;
+    return dispenserQueue.some(entry => entry.userId === userId);
+}
 
 app.get('/api/me', async (req, res) => {
     if (req.session && req.session.userId) {
@@ -225,11 +235,16 @@ app.post('/register', async (req, res) => {
         return res.status(400).json({ status: "Error", message: "All fields are required!" });
     }
     try {
-        await db.run(
+        const result = await db.run(
             `INSERT INTO users (username, email, password) VALUES (?, ?, ?)`, 
             [username, email, password]
         );
-        res.json({ status: "Success", message: "Account setup complete! Enjoy your 20 free 🐟 tokens. Please log in." });
+
+        // Log them straight in — no second trip through the sign-in form
+        req.session.userId = result.lastID;
+        req.session.username = username;
+
+        res.json({ status: "Success", loggedIn: true, message: "You're in! Enjoy your 20 free 🐟 tokens." });
     } catch (err) {
         res.status(400).json({ status: "Error", message: "Username is already taken." });
     }
@@ -261,90 +276,102 @@ app.post('/logout', (req, res) => {
     });
 });
 
-// 3. Fully Managed Queue /dispense Gatekeeper Route
+// --- LIVE LINE STATUS (polled by every browser on the page) ---
+app.get('/api/queue', (req, res) => {
+    const userId = req.session && req.session.userId;
+    res.json({
+        serving: nowServing ? { ticket: nowServing.ticket, username: nowServing.username } : null,
+        queue: dispenserQueue.map((entry, i) => ({
+            ticket: entry.ticket,
+            username: entry.username,
+            position: i + 1
+        })),
+        recent: recentDrops,
+        inLine: userId ? userInLine(userId) : false
+    });
+});
+
+// --- JOIN THE TREAT LINE ---
+// This no longer holds the HTTP response open. It takes the token, puts you in
+// line and answers immediately; the browser watches /api/queue for your turn.
 app.get('/dispense', requireAuth, async (req, res) => {
     const userId = req.session.userId;
-    const now = Date.now();
 
-    // --- GUARDRAIL 1: ANTI-SPAM USER COOLDOWN ---
-    if (userCooldowns.has(userId)) {
-        const lastDispenseTime = userCooldowns.get(userId);
-        if (now - lastDispenseTime < SPAM_COOLDOWN) {
-            const secondsLeft = Math.ceil((SPAM_COOLDOWN - (now - lastDispenseTime)) / 1000);
-            return res.json({ 
-                status: "Error", 
-                message: `Spam Protection: Please wait ${secondsLeft} seconds before feeding Goose again!` 
-            });
-        }
+    // GUARDRAIL: one ticket per person. No joining the line twice.
+    if (userInLine(userId)) {
+        return res.json({
+            status: "Error",
+            code: "already_queued",
+            message: "You're already in line! Wait for your treat to drop."
+        });
     }
 
     try {
-        // Fetch up-to-date user info to confirm token balance
         const user = await db.get(`SELECT token_balance FROM users WHERE id = ?`, [userId]);
 
         if (!user) {
-            return res.status(404).json({ status: "Error", message: "User account profile not found." });
+            return res.status(404).json({ status: "Error", code: "no_user", message: "User account profile not found." });
         }
 
         if (user.token_balance <= 0) {
-            return res.json({ status: "Error", message: "Out of tokens! Please recharge your account to feed Goose." });
+            return res.json({ status: "Error", code: "no_tokens", message: "Out of tokens! Recharge to feed Goose." });
         }
 
-        // --- ATOMIC TRANSACTION PROCESS ---
-        // Deduct token from account balance immediately so they can't reuse the same token
+        // Charge the token up front so the same one can't be spent twice while waiting
         await db.run(`UPDATE users SET token_balance = token_balance - 1 WHERE id = ?`, [userId]);
-        
-        // Log their cooldown timestamp *now* so they can't spam while waiting in queue
-        userCooldowns.set(userId, now);
 
-        // --- ENQUEUE THE REQUEST ---
-        // We push a "promise controller" into our array queue to handle the systematic waiting line
-        new Promise((resolve, reject) => {
-            dispenserQueue.push({
-                username: req.session.username,
-                resolve: () => {
-                    res.json({ 
-                        status: "Success", 
-                        message: "Your request made it through the line! A delicious treat was dropped! 🐟",
-                        remainingTokens: user.token_balance - 1
-                    });
-                    resolve();
-                },
-                reject: (err) => {
-                    res.status(500).json({ status: "Error", message: "Queue processing failure." });
-                    reject(err);
-                }
-            });
-            
-            // Trigger the queue processor to start looking at the line
-            processDispenserQueue();
+        const entry = { ticket: ticketCounter++, userId, username: req.session.username };
+        dispenserQueue.push(entry);
+
+        res.json({
+            status: "Success",
+            code: "queued",
+            ticket: entry.ticket,
+            position: dispenserQueue.length,
+            remainingTokens: user.token_balance - 1
         });
 
+        processDispenserQueue();
+
     } catch (err) {
-        res.status(500).json({ status: "Error", message: "Internal Hardware System Routing Interruption." });
+        res.status(500).json({ status: "Error", code: "server", message: "Could not reach the dispenser." });
     }
 });
 
-// --- SYSTEMATIC QUEUE PROCESSING ENGINE ---
+// --- QUEUE PROCESSING ENGINE ---
 async function processDispenserQueue() {
-    // If the motor is running, back off; the running loop will automatically call this again when done
     if (isProcessingQueue) return;
     if (dispenserQueue.length === 0) return;
 
     isProcessingQueue = true;
+    nowServing = dispenserQueue.shift();
 
-    // Grab the very first person waiting in the line (First-In, First-Out)
-    const currentRequest = dispenserQueue.shift();
+    console.log(`⚡ Dispensing for ${nowServing.username}. (${dispenserQueue.length} still waiting)`);
 
-    console.log(`⚡ Dispenser running request for ${currentRequest.username}. (${dispenserQueue.length} left in queue)`);
+    try {
+        // ===== HARDWARE HOOK =====
+        // When the real dispenser arrives, replace this timer with the motor call,
+        // e.g. await runDispenserMotor();  — everything else keeps working.
+        await new Promise(resolve => setTimeout(resolve, MOTOR_DELAY));
 
-    // Run the physical 3-second motor sequence delay
-    await new Promise(resolve => setTimeout(resolve, MOTOR_DELAY));
+        recentDrops.unshift({
+            ticket: nowServing.ticket,
+            username: nowServing.username,
+            at: Date.now()
+        });
+        recentDrops = recentDrops.slice(0, RECENT_LIMIT);
 
-    // Tell the user's browser their treat successfully dropped!
-    currentRequest.resolve();
+    } catch (err) {
+        console.error("Dispenser motor failed:", err);
+        // Motor failed, so give the token back rather than eating it
+        try {
+            await db.run(`UPDATE users SET token_balance = token_balance + 1 WHERE id = ?`, [nowServing.userId]);
+        } catch (refundErr) {
+            console.error("Refund failed:", refundErr);
+        }
+    }
 
-    // Release the loop lock and move to the next item in line
+    nowServing = null;
     isProcessingQueue = false;
     processDispenserQueue();
 }

@@ -298,6 +298,39 @@ select.lang:hover{border-color:#4a3d5d}
 .toast.good{border-color:rgba(102,217,160,.4)}
 .toast.bad{border-color:rgba(255,92,114,.4)}
 
+
+/* ---------- treat line (twitch-chat style) ---------- */
+.queue{margin-top:14px;border-top:1px solid var(--line);padding-top:13px}
+.queue-head{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 2px 9px;font-size:.78rem;font-weight:600;color:var(--muted);
+}
+.queue-count{
+  background:var(--surface-2);border:1px solid var(--line);
+  border-radius:999px;padding:2px 9px;font-size:.72rem;
+}
+.queue-list{
+  display:flex;flex-direction:column;gap:2px;
+  max-height:176px;overflow-y:auto;overscroll-behavior:contain;
+  padding-right:4px;
+}
+.queue-list::-webkit-scrollbar{width:6px}
+.queue-list::-webkit-scrollbar-thumb{background:#3d3350;border-radius:99px}
+.queue-list::-webkit-scrollbar-track{background:transparent}
+.q-row{
+  display:flex;align-items:baseline;gap:7px;
+  font-size:.87rem;line-height:1.35;padding:5px 8px;border-radius:9px;
+  animation:slideIn .28s ease both;
+}
+.q-row.serving{background:rgba(255,180,84,.09);box-shadow:inset 0 0 0 1px rgba(255,180,84,.2)}
+.q-row .who{font-weight:700;white-space:nowrap}
+.q-row .said{color:var(--muted);min-width:0}
+.q-row .pos{margin-left:auto;font-size:.7rem;color:#6f6584;font-variant-numeric:tabular-nums;padding-left:6px}
+.q-row .motor{margin-left:auto;font-size:.8rem;animation:shake .9s infinite}
+@keyframes slideIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@keyframes shake{0%,100%{transform:rotate(-8deg)}50%{transform:rotate(8deg)}}
+.queue-empty{font-size:.83rem;color:#6f6584;padding:8px 8px 4px}
+
 @media (prefers-reduced-motion:reduce){
   *{animation:none!important;transition:none!important}
 }
@@ -362,6 +395,14 @@ select.lang:hover{border-color:#4a3d5d}
             <span class="sub" id="treatSub"></span>
           </button>
           <p class="feeder-status" id="feederStatus"><span class="sdot"></span><span data-i18n="ready"></span></p>
+
+          <div class="queue">
+            <div class="queue-head">
+              <span data-i18n="queueTitle"></span>
+              <span class="queue-count" id="queueCount">0</span>
+            </div>
+            <div class="queue-list" id="queueList"></div>
+          </div>
         </div>
       </section>
     </div>
@@ -429,6 +470,16 @@ const I18N = {
     dispensing:"Dropping…",
     waitSec:s=>`Wait ${s}s`,
     ready:"Dispenser ready",
+    queueTitle:"Treat line",
+    queueEmpty:"Nobody in line. The bowl is empty.",
+    inLineFor:"is in line to feed Goose",
+    feedingNow:"is feeding Goose right now",
+    thanks:n=>`Goose says thank you ${n} for the treat!`,
+    yourTurn:"Your treat is dropping…",
+    queuedSub:p=>`#${p} in line`,
+    joined:"You're in line.",
+    alreadyQueued:"You're already in line — wait for your treat to drop.",
+    noTokens:"Out of 🐟 tokens.",
     sending:"Talking to the dispenser…",
     dropped:"Treat dropped. Goose says thanks.",
     offline:"Dispenser didn't answer. Try again.",
@@ -460,6 +511,16 @@ const I18N = {
     dispensing:"Distribution…",
     waitSec:s=>`Attendez ${s}s`,
     ready:"Distributeur prêt",
+    queueTitle:"File d'attente",
+    queueEmpty:"Personne dans la file. La gamelle est vide.",
+    inLineFor:"attend son tour pour nourrir Goose",
+    feedingNow:"nourrit Goose en ce moment",
+    thanks:n=>`Goose dit merci à ${n} pour la friandise !`,
+    yourTurn:"Votre friandise tombe…",
+    queuedSub:p=>`${p}ᵉ dans la file`,
+    joined:"Vous êtes dans la file.",
+    alreadyQueued:"Vous êtes déjà dans la file — attendez votre friandise.",
+    noTokens:"Plus de jetons 🐟.",
     sending:"Connexion au distributeur…",
     dropped:"Friandise lâchée. Goose vous remercie.",
     offline:"Le distributeur ne répond pas. Réessayez.",
@@ -491,6 +552,16 @@ const I18N = {
     dispensing:"In caduta…",
     waitSec:s=>`Aspetta ${s}s`,
     ready:"Distributore pronto",
+    queueTitle:"Fila per il premietto",
+    queueEmpty:"Nessuno in fila. La ciotola tace.",
+    inLineFor:"è in fila per dare da mangiare a Goose",
+    feedingNow:"sta dando da mangiare a Goose",
+    thanks:n=>`Goose ringrazia ${n} per il premietto!`,
+    yourTurn:"Il tuo premietto sta cadendo…",
+    queuedSub:p=>`${p}° in fila`,
+    joined:"Sei in fila.",
+    alreadyQueued:"Sei già in fila — aspetta il tuo premietto.",
+    noTokens:"Gettoni 🐟 esauriti.",
     sending:"Contatto il distributore…",
     dropped:"Premietto lanciato. Goose ringrazia.",
     offline:"Il distributore non risponde. Riprova.",
@@ -522,6 +593,16 @@ const I18N = {
     dispensing:"Падает…",
     waitSec:s=>`Подождите ${s} с`,
     ready:"Кормушка готова",
+    queueTitle:"Очередь за лакомством",
+    queueEmpty:"Очереди нет. Миска молчит.",
+    inLineFor:"в очереди, чтобы покормить Гуся",
+    feedingNow:"кормит Гуся прямо сейчас",
+    thanks:n=>`Гусь благодарит ${n} за лакомство!`,
+    yourTurn:"Ваше лакомство падает…",
+    queuedSub:p=>`${p}-й в очереди`,
+    joined:"Вы в очереди.",
+    alreadyQueued:"Вы уже в очереди — дождитесь своего лакомства.",
+    noTokens:"Жетоны 🐟 закончились.",
     sending:"Связь с кормушкой…",
     dropped:"Лакомство упало. Гусь благодарит.",
     offline:"Кормушка не отвечает. Попробуйте ещё раз.",
@@ -553,6 +634,16 @@ const I18N = {
     dispensing:"投放中…",
     waitSec:s=>`请等待 ${s} 秒`,
     ready:"喂食器就绪",
+    queueTitle:"投喂排队",
+    queueEmpty:"暂时没人排队，饭碗很安静。",
+    inLineFor:"正在排队投喂 Goose",
+    feedingNow:"正在投喂 Goose",
+    thanks:n=>`Goose 谢谢 ${n} 的零食！`,
+    yourTurn:"你的零食正在投放…",
+    queuedSub:p=>`队列第 ${p} 位`,
+    joined:"已加入队列。",
+    alreadyQueued:"你已经在排队了，请等待零食投放。",
+    noTokens:"🐟 代币不足。",
     sending:"正在连接喂食器…",
     dropped:"零食已投放，Goose 谢谢你。",
     offline:"喂食器没有回应，请重试。",
@@ -584,6 +675,16 @@ const I18N = {
     dispensing:"落下中…",
     waitSec:s=>`あと ${s} 秒`,
     ready:"給餌器は準備OK",
+    queueTitle:"おやつの列",
+    queueEmpty:"待っている人はいません。お皿は静かです。",
+    inLineFor:"が Goose におやつをあげる順番を待っています",
+    feedingNow:"が Goose におやつをあげています",
+    thanks:n=>`Goose が ${n} さんにお礼を言っています！`,
+    yourTurn:"おやつが落ちています…",
+    queuedSub:p=>`列の ${p} 番目`,
+    joined:"列に並びました。",
+    alreadyQueued:"すでに列に並んでいます。おやつが落ちるまでお待ちください。",
+    noTokens:"🐟 トークンがありません。",
     sending:"給餌器に接続中…",
     dropped:"おやつが落ちました。Goose が喜んでいます。",
     offline:"給餌器が応答しません。もう一度どうぞ。",
@@ -658,7 +759,9 @@ const State = {
   me: null,
   posts: [],
   human: new Set(),      // ids of posts currently shown in human
-  cooldownUntil: 0
+  queue: [],             // people waiting to feed Goose
+  serving: null,         // whose treat is dropping right now
+  lastTicket: 0          // highest drop we've already announced
 };
 const t = () => I18N[State.lang];
 
@@ -708,6 +811,8 @@ function applyLanguage(){
   renderComposer();
   renderFeed();
   renderSession();
+  renderQueue();
+  refreshTreatButton();
 }
 
 function renderComposer(){
@@ -919,9 +1024,13 @@ async function submitComment(event, postId){
   }catch(e){ toast(e.message || t().netErr, "bad"); }
 }
 
-/* ---------- the treat button ---------- */
-const MOTOR_MS = 3000;     // matches MOTOR_DELAY in server.js
-const COOLDOWN_MS = 10000; // matches SPAM_COOLDOWN in server.js
+/* ---------- the treat line ---------- */
+const MOTOR_MS = 3000;      // matches MOTOR_DELAY in server.js
+const POLL_MS  = 1200;      // how often we refresh the line
+
+// Neon-ish names, picked from the username so everyone keeps their colour
+const NEON = ["#ffb454","#6ef0c0","#7cc7ff","#ff8fd0","#c79bff","#ffe066","#5ef2d0","#ff9a6b"];
+const colourFor = name => NEON[hash(name || "anon") % NEON.length];
 
 function fillBar(ms){
   const fill = document.getElementById("treatFill");
@@ -935,25 +1044,91 @@ function fillBar(ms){
   });
 }
 
-function startCooldown(ms){
+function renderQueue(){
+  const list  = document.getElementById("queueList");
+  const count = document.getElementById("queueCount");
+  const rows  = [];
+
+  if(State.serving){
+    rows.push(`
+      <div class="q-row serving">
+        <span class="who" style="color:${colourFor(State.serving.username)};text-shadow:0 0 12px ${colourFor(State.serving.username)}66">${esc(State.serving.username)}</span>
+        <span class="said">${esc(t().feedingNow)}</span>
+        <span class="motor">🐟</span>
+      </div>`);
+  }
+
+  State.queue.forEach(entry => {
+    const c = colourFor(entry.username);
+    rows.push(`
+      <div class="q-row">
+        <span class="who" style="color:${c};text-shadow:0 0 12px ${c}66">${esc(entry.username)}</span>
+        <span class="said">${esc(t().inLineFor)}</span>
+        <span class="pos">${entry.position}</span>
+      </div>`);
+  });
+
+  count.textContent = State.queue.length + (State.serving ? 1 : 0);
+  list.innerHTML = rows.length
+    ? rows.join("")
+    : `<div class="queue-empty">${esc(t().queueEmpty)}</div>`;
+}
+
+function refreshTreatButton(){
   const btn = document.getElementById("treatBtn");
   const sub = document.getElementById("treatSub");
-  State.cooldownUntil = Date.now() + ms;
-  btn.disabled = true;
-  fillBar(ms);
+  const signedIn = State.me && State.me.loggedIn;
+  const me = signedIn ? State.me.username : null;
 
-  const tick = () => {
-    const left = State.cooldownUntil - Date.now();
-    if(left <= 0){
-      btn.disabled = false;
-      sub.textContent = t().dispenseSub;
+  if(State.serving && me && State.serving.username === me){
+    btn.disabled = true;
+    sub.textContent = t().yourTurn;
+    return;
+  }
+  const mine = State.queue.find(e => e.username === me);
+  if(mine){
+    btn.disabled = true;
+    sub.textContent = t().queuedSub(mine.position);
+    return;
+  }
+  btn.disabled = false;
+  sub.textContent = t().dispenseSub;
+}
+
+async function pollQueue(){
+  try{
+    const r = await fetch("/api/queue");
+    const d = await r.json();
+
+    const wasServingMe = State.serving && State.me && State.serving.username === State.me.username;
+
+    State.serving = d.serving;
+    State.queue   = d.queue || [];
+
+    // Announce any drops we haven't announced yet
+    const drops = (d.recent || []).filter(x => x.ticket > State.lastTicket);
+    if(State.lastTicket === 0){
+      // first poll of the session — don't replay history
+      State.lastTicket = (d.recent && d.recent.length) ? d.recent[0].ticket : 0;
+    }else if(drops.length){
+      drops.sort((a,b) => a.ticket - b.ticket).forEach(drop => {
+        toast(t().thanks(drop.username), "good");
+        State.lastTicket = Math.max(State.lastTicket, drop.ticket);
+      });
       setStatus(t().ready);
-      return;
+      checkSession();
     }
-    sub.textContent = t().waitSec(Math.ceil(left / 1000));
-    setTimeout(tick, 250);
-  };
-  tick();
+
+    // Motor animation when it becomes your turn
+    const servingMe = State.serving && State.me && State.serving.username === State.me.username;
+    if(servingMe && !wasServingMe){
+      fillBar(MOTOR_MS);
+      setStatus(t().yourTurn, "warn");
+    }
+
+    renderQueue();
+    refreshTreatButton();
+  }catch(e){ /* server asleep; try again next tick */ }
 }
 
 async function dispense(){
@@ -963,36 +1138,30 @@ async function dispense(){
   }
   const btn = document.getElementById("treatBtn");
   btn.disabled = true;
-  document.getElementById("treatSub").textContent = t().dispensing;
-  setStatus(t().sending, "warn");
-  fillBar(MOTOR_MS);
 
   try{
     const r = await fetch("/dispense");
     const d = await r.json();
 
     if(d.status === "Success"){
-      setStatus(t().dropped);
-      toast(t().dropped, "good");
-      if(State.me && typeof d.remainingTokens === "number"){
+      if(typeof d.remainingTokens === "number"){
         State.me.tokens = d.remainingTokens;
         renderSession();
       }
-      startCooldown(COOLDOWN_MS);
+      toast(t().joined, "good");
+      setStatus(t().joined, "warn");
     }else{
-      setStatus(d.message, "err");
-      toast(d.message, "bad");
-      btn.disabled = false;
-      document.getElementById("treatSub").textContent = t().dispenseSub;
-      fillBar(0);
-      checkSession();
+      const msg = d.code === "already_queued" ? t().alreadyQueued
+                : d.code === "no_tokens"      ? t().noTokens
+                : (d.message || t().offline);
+      toast(msg, "bad");
+      setStatus(msg, "err");
     }
   }catch(e){
-    setStatus(t().offline, "err");
     toast(t().offline, "bad");
-    btn.disabled = false;
-    document.getElementById("treatSub").textContent = t().dispenseSub;
+    setStatus(t().offline, "err");
   }
+  pollQueue();
 }
 
 /* ---------- modals ---------- */
@@ -1014,7 +1183,9 @@ window.addEventListener("DOMContentLoaded", async () => {
   applyLanguage();
   await checkSession();
   loadWall();
-  setInterval(loadWall, 30000);   // gentle auto-refresh of the wall
+  pollQueue();
+  setInterval(pollQueue, POLL_MS);  // live treat line
+  setInterval(loadWall, 30000);     // gentle auto-refresh of the wall
 });
 </script>
 </body>
