@@ -1,514 +1,1021 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sir Paws-a-Lot Live Dashboard</title>
-    
-    <link href="https://vjs.zencdn.net/8.10.0/video-js.css" rel="stylesheet" />
-    <script src="https://vjs.zencdn.net/8.10.0/video.min.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Feed a Goose</title>
 
-    <style>
-        :root {
-            --bg-color: #719a72;
-            --card-bg: #ffffff;
-            --accent-color: #000000;
-            --text-dark: #2f3542;
-            --text-light: #747d8c;
-            --like-color: #ff4757;
-        }
+<link href="https://vjs.zencdn.net/8.10.0/video-js.css" rel="stylesheet">
+<script src="https://vjs.zencdn.net/8.10.0/video.min.js"></script>
 
-        html, body, button, a, input {
-            cursor: url('https://img.icons8.com/ios-glyphs/30/000000/cat-footprint.png') 15 15, auto !important;
-        }
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-        body {
-            font-family: '-apple-system', BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-dark);
-            margin: 0;
-            padding: 20px;
-            overflow-x: hidden;
-            position: relative;
-            min-height: 100vh;
-        }
+<style>
+:root{
+  --ink:#141019;
+  --surface:#1d1825;
+  --surface-2:#272031;
+  --line:#352c44;
+  --text:#f1ecf6;
+  --muted:#a196b3;
+  --accent:#ffb454;
+  --accent-ink:#2a1a02;
+  --live:#ff5c72;
+  --ok:#66d9a0;
+  --radius-lg:22px;
+  --radius:14px;
+  --radius-sm:10px;
+  --shell:1180px;
+}
 
-        header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        header h1 { margin: 0; font-size: 2.5rem; color: var(--text-dark); }
-        header p { margin: 5px 0 0 0; color: var(--text-light); font-size: 1.1rem; }
+*{box-sizing:border-box}
 
-        .dashboard-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 25px;
-            max-width: 1100px;
-            margin: 0 auto;
-        }
+html{-webkit-text-size-adjust:100%}
 
-        @media (min-width: 800px) {
-            .dashboard-grid { grid-template-columns: 1fr 1.3fr; }
-        }
+body{
+  margin:0;
+  background:
+    radial-gradient(1100px 600px at 12% -8%, #2b2038 0%, transparent 60%),
+    radial-gradient(900px 520px at 92% 0%, #1f2a33 0%, transparent 55%),
+    var(--ink);
+  background-attachment:fixed;
+  color:var(--text);
+  font-family:Inter,"Noto Sans SC","Noto Sans JP","PingFang SC","Hiragino Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  font-size:15px;
+  line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+}
 
-        .card {
-            background-color: var(--card-bg);
-            border-radius: 16px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-            padding: 25px;
-            box-sizing: border-box;
-            height: fit-content;
-        }
+h1,h2,h3{
+  font-family:"Bricolage Grotesque",Inter,system-ui,sans-serif;
+  font-weight:700;
+  letter-spacing:-0.02em;
+  margin:0;
+}
 
-        .video-container {
-            width: 100%;
-            display: flex;
-            justify-content: center;
-            margin-bottom: 20px;
-        }
-        .video-js {
-            border-radius: 12px;
-            overflow: hidden;
-            width: 100% !important;
-            max-width: 550px;
-        }
+button,input,textarea,select{font:inherit;color:inherit}
 
-        .btn {
-            background-color: var(--accent-color);
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            font-size: 1rem;
-            border-radius: 30px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: all 0.2s ease;
-        }
-        .btn:hover { background-color: #333333; transform: translateY(-1px); }
-        .btn:active { transform: translateY(1px); }
-        .btn:disabled { background-color: #ced6e0; cursor: not-allowed; }
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:6px}
 
-        .btn-sm { padding: 6px 12px; font-size: 0.85rem; border-radius: 20px; }
+/* ---------- top bar ---------- */
+.topbar{
+  position:sticky;top:0;z-index:60;
+  backdrop-filter:blur(14px);
+  background:rgba(20,16,25,.78);
+  border-bottom:1px solid var(--line);
+}
+.topbar-inner{
+  max-width:var(--shell);margin:0 auto;padding:12px 20px;
+  display:flex;align-items:center;gap:14px;flex-wrap:wrap;
+}
+.brand{display:flex;align-items:center;gap:10px;margin-right:auto;min-width:0}
+.brand-mark{
+  width:36px;height:36px;flex:none;border-radius:12px;
+  background:linear-gradient(150deg,var(--accent),#ff8a6b);
+  display:grid;place-items:center;font-size:19px;
+  box-shadow:0 6px 18px rgba(255,180,84,.22);
+}
+.brand-name{font-family:"Bricolage Grotesque",sans-serif;font-weight:800;font-size:1.12rem;letter-spacing:-.03em}
+.brand-sub{display:block;font-size:.74rem;color:var(--muted);font-weight:500;letter-spacing:0}
 
-        /* --- NEW WALL & POST STYLING --- */
-        .wall-creator {
-            margin-bottom: 25px;
-            border-bottom: 2px solid #f1f2f6;
-            padding-bottom: 20px;
-        }
-        .wall-creator textarea {
-            width: 100%;
-            height: 80px;
-            border: 1px solid #ddd;
-            border-radius: 12px;
-            padding: 12px;
-            box-sizing: border-box;
-            resize: none;
-            font-family: inherit;
-            font-size: 0.95rem;
-            margin-bottom: 10px;
-        }
-        .creator-actions {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .file-input-wrapper {
-            position: relative;
-            overflow: hidden;
-            display: inline-block;
-        }
-        .file-input-wrapper input[type=file] {
-            position: absolute;
-            left: 0; top: 0; opacity: 0;
-            font-size: 100px; cursor: pointer;
-        }
+.lang-wrap{position:relative;display:flex;align-items:center}
+.lang-wrap svg{position:absolute;right:11px;pointer-events:none;opacity:.6}
+select.lang{
+  appearance:none;-webkit-appearance:none;
+  background:var(--surface-2);border:1px solid var(--line);
+  border-radius:999px;padding:8px 30px 8px 14px;
+  font-size:.86rem;font-weight:600;cursor:pointer;
+}
+select.lang:hover{border-color:#4a3d5d}
 
-        .wall-feed {
-            max-height: 700px;
-            overflow-y: auto;
-            padding-right: 10px;
-        }
-        .wall-post {
-            background: #f8f9fa;
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 20px;
-            border: 1px solid #e4e7eb;
-        }
-        .post-header {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 10px;
-        }
-        .post-author { font-weight: bold; color: var(--text-dark); }
-        .post-time { font-size: 0.8rem; color: var(--text-light); }
-        .post-content { line-height: 1.5; margin-bottom: 12px; white-space: pre-wrap; }
-        .post-img {
-            width: 100%;
-            max-height: 350px;
-            object-fit: cover;
-            border-radius: 8px;
-            margin-bottom: 12px;
-        }
-        
-        .post-actions {
-            display: flex;
-            gap: 15px;
-            border-top: 1px solid #e4e7eb;
-            border-bottom: 1px solid #e4e7eb;
-            padding: 8px 0;
-            margin-bottom: 12px;
-        }
-        .action-link {
-            background: none; border: none; font-weight: bold; color: var(--text-light);
-            display: flex; align-items: center; gap: 5px; font-size: 0.9rem;
-        }
-        .action-link:hover { color: var(--accent-color); }
-        .action-link.liked { color: var(--like-color); }
+.btn{
+  border:1px solid transparent;border-radius:999px;
+  padding:9px 18px;font-size:.88rem;font-weight:600;
+  background:var(--surface-2);color:var(--text);
+  cursor:pointer;transition:transform .12s ease,background .15s ease,border-color .15s ease;
+}
+.btn:hover{background:#32293e}
+.btn:active{transform:translateY(1px)}
+.btn-ghost{background:transparent;border-color:var(--line)}
+.btn-ghost:hover{background:var(--surface-2)}
+.btn-primary{background:var(--accent);color:var(--accent-ink)}
+.btn-primary:hover{background:#ffc470}
+.btn-sm{padding:6px 13px;font-size:.82rem}
+.btn:disabled{opacity:.45;cursor:not-allowed;transform:none}
 
-        /* --- COMMENTS SECTION --- */
-        .comments-section { background: #ffffff; border-radius: 8px; padding: 12px; }
-        .comment-item {
-            font-size: 0.9rem; border-bottom: 1px dashed #e4e7eb;
-            padding: 6px 0; margin-bottom: 6px;
-        }
-        .comment-item:last-child { border: none; margin-bottom: 0; }
-        .comment-user { font-weight: bold; margin-right: 6px; }
-        
-        .comment-form { display: flex; gap: 8px; margin-top: 10px; }
-        .comment-form input {
-            flex: 1; border: 1px solid #ddd; border-radius: 20px; padding: 6px 12px; font-size: 0.85rem;
-        }
+.badge{
+  display:inline-flex;align-items:center;gap:7px;
+  background:var(--surface-2);border:1px solid var(--line);
+  border-radius:999px;padding:6px 14px;font-size:.84rem;font-weight:600;
+}
+.badge .fish{color:var(--accent)}
 
-        /* --- AUTH MODALS --- */
-        .modal-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background-color: rgba(0,0,0,0.6); display: none;
-            justify-content: center; align-items: center; z-index: 1000;
-        }
-        .modal-box {
-            background: white; padding: 30px; border-radius: 16px;
-            width: 90%; max-width: 400px; position: relative;
-        }
-        .modal-box form { display: flex; flex-direction: column; gap: 12px; }
-        .modal-box input { padding: 10px; border: 1px solid #ddd; border-radius: 8px; }
-        .close-modal { position: absolute; top: 15px; right: 15px; font-size: 1.5rem; color: var(--text-light); }
-        .close-modal:hover { color: red; }
-    </style>
+/* ---------- layout ---------- */
+.shell{max-width:var(--shell);margin:0 auto;padding:26px 20px 80px}
+.grid{display:grid;grid-template-columns:1fr;gap:22px}
+@media(min-width:960px){
+  .grid{grid-template-columns:minmax(0,420px) minmax(0,1fr);align-items:start}
+  .col-left{position:sticky;top:78px}
+}
+
+.panel{
+  background:var(--surface);
+  border:1px solid var(--line);
+  border-radius:var(--radius-lg);
+  padding:18px;
+}
+
+/* ---------- camera ---------- */
+.cam{padding:14px}
+.cam-head{display:flex;align-items:center;justify-content:space-between;padding:2px 4px 12px}
+.cam-title{font-size:.95rem;font-weight:600}
+.live-pill{
+  display:inline-flex;align-items:center;gap:7px;
+  font-size:.72rem;font-weight:700;letter-spacing:.06em;
+  background:rgba(255,92,114,.13);color:#ff8797;
+  border:1px solid rgba(255,92,114,.3);
+  border-radius:999px;padding:4px 11px;
+}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--live);animation:pulse 1.9s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.25}}
+.video-shell{border-radius:var(--radius);overflow:hidden;background:#0c0910;aspect-ratio:16/10}
+.video-js{width:100%!important;height:100%!important}
+
+/* ---------- the treat button (the one loud thing) ---------- */
+.feeder{margin-top:16px}
+.treat-btn{
+  position:relative;width:100%;overflow:hidden;
+  border:none;border-radius:18px;padding:19px 22px;
+  background:linear-gradient(135deg,#ffb454,#ff9463);
+  color:var(--accent-ink);
+  font-family:"Bricolage Grotesque",sans-serif;
+  font-size:1.14rem;font-weight:800;letter-spacing:-.01em;
+  cursor:pointer;
+  box-shadow:0 10px 26px rgba(255,148,99,.2);
+  transition:transform .12s ease,box-shadow .2s ease,filter .2s ease;
+}
+.treat-btn:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 16px 34px rgba(255,148,99,.28)}
+.treat-btn:active:not(:disabled){transform:translateY(1px)}
+.treat-btn:disabled{cursor:not-allowed;filter:saturate(.35) brightness(.75);box-shadow:none}
+.treat-btn .label{position:relative;z-index:2;display:block}
+.treat-btn .sub{position:relative;z-index:2;display:block;font-family:Inter,sans-serif;font-size:.78rem;font-weight:600;opacity:.72;margin-top:3px}
+.treat-fill{
+  position:absolute;inset:0;z-index:1;
+  background:rgba(20,16,25,.45);
+  transform-origin:left;transform:scaleX(0);
+}
+.treat-fill.running{transition:transform linear}
+
+.feeder-status{
+  margin:12px 2px 2px;font-size:.84rem;color:var(--muted);
+  display:flex;align-items:center;gap:8px;min-height:20px;
+}
+.feeder-status .sdot{width:7px;height:7px;border-radius:50%;background:var(--ok);flex:none}
+.feeder-status.warn .sdot{background:var(--accent)}
+.feeder-status.err .sdot{background:var(--live)}
+
+/* ---------- composer ---------- */
+.feed-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin:0 4px 14px}
+.feed-head h2{font-size:1.3rem}
+.feed-note{font-size:.8rem;color:var(--muted)}
+
+.composer textarea{
+  width:100%;min-height:86px;resize:vertical;
+  background:var(--surface-2);border:1px solid var(--line);
+  border-radius:var(--radius);padding:13px 15px;
+  font-size:.95rem;line-height:1.5;
+}
+.composer textarea::placeholder{color:#7d7291}
+.composer textarea:focus{border-color:#50415f;outline:none}
+.composer-row{display:flex;align-items:center;gap:10px;margin-top:11px;flex-wrap:wrap}
+.file-btn{position:relative;overflow:hidden;display:inline-flex}
+.file-btn input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;font-size:120px}
+.file-name{font-size:.78rem;color:var(--muted);max-width:170px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.composer-row .spacer{margin-left:auto}
+
+.locked{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  flex-wrap:wrap;font-size:.9rem;color:var(--muted);
+}
+
+/* ---------- posts ---------- */
+.feed{margin-top:20px;display:flex;flex-direction:column;gap:16px}
+.post{
+  background:var(--surface);border:1px solid var(--line);
+  border-radius:var(--radius-lg);padding:18px;
+}
+.post-top{display:flex;align-items:center;gap:11px;margin-bottom:12px}
+.avatar{
+  width:38px;height:38px;border-radius:13px;flex:none;
+  display:grid;place-items:center;font-size:17px;
+  background:var(--surface-2);border:1px solid var(--line);
+}
+.post-who{min-width:0}
+.post-author{font-weight:600;font-size:.94rem}
+.post-time{font-size:.76rem;color:var(--muted)}
+
+.meows{
+  font-family:"Bricolage Grotesque",sans-serif;
+  font-size:1.16rem;font-weight:500;line-height:1.45;
+  letter-spacing:.01em;word-break:break-word;
+  margin:2px 0 12px;
+}
+.human{
+  border-left:2px solid var(--line);
+  padding:2px 0 2px 12px;margin:-4px 0 12px;
+  color:var(--muted);font-size:.9rem;white-space:pre-wrap;word-break:break-word;
+}
+.post-img{width:100%;max-height:420px;object-fit:cover;border-radius:var(--radius);margin-bottom:12px;display:block;background:var(--surface-2)}
+
+.post-bar{display:flex;align-items:center;gap:6px;border-top:1px solid var(--line);padding-top:10px}
+.act{
+  background:none;border:none;cursor:pointer;
+  color:var(--muted);font-size:.85rem;font-weight:600;
+  padding:6px 11px;border-radius:999px;
+  display:inline-flex;align-items:center;gap:6px;
+  transition:background .15s ease,color .15s ease;
+}
+.act:hover{background:var(--surface-2);color:var(--text)}
+.act.on{color:var(--live)}
+.act.subtle{margin-left:auto;font-weight:500;font-size:.8rem}
+
+.comments{margin-top:12px;display:flex;flex-direction:column;gap:9px}
+.comment{display:flex;gap:9px;align-items:flex-start}
+.c-avatar{width:26px;height:26px;border-radius:9px;flex:none;display:grid;place-items:center;font-size:12px;background:var(--surface-2);border:1px solid var(--line)}
+.c-body{background:var(--surface-2);border-radius:12px;padding:7px 12px;min-width:0}
+.c-name{font-size:.78rem;font-weight:600;color:var(--muted)}
+.c-text{font-family:"Bricolage Grotesque",sans-serif;font-size:.95rem;word-break:break-word}
+.c-form{display:flex;gap:8px;margin-top:4px}
+.c-form input{
+  flex:1;min-width:0;background:var(--surface-2);border:1px solid var(--line);
+  border-radius:999px;padding:8px 15px;font-size:.87rem;
+}
+.c-form input:focus{border-color:#50415f;outline:none}
+
+.empty{
+  border:1px dashed var(--line);border-radius:var(--radius-lg);
+  padding:44px 24px;text-align:center;color:var(--muted);
+}
+.empty .big{font-size:2rem;display:block;margin-bottom:8px}
+
+/* ---------- modals ---------- */
+.overlay{
+  position:fixed;inset:0;z-index:100;display:none;
+  background:rgba(10,7,14,.72);backdrop-filter:blur(4px);
+  padding:20px;overflow:auto;
+}
+.overlay.open{display:grid;place-items:center}
+.modal{
+  width:100%;max-width:400px;background:var(--surface);
+  border:1px solid var(--line);border-radius:var(--radius-lg);
+  padding:26px;position:relative;
+}
+.modal h3{font-size:1.25rem;margin-bottom:4px}
+.modal p.hint{color:var(--muted);font-size:.86rem;margin:0 0 18px}
+.modal form{display:flex;flex-direction:column;gap:10px}
+.modal input{
+  background:var(--surface-2);border:1px solid var(--line);
+  border-radius:var(--radius-sm);padding:11px 14px;font-size:.92rem;
+}
+.modal input:focus{border-color:#50415f;outline:none}
+.modal .btn-primary{margin-top:6px;padding:11px}
+.x{
+  position:absolute;top:14px;right:14px;background:none;border:none;
+  color:var(--muted);font-size:1.4rem;line-height:1;cursor:pointer;padding:4px 8px;border-radius:8px;
+}
+.x:hover{color:var(--text);background:var(--surface-2)}
+
+/* ---------- toasts ---------- */
+#toasts{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);z-index:200;display:flex;flex-direction:column;gap:9px;align-items:center;width:calc(100% - 32px);max-width:400px}
+.toast{
+  background:var(--surface-2);border:1px solid var(--line);
+  border-radius:14px;padding:11px 17px;font-size:.88rem;font-weight:500;
+  box-shadow:0 12px 30px rgba(0,0,0,.4);
+  display:flex;gap:9px;align-items:center;
+}
+.toast.good{border-color:rgba(102,217,160,.4)}
+.toast.bad{border-color:rgba(255,92,114,.4)}
+
+@media (prefers-reduced-motion:reduce){
+  *{animation:none!important;transition:none!important}
+}
+</style>
 </head>
 <body>
 
-    <div style="text-align: right; max-width: 1100px; margin: 0 auto 10px auto;" id="auth-nav-bar">
-        <span id="logged-out-zone">
-            <button class="btn btn-sm" onclick="openLogin()">🔑 Sign In</button>
-            <button class="btn btn-sm" style="background-color: #2ed573;" onclick="openRegister()">📝 Sign Up</button>
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      <span class="brand-mark">🐈‍⬛</span>
+      <span>
+        <span class="brand-name">Feed a Goose</span>
+        <span class="brand-sub" data-i18n="tagline"></span>
+      </span>
+    </div>
+
+    <div class="lang-wrap">
+      <select class="lang" id="langSelect" aria-label="Language">
+        <option value="en">English</option>
+        <option value="fr">Français</option>
+        <option value="it">Italiano</option>
+        <option value="ru">Русский</option>
+        <option value="zh">中文</option>
+        <option value="ja">日本語</option>
+      </select>
+      <svg width="11" height="7" viewBox="0 0 11 7" fill="none"><path d="M1 1l4.5 4.5L10 1" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+    </div>
+
+    <span id="zoneOut">
+      <button class="btn btn-ghost" onclick="openModal('login')" data-i18n="signIn"></button>
+      <button class="btn btn-primary" onclick="openModal('register')" data-i18n="signUp"></button>
+    </span>
+
+    <span id="zoneIn" style="display:none;align-items:center;gap:10px">
+      <span class="badge" id="userBadge"></span>
+      <button class="btn btn-ghost" onclick="logout()" data-i18n="logOut"></button>
+    </span>
+  </div>
+</header>
+
+<main class="shell">
+  <div class="grid">
+
+    <!-- LEFT: camera + feeder -->
+    <div class="col-left">
+      <section class="panel cam">
+        <div class="cam-head">
+          <span class="cam-title" data-i18n="camTitle"></span>
+          <span class="live-pill"><span class="dot"></span>LIVE</span>
+        </div>
+        <div class="video-shell">
+          <video id="camera" class="video-js vjs-default-skin vjs-big-play-centered" controls preload="auto" data-setup="{}">
+            <source src="https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" type="application/x-mpegURL">
+          </video>
+        </div>
+
+        <div class="feeder">
+          <button class="treat-btn" id="treatBtn" onclick="dispense()">
+            <span class="treat-fill" id="treatFill"></span>
+            <span class="label" data-i18n="dispense"></span>
+            <span class="sub" id="treatSub"></span>
+          </button>
+          <p class="feeder-status" id="feederStatus"><span class="sdot"></span><span data-i18n="ready"></span></p>
+        </div>
+      </section>
+    </div>
+
+    <!-- RIGHT: the wall -->
+    <div>
+      <div class="feed-head">
+        <h2 data-i18n="wallTitle"></h2>
+        <span class="feed-note" id="feedNote"></span>
+      </div>
+
+      <section class="panel composer" id="composer"></section>
+
+      <div class="feed" id="feed">
+        <div class="empty"><span class="big">🐾</span><span data-i18n="loading"></span></div>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<!-- MODALS -->
+<div class="overlay" id="modal-login" onclick="if(event.target===this)closeModals()">
+  <div class="modal">
+    <button class="x" onclick="closeModals()" aria-label="Close">&times;</button>
+    <h3 data-i18n="signIn"></h3>
+    <p class="hint" data-i18n="loginHint"></p>
+    <form onsubmit="auth(event,'/login')">
+      <input name="username" data-ph="username" required autocomplete="username">
+      <input type="password" name="password" data-ph="password" required autocomplete="current-password">
+      <button class="btn btn-primary" type="submit" data-i18n="signIn"></button>
+    </form>
+  </div>
+</div>
+
+<div class="overlay" id="modal-register" onclick="if(event.target===this)closeModals()">
+  <div class="modal">
+    <button class="x" onclick="closeModals()" aria-label="Close">&times;</button>
+    <h3 data-i18n="signUp"></h3>
+    <p class="hint" data-i18n="registerHint"></p>
+    <form onsubmit="auth(event,'/register')">
+      <input name="username" data-ph="petName" required autocomplete="username">
+      <input type="email" name="email" data-ph="email" required autocomplete="email">
+      <input type="password" id="regPass" name="password" data-ph="password" required autocomplete="new-password">
+      <input type="password" id="regConfirm" name="confirmPassword" data-ph="confirm" required autocomplete="new-password">
+      <button class="btn btn-primary" type="submit" data-i18n="signUp"></button>
+    </form>
+  </div>
+</div>
+
+<div id="toasts"></div>
+
+<script>
+/* ============================================================
+   1. LANGUAGES — interface strings
+   ============================================================ */
+const I18N = {
+  en:{
+    tagline:"a wall for cats, by cats",
+    signIn:"Sign in", signUp:"Sign up", logOut:"Log out",
+    tokens:"tokens",
+    camTitle:"Goose, live",
+    dispense:"Drop a treat",
+    dispenseSub:"one 🐟 token",
+    dispensing:"Dropping…",
+    waitSec:s=>`Wait ${s}s`,
+    ready:"Dispenser ready",
+    sending:"Talking to the dispenser…",
+    dropped:"Treat dropped. Goose says thanks.",
+    offline:"Dispenser didn't answer. Try again.",
+    wallTitle:"The wall",
+    feedNote:n=>`${n} ${n===1?"post":"posts"}`,
+    composerPh:"Say something. It comes out as meows anyway.",
+    addPhoto:"Photo", post:"Post",
+    lockedMsg:"Sign up as your pet to post, like and comment.",
+    loading:"Fetching meows…",
+    emptyTitle:"Nothing on the wall yet.",
+    emptySub:"Be the first cat to say something.",
+    like:"Like", showHuman:"Read in human", hideHuman:"Back to meows",
+    commentPh:"Meow back…", send:"Send",
+    loginHint:"Welcome back, you beautiful animal.",
+    registerHint:"New cats get 20 🐟 tokens to spend on Goose.",
+    username:"Username", petName:"Your pet's name", email:"Email",
+    password:"Password", confirm:"Confirm password",
+    mismatch:"Passwords don't match.",
+    netErr:"Can't reach the server.",
+    needLogin:"Sign in first."
+  },
+  fr:{
+    tagline:"un mur pour chats, par des chats",
+    signIn:"Connexion", signUp:"S'inscrire", logOut:"Déconnexion",
+    tokens:"jetons",
+    camTitle:"Goose, en direct",
+    dispense:"Lâcher une friandise",
+    dispenseSub:"un jeton 🐟",
+    dispensing:"Distribution…",
+    waitSec:s=>`Attendez ${s}s`,
+    ready:"Distributeur prêt",
+    sending:"Connexion au distributeur…",
+    dropped:"Friandise lâchée. Goose vous remercie.",
+    offline:"Le distributeur ne répond pas. Réessayez.",
+    wallTitle:"Le mur",
+    feedNote:n=>`${n} ${n===1?"publication":"publications"}`,
+    composerPh:"Dites quelque chose. Ça sortira en miaous.",
+    addPhoto:"Photo", post:"Publier",
+    lockedMsg:"Inscrivez votre animal pour publier, aimer et commenter.",
+    loading:"Récupération des miaous…",
+    emptyTitle:"Le mur est vide.",
+    emptySub:"Soyez le premier chat à parler.",
+    like:"J'aime", showHuman:"Lire en humain", hideHuman:"Retour aux miaous",
+    commentPh:"Miaulez une réponse…", send:"Envoyer",
+    loginHint:"Content de vous revoir, bel animal.",
+    registerHint:"Les nouveaux chats reçoivent 20 jetons 🐟.",
+    username:"Nom d'utilisateur", petName:"Nom de votre animal", email:"E-mail",
+    password:"Mot de passe", confirm:"Confirmer le mot de passe",
+    mismatch:"Les mots de passe ne correspondent pas.",
+    netErr:"Serveur injoignable.",
+    needLogin:"Connectez-vous d'abord."
+  },
+  it:{
+    tagline:"un muro per gatti, scritto dai gatti",
+    signIn:"Accedi", signUp:"Registrati", logOut:"Esci",
+    tokens:"gettoni",
+    camTitle:"Goose, in diretta",
+    dispense:"Lancia un premietto",
+    dispenseSub:"un gettone 🐟",
+    dispensing:"In caduta…",
+    waitSec:s=>`Aspetta ${s}s`,
+    ready:"Distributore pronto",
+    sending:"Contatto il distributore…",
+    dropped:"Premietto lanciato. Goose ringrazia.",
+    offline:"Il distributore non risponde. Riprova.",
+    wallTitle:"Il muro",
+    feedNote:n=>`${n} ${n===1?"post":"post"}`,
+    composerPh:"Scrivi qualcosa. Uscirà comunque in miao.",
+    addPhoto:"Foto", post:"Pubblica",
+    lockedMsg:"Registra il tuo animale per pubblicare, mettere mi piace e commentare.",
+    loading:"Recupero dei miao…",
+    emptyTitle:"Il muro è vuoto.",
+    emptySub:"Sii il primo gatto a parlare.",
+    like:"Mi piace", showHuman:"Leggi in umano", hideHuman:"Torna ai miao",
+    commentPh:"Rispondi con un miao…", send:"Invia",
+    loginHint:"Bentornato, splendido animale.",
+    registerHint:"I gatti nuovi ricevono 20 gettoni 🐟.",
+    username:"Nome utente", petName:"Nome del tuo animale", email:"Email",
+    password:"Password", confirm:"Conferma password",
+    mismatch:"Le password non coincidono.",
+    netErr:"Server irraggiungibile.",
+    needLogin:"Prima accedi."
+  },
+  ru:{
+    tagline:"стена для котов, написанная котами",
+    signIn:"Войти", signUp:"Регистрация", logOut:"Выйти",
+    tokens:"жетонов",
+    camTitle:"Гусь в прямом эфире",
+    dispense:"Бросить лакомство",
+    dispenseSub:"один жетон 🐟",
+    dispensing:"Падает…",
+    waitSec:s=>`Подождите ${s} с`,
+    ready:"Кормушка готова",
+    sending:"Связь с кормушкой…",
+    dropped:"Лакомство упало. Гусь благодарит.",
+    offline:"Кормушка не отвечает. Попробуйте ещё раз.",
+    wallTitle:"Стена",
+    feedNote:n=>`Записей: ${n}`,
+    composerPh:"Напишите что угодно. Всё равно выйдет мяу.",
+    addPhoto:"Фото", post:"Опубликовать",
+    lockedMsg:"Зарегистрируйте питомца, чтобы писать, лайкать и комментировать.",
+    loading:"Загружаем мяу…",
+    emptyTitle:"Стена пуста.",
+    emptySub:"Станьте первым котом, который заговорит.",
+    like:"Нравится", showHuman:"По-человечески", hideHuman:"Обратно в мяу",
+    commentPh:"Мяукните в ответ…", send:"Отправить",
+    loginHint:"С возвращением, прекрасное животное.",
+    registerHint:"Новые коты получают 20 жетонов 🐟.",
+    username:"Имя пользователя", petName:"Имя питомца", email:"Почта",
+    password:"Пароль", confirm:"Повторите пароль",
+    mismatch:"Пароли не совпадают.",
+    netErr:"Сервер недоступен.",
+    needLogin:"Сначала войдите."
+  },
+  zh:{
+    tagline:"喵星人的留言墙",
+    signIn:"登录", signUp:"注册", logOut:"退出",
+    tokens:"代币",
+    camTitle:"Goose 直播中",
+    dispense:"投一颗零食",
+    dispenseSub:"消耗一枚 🐟",
+    dispensing:"投放中…",
+    waitSec:s=>`请等待 ${s} 秒`,
+    ready:"喂食器就绪",
+    sending:"正在连接喂食器…",
+    dropped:"零食已投放，Goose 谢谢你。",
+    offline:"喂食器没有回应，请重试。",
+    wallTitle:"留言墙",
+    feedNote:n=>`${n} 条动态`,
+    composerPh:"随便写点什么，反正发出来都是喵。",
+    addPhoto:"图片", post:"发布",
+    lockedMsg:"以宠物身份注册后即可发布、点赞和评论。",
+    loading:"正在加载喵…",
+    emptyTitle:"墙上还什么都没有。",
+    emptySub:"当第一只开口的猫吧。",
+    like:"赞", showHuman:"看人类语", hideHuman:"回到喵语",
+    commentPh:"喵一句…", send:"发送",
+    loginHint:"欢迎回来，可爱的小动物。",
+    registerHint:"新猫注册即得 20 枚 🐟 代币。",
+    username:"用户名", petName:"宠物的名字", email:"邮箱",
+    password:"密码", confirm:"确认密码",
+    mismatch:"两次密码不一致。",
+    netErr:"无法连接服务器。",
+    needLogin:"请先登录。"
+  },
+  ja:{
+    tagline:"猫による猫のための掲示板",
+    signIn:"ログイン", signUp:"新規登録", logOut:"ログアウト",
+    tokens:"トークン",
+    camTitle:"Goose、ライブ中",
+    dispense:"おやつを落とす",
+    dispenseSub:"🐟 トークン 1 枚",
+    dispensing:"落下中…",
+    waitSec:s=>`あと ${s} 秒`,
+    ready:"給餌器は準備OK",
+    sending:"給餌器に接続中…",
+    dropped:"おやつが落ちました。Goose が喜んでいます。",
+    offline:"給餌器が応答しません。もう一度どうぞ。",
+    wallTitle:"みんなの壁",
+    feedNote:n=>`${n} 件の投稿`,
+    composerPh:"なんでもどうぞ。どうせ にゃー になります。",
+    addPhoto:"写真", post:"投稿",
+    lockedMsg:"ペットとして登録すると投稿・いいね・コメントができます。",
+    loading:"にゃーを読み込み中…",
+    emptyTitle:"まだ何もありません。",
+    emptySub:"最初に鳴く猫になりましょう。",
+    like:"いいね", showHuman:"人間語で読む", hideHuman:"にゃー に戻す",
+    commentPh:"にゃーで返信…", send:"送信",
+    loginHint:"おかえりなさい、すてきな動物さん。",
+    registerHint:"新入りの猫には 🐟 トークンを20枚。",
+    username:"ユーザー名", petName:"ペットの名前", email:"メール",
+    password:"パスワード", confirm:"パスワード（確認）",
+    mismatch:"パスワードが一致しません。",
+    netErr:"サーバーに接続できません。",
+    needLogin:"先にログインしてください。"
+  }
+};
+
+/* ============================================================
+   2. THE MEOW ENGINE
+   Every post is stored as the human wrote it. It is only ever
+   *displayed* as meows, re-rendered in the selected language.
+   The same post always produces the same meows (seeded hash),
+   so it doesn't reshuffle on every render.
+   ============================================================ */
+const MEOWS = {
+  en:["meow","mew","mrow","meoww","mrrp","purr"],
+  fr:["miaou","miaw","mrou","miaou","miaaou"],
+  it:["miao","miau","mia","miaoo"],
+  ru:["мяу","мяв","мур","мяуу"],
+  zh:["喵","喵呜","喵喵","咪"],
+  ja:["にゃー","にゃん","にゃあ","ニャー"]
+};
+const LOCALES = {en:"en-US",fr:"fr-FR",it:"it-IT",ru:"ru-RU",zh:"zh-CN",ja:"ja-JP"};
+
+function hash(str){
+  let h = 2166136261;
+  for(let i=0;i<str.length;i++){ h ^= str.charCodeAt(i); h = Math.imul(h,16777619); }
+  return h >>> 0;
+}
+
+function meowify(text, lang, seed){
+  const bank = MEOWS[lang] || MEOWS.en;
+  const raw  = (text || "").trim();
+  if(!raw) return bank[0];
+
+  // one meow per word, capped so nobody can write a novel
+  const words = raw.split(/\s+/).filter(Boolean).slice(0, 45);
+  const out = words.map((w,i) => bank[ hash(seed + "|" + i + "|" + w.length) % bank.length ]);
+
+  let line = out.join(" ");
+
+  // keep the emotional punctuation the human ended on
+  const tail = raw.match(/[!?！？…~]+$/);
+  line += tail ? tail[0] : (lang === "zh" || lang === "ja" ? "" : ".");
+
+  // capitalise for latin/cyrillic scripts
+  if(!["zh","ja"].includes(lang)) line = line.charAt(0).toUpperCase() + line.slice(1);
+  return line;
+}
+
+/* ============================================================
+   3. STATE
+   ============================================================ */
+const State = {
+  lang: localStorage.getItem("goose_lang") || "en",
+  me: null,
+  posts: [],
+  human: new Set(),      // ids of posts currently shown in human
+  cooldownUntil: 0
+};
+const t = () => I18N[State.lang];
+
+/* ============================================================
+   4. HELPERS
+   ============================================================ */
+function esc(s){
+  return String(s ?? "").replace(/[&<>'"]/g, c => (
+    {"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"}[c]
+  ));
+}
+
+function toast(msg, kind=""){
+  const el = document.createElement("div");
+  el.className = "toast " + kind;
+  el.textContent = msg;
+  document.getElementById("toasts").appendChild(el);
+  setTimeout(() => el.remove(), 3600);
+}
+
+function when(ts){
+  const d = new Date(ts.includes("Z") || ts.includes("T") ? ts : ts.replace(" ", "T") + "Z");
+  if(isNaN(d)) return "";
+  return new Intl.DateTimeFormat(LOCALES[State.lang], {
+    day:"numeric", month:"short", hour:"2-digit", minute:"2-digit"
+  }).format(d);
+}
+
+function pawFor(name){
+  const paws = ["🐈","🐈‍⬛","🐱","🐾","😼","🙀","😻","🐕","🐹","🦜"];
+  return paws[hash(name || "anon") % paws.length];
+}
+
+/* ============================================================
+   5. RENDER
+   ============================================================ */
+function applyLanguage(){
+  document.documentElement.lang = State.lang;
+  document.querySelectorAll("[data-i18n]").forEach(el => {
+    const v = t()[el.dataset.i18n];
+    if(typeof v === "string") el.textContent = v;
+  });
+  document.querySelectorAll("[data-ph]").forEach(el => {
+    el.placeholder = t()[el.dataset.ph] || "";
+  });
+  document.getElementById("treatSub").textContent = t().dispenseSub;
+  renderComposer();
+  renderFeed();
+  renderSession();
+}
+
+function renderComposer(){
+  const box = document.getElementById("composer");
+  if(!State.me){
+    box.innerHTML = `
+      <div class="locked">
+        <span>${esc(t().lockedMsg)}</span>
+        <button class="btn btn-primary btn-sm" onclick="openModal('register')">${esc(t().signUp)}</button>
+      </div>`;
+    return;
+  }
+  box.innerHTML = `
+    <form id="postForm" onsubmit="submitPost(event)">
+      <textarea name="content" placeholder="${esc(t().composerPh)}" required></textarea>
+      <div class="composer-row">
+        <span class="file-btn">
+          <button type="button" class="btn btn-ghost btn-sm">📷 ${esc(t().addPhoto)}</button>
+          <input type="file" name="image" accept="image/*" onchange="document.getElementById('fileName').textContent = this.files[0] ? this.files[0].name : ''">
         </span>
-        <span id="logged-in-zone" style="display: none;">
-            <style>
-                .user-badge {
-                    background: #2f3542; color: #fff; padding: 6px 14px; 
-                    border-radius: 20px; font-weight: bold; font-size: 0.85rem; margin-right: 10px;
-                }
-            </style>
-            <span class="user-badge" id="nav-username">🐾 User: Guest</span>
-            <button class="btn btn-sm" style="background-color: #ff4757;" onclick="handleLogout()">🚪 Log Out</button>
-        </span>
-    </div>
+        <span class="file-name" id="fileName"></span>
+        <span class="spacer"></span>
+        <button type="submit" class="btn btn-primary btn-sm">${esc(t().post)}</button>
+      </div>
+    </form>`;
+}
 
-    <header>
-        <h1>Feed a Goose 🐈‍⬛</h1>
-        <p>Can you watch my cat while I'm out?</p>
-    </header>
+function renderFeed(){
+  const feed = document.getElementById("feed");
+  const note = document.getElementById("feedNote");
+  note.textContent = t().feedNote(State.posts.length);
 
-    <div class="dashboard-grid">
-        <div class="card">
-            <div class="video-container">
-                <video id="my-video" class="video-js vjs-default-skin vjs-big-play-centered" controls preload="auto" height="250" data-setup='{}'>
-                    <source src="https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" type="application/x-mpegURL">
-                </video>
-            </div>
-            <button class="btn" style="width: 100%;" id="treat-button" onclick="dispenseTreat()">Dispense Treat 🐟</button>
-            <p id="status-message" style="text-align: center; margin-top: 15px; font-weight: 600;">🟢 Dispenser active</p>
+  if(!State.posts.length){
+    feed.innerHTML = `<div class="empty"><span class="big">🐾</span>
+      <strong>${esc(t().emptyTitle)}</strong><br>${esc(t().emptySub)}</div>`;
+    return;
+  }
+
+  feed.innerHTML = State.posts.map(p => {
+    const showHuman = State.human.has(p.id);
+    const body = showHuman
+      ? `<div class="meows">${esc(meowify(p.content, State.lang, "post" + p.id))}</div>
+         <div class="human">${esc(p.content)}</div>`
+      : `<div class="meows">${esc(meowify(p.content, State.lang, "post" + p.id))}</div>`;
+
+    const comments = (p.comments || []).map(c => `
+      <div class="comment">
+        <span class="c-avatar">${pawFor(c.username)}</span>
+        <div class="c-body">
+          <div class="c-name">${esc(c.username)}</div>
+          <div class="c-text">${esc(meowify(c.content, State.lang, "c" + c.id))}</div>
         </div>
+      </div>`).join("");
 
-        <div class="card">
-            <h2>📜 meow meow meow</h2>
-            
-            <div class="wall-creator">
-                <form id="postForm" onsubmit="submitPost(event)">
-                    <textarea name="content" placeholder="Share a picture, cat thought, or coordinate a community treat session..." required></textarea>
-                    <div class="creator-actions">
-                        <div class="file-input-wrapper">
-                            <button type="button" class="btn btn-sm" style="background-color: #747d8c;">📸 Add Photo</button>
-                            <input type="file" name="image" accept="image/*" onchange="updateFileLabel(this)">
-                            <span id="file-chosen" style="font-size: 0.8rem; margin-left: 5px; color: var(--text-light);"></span>
-                        </div>
-                        <button type="submit" class="btn">Broadcast Post</button>
-                    </div>
-                </form>
-            </div>
-
-            <div class="wall-feed" id="wallFeed">
-                <p style="text-align: center; color: var(--text-light);">Gathering chronicles stream...</p>
-            </div>
+    return `
+      <article class="post">
+        <div class="post-top">
+          <span class="avatar">${pawFor(p.username)}</span>
+          <div class="post-who">
+            <div class="post-author">${esc(p.username)}</div>
+            <div class="post-time">${esc(when(p.timestamp))}</div>
+          </div>
         </div>
-    </div>
-
-    <div id="login-modal" class="modal-overlay" onclick="closeAuthModals()">
-        <div class="modal-box" onclick="event.stopPropagation()">
-            <span class="close-modal" onclick="closeAuthModals()">&times;</span>
-            <h3 style="margin-top:0;">🔑 Sign In</h3>
-            <form onsubmit="handleAuth(event, '/login')">
-                <input type="text" name="username" placeholder="Username" required>
-                <input type="password" name="password" placeholder="Password" required>
-                <button type="submit" class="btn">Login</button>
-            </form>
+        ${body}
+        ${p.image_url ? `<img class="post-img" src="${esc(p.image_url)}" alt="" loading="lazy">` : ""}
+        <div class="post-bar">
+          <button class="act ${p.user_has_liked ? "on" : ""}" onclick="like(${p.id})">
+            ${p.user_has_liked ? "❤️" : "🤍"} ${esc(t().like)} ${p.total_likes ? "· " + p.total_likes : ""}
+          </button>
+          <button class="act subtle" onclick="toggleHuman(${p.id})">
+            ${esc(showHuman ? t().hideHuman : t().showHuman)}
+          </button>
         </div>
-    </div>
-
-    <div id="register-modal" class="modal-overlay" onclick="closeAuthModals()">
-        <div class="modal-box" onclick="event.stopPropagation()">
-            <span class="close-modal" onclick="closeAuthModals()">&times;</span>
-            <h3 style="margin-top:0;">📝 Create Account</h3>
-            <p style="color: var(--text-light); font-size: 0.9rem; margin-top:-10px;">Get 20 Free 🐟 Tokens upon registration!</p>
-            <form onsubmit="handleAuth(event, '/register')">
-                <input type="text" name="username" placeholder="Username" required>
-                <input type="email" name="email" placeholder="Email Address" required>
-                <input type="password" id="reg-password" name="password" placeholder="Password" required>
-                <input type="password" id="reg-confirm" name="confirmPassword" placeholder="Confirm Password" required>
-                <button type="submit" class="btn" style="background-color: #2ed573;">Sign Up</button>
-            </form>
+        <div class="comments">
+          ${comments}
+          ${State.me ? `
+          <form class="c-form" onsubmit="submitComment(event, ${p.id})">
+            <input name="content" placeholder="${esc(t().commentPh)}" required>
+            <button type="submit" class="btn btn-ghost btn-sm">${esc(t().send)}</button>
+          </form>` : ""}
         </div>
-    </div>
+      </article>`;
+  }).join("");
+}
 
-    <script>
-        function openLogin() { document.getElementById('login-modal').style.display = 'flex'; }
-        function openRegister() { document.getElementById('register-modal').style.display = 'flex'; }
-        function closeAuthModals() {
-            document.getElementById('login-modal').style.display = 'none';
-            document.getElementById('register-modal').style.display = 'none';
-        }
-        function updateFileLabel(input) {
-            document.getElementById('file-chosen').innerText = input.files[0] ? input.files[0].name : "";
-        }
+function renderSession(){
+  const out = document.getElementById("zoneOut");
+  const inn = document.getElementById("zoneIn");
+  if(State.me && State.me.loggedIn){
+    out.style.display = "none";
+    inn.style.display = "inline-flex";
+    document.getElementById("userBadge").innerHTML =
+      `${pawFor(State.me.username)} ${esc(State.me.username)} <span class="fish">🐟 ${State.me.tokens}</span>`;
+  }else{
+    out.style.display = "inline-flex";
+    inn.style.display = "none";
+  }
+}
 
-        // --- FIXED AUTH REQUEST DISPATCHER ---
-        async function handleAuth(event, endpoint) {
-            event.preventDefault();
-            const formData = new FormData(event.target);
-            const data = Object.fromEntries(formData);
+function setStatus(text, kind=""){
+  const el = document.getElementById("feederStatus");
+  el.className = "feeder-status " + kind;
+  el.innerHTML = `<span class="sdot"></span><span></span>`;
+  el.lastElementChild.textContent = text;
+}
 
-            // Client-Side Security Pass: Validate double-entry password logic for registrations
-            if (endpoint === '/register') {
-                const pass = document.getElementById('reg-password').value;
-                const confirmPass = document.getElementById('reg-confirm').value;
-                
-                if (pass !== confirmPass) {
-                    alert("Security Error: Passwords do not match! Please verify your inputs.");
-                    return;
-                }
-            }
+function toggleHuman(id){
+  State.human.has(id) ? State.human.delete(id) : State.human.add(id);
+  renderFeed();
+}
 
-            try {
-                const response = await fetch(endpoint, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(data)
-                });
-                
-                const resData = await response.json();
-                
-                // Read the actual error string message sent down from your Express server route
-                alert(resData.message || "An unexpected server event occurred.");
-                
-                if (response.ok) {
-                    event.target.reset();
-                    closeAuthModals();
-                    loadWall();
-                    checkUserSession(); 
-                }
-            } catch (err) {
-                alert("Network error: Failed to connect to the authentication server.");
-            }
-        }
+/* ============================================================
+   6. SERVER CALLS
+   ============================================================ */
+async function loadWall(){
+  try{
+    const r = await fetch("/api/posts");
+    const d = await r.json();
+    State.posts = d.status === "Success" ? d.posts : [];
+  }catch(e){
+    State.posts = [];
+  }
+  renderFeed();
+}
 
-        // --- CORE WALL AJAX RENDERING ENGINE ---
-        async function loadWall() {
-            const feedContainer = document.getElementById('wallFeed');
-            try {
-                const response = await fetch('/api/posts');
-                const data = await response.json();
-                
-                if (data.status !== "Success") {
-                    feedContainer.innerHTML = `<p style="text-align:center; color:red;">${data.message}</p>`;
-                    return;
-                }
+async function checkSession(){
+  try{
+    const r = await fetch("/api/me");
+    State.me = await r.json();
+  }catch(e){ State.me = null; }
+  renderSession();
+  renderComposer();
+}
 
-                if (data.posts.length === 0) {
-                    feedContainer.innerHTML = `<p style="text-align:center; color:var(--text-light);">The wall is clean. Write the first chronicle!</p>`;
-                    return;
-                }
+async function auth(event, endpoint){
+  event.preventDefault();
+  const data = Object.fromEntries(new FormData(event.target));
 
-                feedContainer.innerHTML = data.posts.map(post => `
-                    <div class="wall-post">
-                        <div class="post-header">
-                            <span class="post-author">🐾 ${escapeHTML(post.username)}</span>
-                            <span class="post-time">${new Date(post.timestamp).toLocaleDateString()}</span>
-                        </div>
-                        <div class="post-content">${escapeHTML(post.content)}</div>
-                        ${post.image_url ? `<img src="${post.image_url}" class="post-img" alt="Post attachment">` : ''}
-                        
-                        <div class="post-actions">
-                            <button class="action-link ${post.user_has_liked ? 'liked' : ''}" onclick="toggleLike(${post.id})">
-                                ❤️ Like (${post.total_likes})
-                            </button>
-                        </div>
+  if(endpoint === "/register" &&
+     document.getElementById("regPass").value !== document.getElementById("regConfirm").value){
+    return toast(t().mismatch, "bad");
+  }
 
-                        <div class="comments-section">
-                            <div id="comments-list-${post.id}">
-                                ${post.comments.map(c => `
-                                    <div class="comment-item">
-                                        <span class="comment-user">${escapeHTML(c.username)}:</span>
-                                        <span>${escapeHTML(c.content)}</span>
-                                    </div>
-                                `).join('')}
-                            </div>
-                            <form class="comment-form" onsubmit="submitComment(event, ${post.id})">
-                                <input type="text" name="content" placeholder="Write a comment..." required>
-                                <button type="submit" class="btn btn-sm">Reply</button>
-                            </form>
-                        </div>
-                    </div>
-                `).join('');
-            } catch (err) {
-                feedContainer.innerHTML = `<p style="text-align:center; color:red;">Could not load network wall stream.</p>`;
-            }
-        }
+  try{
+    const r = await fetch(endpoint, {
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify(data)
+    });
+    const d = await r.json();
+    toast(d.message || "…", r.ok ? "good" : "bad");
+    if(r.ok){
+      event.target.reset();
+      closeModals();
+      await checkSession();
+      loadWall();
+    }
+  }catch(e){ toast(t().netErr, "bad"); }
+}
 
-        // --- SUBMIT COMPONENT HANDLING ---
-        async function submitPost(event) {
-            event.preventDefault();
-            const form = event.target;
-            const formData = new FormData(form);
+async function logout(){
+  try{
+    await fetch("/logout", {method:"POST"});
+    State.me = null;
+    State.human.clear();
+    renderSession(); renderComposer(); loadWall();
+  }catch(e){ toast(t().netErr, "bad"); }
+}
 
-            try {
-                const response = await fetch('/api/posts', { method: 'POST', body: formData });
-                const data = await response.json();
-                
-                if (!response.ok) throw new Error(data.message);
-                
-                form.reset();
-                document.getElementById('file-chosen').innerText = "";
-                loadWall();
-            } catch (err) {
-                alert(err.message || "Failed to broadcast thread item.");
-            }
-        }
+async function submitPost(event){
+  event.preventDefault();
+  const form = event.target;
+  const btn = form.querySelector("button[type=submit]");
+  btn.disabled = true;
+  try{
+    const r = await fetch("/api/posts", {method:"POST", body:new FormData(form)});
+    const d = await r.json();
+    if(!r.ok) throw new Error(d.message);
+    form.reset();
+    loadWall();
+  }catch(e){
+    toast(e.message || t().netErr, "bad");
+  }finally{ btn.disabled = false; }
+}
 
-        async function toggleLike(postId) {
-            try {
-                const response = await fetch(`/api/posts/${postId}/like`, { method: 'POST' });
-                if (response.status === 401) return alert("Please log in to like posts!");
-                loadWall();
-            } catch (err) {
-                console.error("Like toggle error tracking:", err);
-            }
-        }
+async function like(postId){
+  if(!State.me || !State.me.loggedIn) return toast(t().needLogin, "bad");
+  try{
+    const r = await fetch(`/api/posts/${postId}/like`, {method:"POST"});
+    if(r.status === 401) return toast(t().needLogin, "bad");
+    loadWall();
+  }catch(e){ toast(t().netErr, "bad"); }
+}
 
-        async function submitComment(event, postId) {
-            event.preventDefault();
-            const form = event.target;
-            const input = form.querySelector('input[name="content"]');
-            
-            try {
-                const response = await fetch(`/api/posts/${postId}/comments`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ content: input.value })
-                });
-                
-                const data = await response.json();
-                if (!response.ok) throw new Error(data.message);
-                
-                form.reset();
-                loadWall();
-            } catch (err) {
-                alert(err.message || "Could not publish comment reply.");
-            }
-        }
+async function submitComment(event, postId){
+  event.preventDefault();
+  const form = event.target;
+  const input = form.querySelector("input[name=content]");
+  try{
+    const r = await fetch(`/api/posts/${postId}/comments`, {
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({content: input.value})
+    });
+    const d = await r.json();
+    if(!r.ok) throw new Error(d.message);
+    form.reset();
+    loadWall();
+  }catch(e){ toast(e.message || t().netErr, "bad"); }
+}
 
-        // Security Helper: Sanitizes raw database output to neutralize HTML injection vulnerabilities
-        function escapeHTML(str) {
-            return str.replace(/[&<>'"]/g, 
-                tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)
-            );
-        }
+/* ---------- the treat button ---------- */
+const MOTOR_MS = 3000;     // matches MOTOR_DELAY in server.js
+const COOLDOWN_MS = 10000; // matches SPAM_COOLDOWN in server.js
 
-        async function dispenseTreat() {
-            const statusMsg = document.getElementById('status-message');
-            statusMsg.innerText = "🔄 Communicating with dispenser framework...";
-            
-            try {
-                const response = await fetch('/dispense');
-                const data = await response.json();
-                
-                alert(data.message);
-                
-                if (data.status === "Success") {
-                    statusMsg.innerText = "🟢 Dispense cycle complete!";
-                    // Refresh token layout instantly without breaking page flow
-                    checkUserSession();
-                } else {
-                    statusMsg.innerText = "⚠️ Action interrupted.";
-                }
-            } catch (err) {
-                statusMsg.innerText = "❌ Network transport hardware failure.";
-            }
-        }
+function fillBar(ms){
+  const fill = document.getElementById("treatFill");
+  fill.classList.remove("running");
+  fill.style.transitionDuration = "0ms";
+  fill.style.transform = "scaleX(1)";
+  requestAnimationFrame(() => {
+    fill.classList.add("running");
+    fill.style.transitionDuration = ms + "ms";
+    fill.style.transform = "scaleX(0)";
+  });
+}
 
-// --- CHECK USER STATE ON RUNTIME LOADING ---
-        async function checkUserSession() {
-            try {
-                const response = await fetch('/api/me');
-                const data = await response.json();
+function startCooldown(ms){
+  const btn = document.getElementById("treatBtn");
+  const sub = document.getElementById("treatSub");
+  State.cooldownUntil = Date.now() + ms;
+  btn.disabled = true;
+  fillBar(ms);
 
-                const loggedOutZone = document.getElementById('logged-out-zone');
-                const loggedInZone = document.getElementById('logged-in-zone');
-                const navUsername = document.getElementById('nav-username');
+  const tick = () => {
+    const left = State.cooldownUntil - Date.now();
+    if(left <= 0){
+      btn.disabled = false;
+      sub.textContent = t().dispenseSub;
+      setStatus(t().ready);
+      return;
+    }
+    sub.textContent = t().waitSec(Math.ceil(left / 1000));
+    setTimeout(tick, 250);
+  };
+  tick();
+}
 
-                if (data.loggedIn) {
-                    loggedOutZone.style.display = 'none';
-                    loggedInZone.style.display = 'inline-block';
-                    navUsername.innerText = `🐾 User: ${escapeHTML(data.username)} (🐟 ${data.tokens} Tokens)`;
-                } else {
-                    loggedOutZone.style.display = 'inline-block';
-                    loggedInZone.style.display = 'none';
-                }
-            } catch (err) {
-                console.error("Session runtime handshake failed:", err);
-            }
-        }
+async function dispense(){
+  if(!State.me || !State.me.loggedIn){
+    openModal("login");
+    return toast(t().needLogin, "bad");
+  }
+  const btn = document.getElementById("treatBtn");
+  btn.disabled = true;
+  document.getElementById("treatSub").textContent = t().dispensing;
+  setStatus(t().sending, "warn");
+  fillBar(MOTOR_MS);
 
-        // --- DISPATCH TERMINATION LOGOUT REQUEST ---
-        async function handleLogout() {
-            try {
-                const response = await fetch('/logout', { method: 'POST' });
-                if (response.ok) {
-                    alert("Goodbye!");
-                    window.location.reload(); // Refresh screen to wipe cache
-                }
-            } catch (err) {
-                alert("Logout transmission routing error.");
-            }
-        }
+  try{
+    const r = await fetch("/dispense");
+    const d = await r.json();
 
-        // Modify your existing DOMContentLoaded listener to chain both commands together cleanly
-        window.addEventListener('DOMContentLoaded', () => {
-            loadWall();
-            checkUserSession(); // <-- Added to handle login state on page load!
-        });
-    </script>
+    if(d.status === "Success"){
+      setStatus(t().dropped);
+      toast(t().dropped, "good");
+      if(State.me && typeof d.remainingTokens === "number"){
+        State.me.tokens = d.remainingTokens;
+        renderSession();
+      }
+      startCooldown(COOLDOWN_MS);
+    }else{
+      setStatus(d.message, "err");
+      toast(d.message, "bad");
+      btn.disabled = false;
+      document.getElementById("treatSub").textContent = t().dispenseSub;
+      fillBar(0);
+      checkSession();
+    }
+  }catch(e){
+    setStatus(t().offline, "err");
+    toast(t().offline, "bad");
+    btn.disabled = false;
+    document.getElementById("treatSub").textContent = t().dispenseSub;
+  }
+}
+
+/* ---------- modals ---------- */
+function openModal(which){ document.getElementById("modal-" + which).classList.add("open"); }
+function closeModals(){ document.querySelectorAll(".overlay").forEach(o => o.classList.remove("open")); }
+document.addEventListener("keydown", e => { if(e.key === "Escape") closeModals(); });
+
+/* ============================================================
+   7. BOOT
+   ============================================================ */
+document.getElementById("langSelect").addEventListener("change", e => {
+  State.lang = e.target.value;
+  localStorage.setItem("goose_lang", State.lang);
+  applyLanguage();
+});
+
+window.addEventListener("DOMContentLoaded", async () => {
+  document.getElementById("langSelect").value = State.lang;
+  applyLanguage();
+  await checkSession();
+  loadWall();
+  setInterval(loadWall, 30000);   // gentle auto-refresh of the wall
+});
+</script>
 </body>
 </html>
