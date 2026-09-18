@@ -29,11 +29,8 @@
   --radius-sm:10px;
   --shell:1180px;
 }
-
 *{box-sizing:border-box}
-
 html{-webkit-text-size-adjust:100%}
-
 body{
   margin:0;
   background:
@@ -43,59 +40,25 @@ body{
   background-attachment:fixed;
   color:var(--text);
   font-family:Inter,"Noto Sans SC","Noto Sans JP","PingFang SC","Hiragino Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
-  font-size:15px;
-  line-height:1.55;
-  -webkit-font-smoothing:antialiased;
+  font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased;
 }
-
-h1,h2,h3{
-  font-family:"Bricolage Grotesque",Inter,system-ui,sans-serif;
-  font-weight:700;
-  letter-spacing:-0.02em;
-  margin:0;
-}
-
+h1,h2,h3{font-family:"Bricolage Grotesque",Inter,system-ui,sans-serif;font-weight:700;letter-spacing:-0.02em;margin:0}
 button,input,textarea,select{font:inherit;color:inherit}
-
 :focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:6px}
 
 /* ---------- top bar ---------- */
-.topbar{
-  position:sticky;top:0;z-index:60;
-  backdrop-filter:blur(14px);
-  background:rgba(20,16,25,.78);
-  border-bottom:1px solid var(--line);
-}
-.topbar-inner{
-  max-width:var(--shell);margin:0 auto;padding:12px 20px;
-  display:flex;align-items:center;gap:14px;flex-wrap:wrap;
-}
+.topbar{position:sticky;top:0;z-index:60;backdrop-filter:blur(14px);background:rgba(20,16,25,.78);border-bottom:1px solid var(--line)}
+.topbar-inner{max-width:var(--shell);margin:0 auto;padding:12px 20px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
 .brand{display:flex;align-items:center;gap:10px;margin-right:auto;min-width:0}
-.brand-mark{
-  width:36px;height:36px;flex:none;border-radius:12px;
-  background:linear-gradient(150deg,var(--accent),#ff8a6b);
-  display:grid;place-items:center;font-size:19px;
-  box-shadow:0 6px 18px rgba(255,180,84,.22);
-}
+.brand-mark{width:36px;height:36px;flex:none;border-radius:12px;background:linear-gradient(150deg,var(--accent),#ff8a6b);display:grid;place-items:center;font-size:19px;box-shadow:0 6px 18px rgba(255,180,84,.22)}
 .brand-name{font-family:"Bricolage Grotesque",sans-serif;font-weight:800;font-size:1.12rem;letter-spacing:-.03em}
 .brand-sub{display:block;font-size:.74rem;color:var(--muted);font-weight:500;letter-spacing:0}
-
 .lang-wrap{position:relative;display:flex;align-items:center}
 .lang-wrap svg{position:absolute;right:11px;pointer-events:none;opacity:.6}
-select.lang{
-  appearance:none;-webkit-appearance:none;
-  background:var(--surface-2);border:1px solid var(--line);
-  border-radius:999px;padding:8px 30px 8px 14px;
-  font-size:.86rem;font-weight:600;cursor:pointer;
-}
+select.lang{appearance:none;-webkit-appearance:none;background:var(--surface-2);border:1px solid var(--line);border-radius:999px;padding:8px 30px 8px 14px;font-size:.86rem;font-weight:600;cursor:pointer}
 select.lang:hover{border-color:#4a3d5d}
 
-.btn{
-  border:1px solid transparent;border-radius:999px;
-  padding:9px 18px;font-size:.88rem;font-weight:600;
-  background:var(--surface-2);color:var(--text);
-  cursor:pointer;transition:transform .12s ease,background .15s ease,border-color .15s ease;
-}
+.btn{border:1px solid transparent;border-radius:999px;padding:9px 18px;font-size:.88rem;font-weight:600;background:var(--surface-2);color:var(--text);cursor:pointer;transition:transform .12s ease,background .15s ease,border-color .15s ease}
 .btn:hover{background:#32293e}
 .btn:active{transform:translateY(1px)}
 .btn-ghost{background:transparent;border-color:var(--line)}
@@ -104,224 +67,51 @@ select.lang:hover{border-color:#4a3d5d}
 .btn-primary:hover{background:#ffc470}
 .btn-sm{padding:6px 13px;font-size:.82rem}
 .btn:disabled{opacity:.45;cursor:not-allowed;transform:none}
-
-.badge{
-  display:inline-flex;align-items:center;gap:7px;
-  background:var(--surface-2);border:1px solid var(--line);
-  border-radius:999px;padding:6px 14px;font-size:.84rem;font-weight:600;
-}
+.badge{display:inline-flex;align-items:center;gap:8px;background:var(--surface-2);border:1px solid var(--line);border-radius:999px;padding:4px 14px 4px 5px;font-size:.84rem;font-weight:600}
 .badge .fish{color:var(--accent)}
+.badge .mini{width:26px;height:26px;border-radius:50%;overflow:hidden;flex:none;background:var(--ink)}
+.mod-tag{background:rgba(255,180,84,.14);color:var(--accent);border:1px solid rgba(255,180,84,.3);border-radius:999px;padding:1px 8px;font-size:.66rem;font-weight:700;letter-spacing:.05em}
 
 /* ---------- layout ---------- */
 .shell{max-width:var(--shell);margin:0 auto;padding:26px 20px 80px}
 .grid{display:grid;grid-template-columns:1fr;gap:22px}
-@media(min-width:960px){
-  .grid{grid-template-columns:minmax(0,420px) minmax(0,1fr);align-items:start}
-  .col-left{position:sticky;top:78px}
-}
-
-.panel{
-  background:var(--surface);
-  border:1px solid var(--line);
-  border-radius:var(--radius-lg);
-  padding:18px;
-}
+@media(min-width:960px){.grid{grid-template-columns:minmax(0,420px) minmax(0,1fr);align-items:start}.col-left{position:sticky;top:78px}}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-lg);padding:18px}
 
 /* ---------- camera ---------- */
 .cam{padding:14px}
 .cam-head{display:flex;align-items:center;justify-content:space-between;padding:2px 4px 12px}
 .cam-title{font-size:.95rem;font-weight:600}
-.live-pill{
-  display:inline-flex;align-items:center;gap:7px;
-  font-size:.72rem;font-weight:700;letter-spacing:.06em;
-  background:rgba(255,92,114,.13);color:#ff8797;
-  border:1px solid rgba(255,92,114,.3);
-  border-radius:999px;padding:4px 11px;
-}
+.live-pill{display:inline-flex;align-items:center;gap:7px;font-size:.72rem;font-weight:700;letter-spacing:.06em;background:rgba(255,92,114,.13);color:#ff8797;border:1px solid rgba(255,92,114,.3);border-radius:999px;padding:4px 11px}
 .dot{width:7px;height:7px;border-radius:50%;background:var(--live);animation:pulse 1.9s infinite}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.25}}
 .video-shell{border-radius:var(--radius);overflow:hidden;background:#0c0910;aspect-ratio:16/10}
 .video-js{width:100%!important;height:100%!important}
 
-/* ---------- the treat button (the one loud thing) ---------- */
+/* ---------- treat button ---------- */
 .feeder{margin-top:16px}
-.treat-btn{
-  position:relative;width:100%;overflow:hidden;
-  border:none;border-radius:18px;padding:19px 22px;
-  background:linear-gradient(135deg,#ffb454,#ff9463);
-  color:var(--accent-ink);
-  font-family:"Bricolage Grotesque",sans-serif;
-  font-size:1.14rem;font-weight:800;letter-spacing:-.01em;
-  cursor:pointer;
-  box-shadow:0 10px 26px rgba(255,148,99,.2);
-  transition:transform .12s ease,box-shadow .2s ease,filter .2s ease;
-}
+.treat-btn{position:relative;width:100%;overflow:hidden;border:none;border-radius:18px;padding:19px 22px;background:linear-gradient(135deg,#ffb454,#ff9463);color:var(--accent-ink);font-family:"Bricolage Grotesque",sans-serif;font-size:1.14rem;font-weight:800;letter-spacing:-.01em;cursor:pointer;box-shadow:0 10px 26px rgba(255,148,99,.2);transition:transform .12s ease,box-shadow .2s ease,filter .2s ease}
 .treat-btn:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 16px 34px rgba(255,148,99,.28)}
 .treat-btn:active:not(:disabled){transform:translateY(1px)}
 .treat-btn:disabled{cursor:not-allowed;filter:saturate(.35) brightness(.75);box-shadow:none}
 .treat-btn .label{position:relative;z-index:2;display:block}
 .treat-btn .sub{position:relative;z-index:2;display:block;font-family:Inter,sans-serif;font-size:.78rem;font-weight:600;opacity:.72;margin-top:3px}
-.treat-fill{
-  position:absolute;inset:0;z-index:1;
-  background:rgba(20,16,25,.45);
-  transform-origin:left;transform:scaleX(0);
-}
+.treat-fill{position:absolute;inset:0;z-index:1;background:rgba(20,16,25,.45);transform-origin:left;transform:scaleX(0)}
 .treat-fill.running{transition:transform linear}
-
-.feeder-status{
-  margin:12px 2px 2px;font-size:.84rem;color:var(--muted);
-  display:flex;align-items:center;gap:8px;min-height:20px;
-}
+.feeder-status{margin:12px 2px 2px;font-size:.84rem;color:var(--muted);display:flex;align-items:center;gap:8px;min-height:20px}
 .feeder-status .sdot{width:7px;height:7px;border-radius:50%;background:var(--ok);flex:none}
 .feeder-status.warn .sdot{background:var(--accent)}
 .feeder-status.err .sdot{background:var(--live)}
 
-/* ---------- composer ---------- */
-.feed-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin:0 4px 14px}
-.feed-head h2{font-size:1.3rem}
-.feed-note{font-size:.8rem;color:var(--muted)}
-
-.composer textarea{
-  width:100%;min-height:86px;resize:vertical;
-  background:var(--surface-2);border:1px solid var(--line);
-  border-radius:var(--radius);padding:13px 15px;
-  font-size:.95rem;line-height:1.5;
-}
-.composer textarea::placeholder{color:#7d7291}
-.composer textarea:focus{border-color:#50415f;outline:none}
-.composer-row{display:flex;align-items:center;gap:10px;margin-top:11px;flex-wrap:wrap}
-.file-btn{position:relative;overflow:hidden;display:inline-flex}
-.file-btn input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;font-size:120px}
-.file-name{font-size:.78rem;color:var(--muted);max-width:170px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.composer-row .spacer{margin-left:auto}
-
-.locked{
-  display:flex;align-items:center;justify-content:space-between;gap:12px;
-  flex-wrap:wrap;font-size:.9rem;color:var(--muted);
-}
-
-/* ---------- posts ---------- */
-.feed{margin-top:20px;display:flex;flex-direction:column;gap:16px}
-.post{
-  background:var(--surface);border:1px solid var(--line);
-  border-radius:var(--radius-lg);padding:18px;
-}
-.post-top{display:flex;align-items:center;gap:11px;margin-bottom:12px}
-.avatar{
-  width:38px;height:38px;border-radius:13px;flex:none;
-  display:grid;place-items:center;font-size:17px;
-  background:var(--surface-2);border:1px solid var(--line);
-}
-.post-who{min-width:0}
-.post-author{font-weight:600;font-size:.94rem}
-.post-time{font-size:.76rem;color:var(--muted)}
-
-.meows{
-  font-family:"Bricolage Grotesque",sans-serif;
-  font-size:1.16rem;font-weight:500;line-height:1.45;
-  letter-spacing:.01em;word-break:break-word;
-  margin:2px 0 12px;
-}
-.human{
-  border-left:2px solid var(--line);
-  padding:2px 0 2px 12px;margin:-4px 0 12px;
-  color:var(--muted);font-size:.9rem;white-space:pre-wrap;word-break:break-word;
-}
-.post-img{width:100%;max-height:420px;object-fit:cover;border-radius:var(--radius);margin-bottom:12px;display:block;background:var(--surface-2)}
-
-.post-bar{display:flex;align-items:center;gap:6px;border-top:1px solid var(--line);padding-top:10px}
-.act{
-  background:none;border:none;cursor:pointer;
-  color:var(--muted);font-size:.85rem;font-weight:600;
-  padding:6px 11px;border-radius:999px;
-  display:inline-flex;align-items:center;gap:6px;
-  transition:background .15s ease,color .15s ease;
-}
-.act:hover{background:var(--surface-2);color:var(--text)}
-.act.on{color:var(--live)}
-.act.subtle{margin-left:auto;font-weight:500;font-size:.8rem}
-
-.comments{margin-top:12px;display:flex;flex-direction:column;gap:9px}
-.comment{display:flex;gap:9px;align-items:flex-start}
-.c-avatar{width:26px;height:26px;border-radius:9px;flex:none;display:grid;place-items:center;font-size:12px;background:var(--surface-2);border:1px solid var(--line)}
-.c-body{background:var(--surface-2);border-radius:12px;padding:7px 12px;min-width:0}
-.c-name{font-size:.78rem;font-weight:600;color:var(--muted)}
-.c-text{font-family:"Bricolage Grotesque",sans-serif;font-size:.95rem;word-break:break-word}
-.c-form{display:flex;gap:8px;margin-top:4px}
-.c-form input{
-  flex:1;min-width:0;background:var(--surface-2);border:1px solid var(--line);
-  border-radius:999px;padding:8px 15px;font-size:.87rem;
-}
-.c-form input:focus{border-color:#50415f;outline:none}
-
-.empty{
-  border:1px dashed var(--line);border-radius:var(--radius-lg);
-  padding:44px 24px;text-align:center;color:var(--muted);
-}
-.empty .big{font-size:2rem;display:block;margin-bottom:8px}
-
-/* ---------- modals ---------- */
-.overlay{
-  position:fixed;inset:0;z-index:100;display:none;
-  background:rgba(10,7,14,.72);backdrop-filter:blur(4px);
-  padding:20px;overflow:auto;
-}
-.overlay.open{display:grid;place-items:center}
-.modal{
-  width:100%;max-width:400px;background:var(--surface);
-  border:1px solid var(--line);border-radius:var(--radius-lg);
-  padding:26px;position:relative;
-}
-.modal h3{font-size:1.25rem;margin-bottom:4px}
-.modal p.hint{color:var(--muted);font-size:.86rem;margin:0 0 18px}
-.modal form{display:flex;flex-direction:column;gap:10px}
-.modal input{
-  background:var(--surface-2);border:1px solid var(--line);
-  border-radius:var(--radius-sm);padding:11px 14px;font-size:.92rem;
-}
-.modal input:focus{border-color:#50415f;outline:none}
-.modal .btn-primary{margin-top:6px;padding:11px}
-.x{
-  position:absolute;top:14px;right:14px;background:none;border:none;
-  color:var(--muted);font-size:1.4rem;line-height:1;cursor:pointer;padding:4px 8px;border-radius:8px;
-}
-.x:hover{color:var(--text);background:var(--surface-2)}
-
-/* ---------- toasts ---------- */
-#toasts{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);z-index:200;display:flex;flex-direction:column;gap:9px;align-items:center;width:calc(100% - 32px);max-width:400px}
-.toast{
-  background:var(--surface-2);border:1px solid var(--line);
-  border-radius:14px;padding:11px 17px;font-size:.88rem;font-weight:500;
-  box-shadow:0 12px 30px rgba(0,0,0,.4);
-  display:flex;gap:9px;align-items:center;
-}
-.toast.good{border-color:rgba(102,217,160,.4)}
-.toast.bad{border-color:rgba(255,92,114,.4)}
-
-
-/* ---------- treat line (twitch-chat style) ---------- */
+/* ---------- treat line ---------- */
 .queue{margin-top:14px;border-top:1px solid var(--line);padding-top:13px}
-.queue-head{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:0 2px 9px;font-size:.78rem;font-weight:600;color:var(--muted);
-}
-.queue-count{
-  background:var(--surface-2);border:1px solid var(--line);
-  border-radius:999px;padding:2px 9px;font-size:.72rem;
-}
-.queue-list{
-  display:flex;flex-direction:column;gap:2px;
-  max-height:176px;overflow-y:auto;overscroll-behavior:contain;
-  padding-right:4px;
-}
+.queue-head{display:flex;align-items:center;justify-content:space-between;padding:0 2px 9px;font-size:.78rem;font-weight:600;color:var(--muted)}
+.queue-count{background:var(--surface-2);border:1px solid var(--line);border-radius:999px;padding:2px 9px;font-size:.72rem}
+.queue-list{display:flex;flex-direction:column;gap:2px;max-height:176px;overflow-y:auto;overscroll-behavior:contain;padding-right:4px}
 .queue-list::-webkit-scrollbar{width:6px}
 .queue-list::-webkit-scrollbar-thumb{background:#3d3350;border-radius:99px}
 .queue-list::-webkit-scrollbar-track{background:transparent}
-.q-row{
-  display:flex;align-items:baseline;gap:7px;
-  font-size:.87rem;line-height:1.35;padding:5px 8px;border-radius:9px;
-  animation:slideIn .28s ease both;
-}
+.q-row{display:flex;align-items:baseline;gap:7px;font-size:.87rem;line-height:1.35;padding:5px 8px;border-radius:9px;animation:slideIn .28s ease both}
 .q-row.serving{background:rgba(255,180,84,.09);box-shadow:inset 0 0 0 1px rgba(255,180,84,.2)}
 .q-row .who{font-weight:700;white-space:nowrap}
 .q-row .said{color:var(--muted);min-width:0}
@@ -331,9 +121,112 @@ select.lang:hover{border-color:#4a3d5d}
 @keyframes shake{0%,100%{transform:rotate(-8deg)}50%{transform:rotate(8deg)}}
 .queue-empty{font-size:.83rem;color:#6f6584;padding:8px 8px 4px}
 
-@media (prefers-reduced-motion:reduce){
-  *{animation:none!important;transition:none!important}
+/* ---------- composer ---------- */
+.feed-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin:0 4px 14px}
+.feed-head h2{font-size:1.3rem}
+.feed-note{font-size:.8rem;color:var(--muted)}
+.composer textarea{width:100%;min-height:86px;resize:vertical;background:var(--surface-2);border:1px solid var(--line);border-radius:var(--radius);padding:13px 15px;font-size:.95rem;line-height:1.5}
+.composer textarea::placeholder{color:#7d7291}
+.composer textarea:focus{border-color:#50415f;outline:none}
+.composer-row{display:flex;align-items:center;gap:10px;margin-top:11px;flex-wrap:wrap}
+.file-btn{position:relative;overflow:hidden;display:inline-flex}
+.file-btn input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;font-size:120px}
+.file-name{font-size:.78rem;color:var(--muted);max-width:170px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.composer-row .spacer{margin-left:auto}
+.locked{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;font-size:.9rem;color:var(--muted)}
+
+/* ---------- posts ---------- */
+.feed{margin-top:20px;display:flex;flex-direction:column;gap:16px}
+.post{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-lg);padding:18px}
+.post.leaving{opacity:0;transform:scale(.97);transition:opacity .22s ease,transform .22s ease}
+.post-top{display:flex;align-items:center;gap:11px;margin-bottom:12px}
+.avatar{width:40px;height:40px;border-radius:14px;flex:none;overflow:hidden;background:var(--surface-2);border:1px solid var(--line)}
+.avatar svg,.c-avatar svg,.mini svg,.big-face svg{display:block;width:100%;height:100%}
+.post-who{min-width:0}
+.post-author{font-weight:600;font-size:.94rem;cursor:help;border-bottom:1px dotted transparent}
+.post-author:hover{border-bottom-color:var(--muted)}
+.post-time{font-size:.76rem;color:var(--muted)}
+.meows{font-family:"Bricolage Grotesque",sans-serif;font-size:1.16rem;font-weight:500;line-height:1.45;letter-spacing:.01em;word-break:break-word;margin:2px 0 12px}
+.human{border-left:2px solid var(--line);padding:2px 0 2px 12px;margin:-4px 0 12px;color:var(--muted);font-size:.9rem;white-space:pre-wrap;word-break:break-word}
+.post-img{width:100%;max-height:420px;object-fit:cover;border-radius:var(--radius);margin-bottom:12px;display:block;background:var(--surface-2)}
+.post-bar{display:flex;align-items:center;gap:6px;border-top:1px solid var(--line);padding-top:10px;flex-wrap:wrap}
+.act{background:none;border:none;cursor:pointer;color:var(--muted);font-size:.85rem;font-weight:600;padding:6px 11px;border-radius:999px;display:inline-flex;align-items:center;gap:6px;transition:background .15s ease,color .15s ease}
+.act:hover{background:var(--surface-2);color:var(--text)}
+.act.on{color:var(--live)}
+.act.subtle{margin-left:auto;font-weight:500;font-size:.8rem}
+.act.danger:hover{background:rgba(255,92,114,.12);color:#ff8797}
+.comments{margin-top:12px;display:flex;flex-direction:column;gap:9px}
+.comment{display:flex;gap:9px;align-items:flex-start}
+.c-avatar{width:28px;height:28px;border-radius:10px;flex:none;overflow:hidden;background:var(--surface-2);border:1px solid var(--line)}
+.c-body{background:var(--surface-2);border-radius:12px;padding:7px 12px;min-width:0;position:relative}
+.c-name{font-size:.78rem;font-weight:600;color:var(--muted);cursor:help}
+.c-text{font-family:"Bricolage Grotesque",sans-serif;font-size:.95rem;word-break:break-word}
+.c-del{background:none;border:none;color:#6f6584;cursor:pointer;font-size:.76rem;padding:4px 6px;border-radius:7px;align-self:center}
+.c-del:hover{color:#ff8797;background:rgba(255,92,114,.1)}
+.c-form{display:flex;gap:8px;margin-top:4px}
+.c-form input{flex:1;min-width:0;background:var(--surface-2);border:1px solid var(--line);border-radius:999px;padding:8px 15px;font-size:.87rem}
+.c-form input:focus{border-color:#50415f;outline:none}
+.empty{border:1px dashed var(--line);border-radius:var(--radius-lg);padding:44px 24px;text-align:center;color:var(--muted)}
+.empty .big{font-size:2rem;display:block;margin-bottom:8px}
+
+/* ---------- hover profile card ---------- */
+#profileCard{
+  position:fixed;z-index:150;width:250px;pointer-events:none;
+  background:var(--surface);border:1px solid var(--line);border-radius:18px;
+  padding:15px;box-shadow:0 20px 44px rgba(0,0,0,.5);
+  opacity:0;transform:translateY(6px);transition:opacity .16s ease,transform .16s ease;
 }
+#profileCard.show{opacity:1;transform:none}
+.pc-top{display:flex;align-items:center;gap:11px;margin-bottom:12px}
+.big-face{width:52px;height:52px;border-radius:16px;overflow:hidden;flex:none;background:var(--surface-2);border:1px solid var(--line)}
+.pc-name{font-family:"Bricolage Grotesque",sans-serif;font-weight:700;font-size:1.06rem;line-height:1.2}
+.pc-handle{font-size:.76rem;color:var(--muted)}
+.pc-rows{display:flex;flex-direction:column;gap:6px}
+.pc-row{display:flex;gap:10px;font-size:.83rem;align-items:baseline}
+.pc-row .k{color:#6f6584;width:74px;flex:none}
+.pc-row .v{color:var(--text);min-width:0;word-break:break-word}
+.pc-empty{font-size:.82rem;color:#6f6584}
+
+/* ---------- modals ---------- */
+.overlay{position:fixed;inset:0;z-index:100;display:none;background:rgba(10,7,14,.72);backdrop-filter:blur(4px);padding:20px;overflow:auto}
+.overlay.open{display:grid;place-items:center}
+.modal{width:100%;max-width:440px;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-lg);padding:26px;position:relative}
+.modal h3{font-size:1.25rem;margin-bottom:4px}
+.modal p.hint{color:var(--muted);font-size:.86rem;margin:0 0 18px}
+.modal form{display:flex;flex-direction:column;gap:10px}
+.modal input,.modal select{background:var(--surface-2);border:1px solid var(--line);border-radius:var(--radius-sm);padding:11px 14px;font-size:.92rem;width:100%}
+.modal select{appearance:none;-webkit-appearance:none;cursor:pointer}
+.modal input:focus,.modal select:focus{border-color:#50415f;outline:none}
+.modal input[type=date]{color-scheme:dark}
+.field-label{font-size:.76rem;color:var(--muted);font-weight:600;margin:4px 0 -4px}
+.x{position:absolute;top:14px;right:14px;background:none;border:none;color:var(--muted);font-size:1.4rem;line-height:1;cursor:pointer;padding:4px 8px;border-radius:8px}
+.x:hover{color:var(--text);background:var(--surface-2)}
+.steps{display:flex;gap:6px;margin-bottom:16px}
+.step-pip{height:3px;flex:1;background:var(--surface-2);border-radius:99px}
+.step-pip.on{background:var(--accent)}
+.wizard-nav{display:flex;gap:10px;margin-top:6px}
+.wizard-nav .btn{flex:1;padding:11px}
+
+/* ---------- avatar picker ---------- */
+.face-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;max-height:270px;overflow-y:auto;padding:4px;margin-bottom:4px}
+@media(max-width:480px){.face-grid{grid-template-columns:repeat(5,1fr)}}
+.face-grid::-webkit-scrollbar{width:6px}
+.face-grid::-webkit-scrollbar-thumb{background:#3d3350;border-radius:99px}
+.face-opt{aspect-ratio:1;border-radius:13px;border:2px solid transparent;background:var(--surface-2);cursor:pointer;padding:2px;overflow:hidden;transition:transform .12s ease,border-color .12s ease}
+.face-opt:hover{transform:scale(1.08)}
+.face-opt.sel{border-color:var(--accent);background:rgba(255,180,84,.12)}
+.face-opt svg{display:block;width:100%;height:100%}
+.picked{display:flex;align-items:center;gap:11px;background:var(--surface-2);border-radius:14px;padding:10px 13px;margin-bottom:12px}
+.picked .big-face{width:44px;height:44px}
+.picked-label{font-size:.82rem;color:var(--muted)}
+
+/* ---------- toasts ---------- */
+#toasts{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);z-index:200;display:flex;flex-direction:column;gap:9px;align-items:center;width:calc(100% - 32px);max-width:400px}
+.toast{background:var(--surface-2);border:1px solid var(--line);border-radius:14px;padding:11px 17px;font-size:.88rem;font-weight:500;box-shadow:0 12px 30px rgba(0,0,0,.4);display:flex;gap:9px;align-items:center}
+.toast.good{border-color:rgba(102,217,160,.4)}
+.toast.bad{border-color:rgba(255,92,114,.4)}
+
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
 <body>
@@ -353,6 +246,9 @@ select.lang:hover{border-color:#4a3d5d}
         <option value="en">English</option>
         <option value="fr">Français</option>
         <option value="it">Italiano</option>
+        <option value="pt">Português</option>
+        <option value="pl">Polski</option>
+        <option value="sv">Svenska</option>
         <option value="ru">Русский</option>
         <option value="zh">中文</option>
         <option value="ja">日本語</option>
@@ -362,7 +258,7 @@ select.lang:hover{border-color:#4a3d5d}
 
     <span id="zoneOut">
       <button class="btn btn-ghost" onclick="openModal('login')" data-i18n="signIn"></button>
-      <button class="btn btn-primary" onclick="openModal('register')" data-i18n="signUp"></button>
+      <button class="btn btn-primary" onclick="openRegister()" data-i18n="signUp"></button>
     </span>
 
     <span id="zoneIn" style="display:none;align-items:center;gap:10px">
@@ -375,7 +271,6 @@ select.lang:hover{border-color:#4a3d5d}
 <main class="shell">
   <div class="grid">
 
-    <!-- LEFT: camera + feeder -->
     <div class="col-left">
       <section class="panel cam">
         <div class="cam-head">
@@ -407,15 +302,12 @@ select.lang:hover{border-color:#4a3d5d}
       </section>
     </div>
 
-    <!-- RIGHT: the wall -->
     <div>
       <div class="feed-head">
         <h2 data-i18n="wallTitle"></h2>
         <span class="feed-note" id="feedNote"></span>
       </div>
-
       <section class="panel composer" id="composer"></section>
-
       <div class="feed" id="feed">
         <div class="empty"><span class="big">🐾</span><span data-i18n="loading"></span></div>
       </div>
@@ -424,13 +316,13 @@ select.lang:hover{border-color:#4a3d5d}
   </div>
 </main>
 
-<!-- MODALS -->
+<!-- SIGN IN -->
 <div class="overlay" id="modal-login" onclick="if(event.target===this)closeModals()">
-  <div class="modal">
+  <div class="modal" style="max-width:400px">
     <button class="x" onclick="closeModals()" aria-label="Close">&times;</button>
     <h3 data-i18n="signIn"></h3>
     <p class="hint" data-i18n="loginHint"></p>
-    <form onsubmit="auth(event,'/login')">
+    <form onsubmit="doLogin(event)">
       <input name="username" data-ph="username" required autocomplete="username">
       <input type="password" name="password" data-ph="password" required autocomplete="current-password">
       <button class="btn btn-primary" type="submit" data-i18n="signIn"></button>
@@ -438,292 +330,447 @@ select.lang:hover{border-color:#4a3d5d}
   </div>
 </div>
 
+<!-- SIGN UP — three steps -->
 <div class="overlay" id="modal-register" onclick="if(event.target===this)closeModals()">
   <div class="modal">
     <button class="x" onclick="closeModals()" aria-label="Close">&times;</button>
-    <h3 data-i18n="signUp"></h3>
-    <p class="hint" data-i18n="registerHint"></p>
-    <form onsubmit="auth(event,'/register')">
-      <input name="username" data-ph="petName" required autocomplete="username">
-      <input type="email" name="email" data-ph="email" required autocomplete="email">
-      <input type="password" id="regPass" name="password" data-ph="password" required autocomplete="new-password">
-      <input type="password" id="regConfirm" name="confirmPassword" data-ph="confirm" required autocomplete="new-password">
-      <button class="btn btn-primary" type="submit" data-i18n="signUp"></button>
-    </form>
+    <div class="steps">
+      <span class="step-pip on" id="pip1"></span>
+      <span class="step-pip" id="pip2"></span>
+      <span class="step-pip" id="pip3"></span>
+    </div>
+
+    <!-- step 1: the account -->
+    <div class="wizard-step" id="step1">
+      <h3 data-i18n="signUp"></h3>
+      <p class="hint" data-i18n="registerHint"></p>
+      <form onsubmit="goStep2(event)">
+        <input name="username" id="regUser" data-ph="petName" required autocomplete="username">
+        <input type="email" name="email" id="regEmail" data-ph="email" required autocomplete="email">
+        <input type="password" id="regPass" data-ph="password" required minlength="6" autocomplete="new-password">
+        <input type="password" id="regConfirm" data-ph="confirm" required minlength="6" autocomplete="new-password">
+        <button class="btn btn-primary" type="submit" data-i18n="next"></button>
+      </form>
+    </div>
+
+    <!-- step 2: about the cat -->
+    <div class="wizard-step" id="step2" style="display:none">
+      <h3 data-i18n="aboutCat"></h3>
+      <p class="hint" data-i18n="aboutCatHint"></p>
+      <form onsubmit="goStep3(event)">
+        <div class="field-label" data-i18n="catName"></div>
+        <input id="regCatName" data-ph="catNamePh" required>
+
+        <div class="field-label" data-i18n="breed"></div>
+        <select id="regBreed" required></select>
+
+        <div class="field-label" data-i18n="birthdayLabel"></div>
+        <input type="date" id="regBirthday" required>
+
+        <div class="field-label" data-i18n="country"></div>
+        <select id="regCountry" required></select>
+
+        <div class="field-label" data-i18n="favFood"></div>
+        <input id="regFood" data-ph="favFoodPh" required>
+
+        <div class="wizard-nav">
+          <button type="button" class="btn btn-ghost" onclick="showStep(1)" data-i18n="back"></button>
+          <button type="submit" class="btn btn-primary" data-i18n="next"></button>
+        </div>
+      </form>
+    </div>
+
+    <!-- step 3: pick a face -->
+    <div class="wizard-step" id="step3" style="display:none">
+      <h3 data-i18n="pickFace"></h3>
+      <p class="hint" data-i18n="pickFaceHint"></p>
+      <div class="picked">
+        <span class="big-face" id="pickedFace"></span>
+        <span class="picked-label" id="pickedLabel"></span>
+      </div>
+      <div class="face-grid" id="faceGrid"></div>
+      <div class="wizard-nav">
+        <button type="button" class="btn btn-ghost" onclick="showStep(2)" data-i18n="back"></button>
+        <button type="button" class="btn btn-primary" onclick="finishRegister()" data-i18n="createAccount"></button>
+      </div>
+    </div>
   </div>
 </div>
 
+<div id="profileCard"></div>
 <div id="toasts"></div>
 
 <script>
 /* ============================================================
-   1. LANGUAGES — interface strings
+   1. CAT FACES
+   Avatars are drawn as SVG from an id like "ginger-tabby-gold",
+   so there are dozens of combinations and nothing to upload.
    ============================================================ */
-const I18N = {
-  en:{
-    tagline:"a wall for cats, by cats",
-    signIn:"Sign in", signUp:"Sign up", logOut:"Log out",
-    tokens:"tokens",
-    camTitle:"Goose, live",
-    dispense:"Drop a treat",
-    dispenseSub:"one 🐟 token",
-    dispensing:"Dropping…",
-    waitSec:s=>`Wait ${s}s`,
-    ready:"Dispenser ready",
-    queueTitle:"Treat line",
-    queueEmpty:"Nobody in line. The bowl is empty.",
-    inLineFor:"is in line to feed Goose",
-    feedingNow:"is feeding Goose right now",
-    thanks:n=>`Goose says thank you ${n} for the treat!`,
-    yourTurn:"Your treat is dropping…",
-    queuedSub:p=>`#${p} in line`,
-    joined:"You're in line.",
-    alreadyQueued:"You're already in line — wait for your treat to drop.",
-    noTokens:"Out of 🐟 tokens.",
-    sending:"Talking to the dispenser…",
-    dropped:"Treat dropped. Goose says thanks.",
-    offline:"Dispenser didn't answer. Try again.",
-    wallTitle:"The wall",
-    feedNote:n=>`${n} ${n===1?"post":"posts"}`,
-    composerPh:"Say something. It comes out as meows anyway.",
-    addPhoto:"Photo", post:"Post",
-    lockedMsg:"Sign up as your pet to post, like and comment.",
-    loading:"Fetching meows…",
-    emptyTitle:"Nothing on the wall yet.",
-    emptySub:"Be the first cat to say something.",
-    like:"Like", showHuman:"Read in human", hideHuman:"Back to meows",
-    commentPh:"Meow back…", send:"Send",
-    loginHint:"Welcome back, you beautiful animal.",
-    registerHint:"New cats get 20 🐟 tokens to spend on Goose.",
-    username:"Username", petName:"Your pet's name", email:"Email",
-    password:"Password", confirm:"Confirm password",
-    mismatch:"Passwords don't match.",
-    netErr:"Can't reach the server.",
-    needLogin:"Sign in first."
-  },
-  fr:{
-    tagline:"un mur pour chats, par des chats",
-    signIn:"Connexion", signUp:"S'inscrire", logOut:"Déconnexion",
-    tokens:"jetons",
-    camTitle:"Goose, en direct",
-    dispense:"Lâcher une friandise",
-    dispenseSub:"un jeton 🐟",
-    dispensing:"Distribution…",
-    waitSec:s=>`Attendez ${s}s`,
-    ready:"Distributeur prêt",
-    queueTitle:"File d'attente",
-    queueEmpty:"Personne dans la file. La gamelle est vide.",
-    inLineFor:"attend son tour pour nourrir Goose",
-    feedingNow:"nourrit Goose en ce moment",
-    thanks:n=>`Goose dit merci à ${n} pour la friandise !`,
-    yourTurn:"Votre friandise tombe…",
-    queuedSub:p=>`${p}ᵉ dans la file`,
-    joined:"Vous êtes dans la file.",
-    alreadyQueued:"Vous êtes déjà dans la file — attendez votre friandise.",
-    noTokens:"Plus de jetons 🐟.",
-    sending:"Connexion au distributeur…",
-    dropped:"Friandise lâchée. Goose vous remercie.",
-    offline:"Le distributeur ne répond pas. Réessayez.",
-    wallTitle:"Le mur",
-    feedNote:n=>`${n} ${n===1?"publication":"publications"}`,
-    composerPh:"Dites quelque chose. Ça sortira en miaous.",
-    addPhoto:"Photo", post:"Publier",
-    lockedMsg:"Inscrivez votre animal pour publier, aimer et commenter.",
-    loading:"Récupération des miaous…",
-    emptyTitle:"Le mur est vide.",
-    emptySub:"Soyez le premier chat à parler.",
-    like:"J'aime", showHuman:"Lire en humain", hideHuman:"Retour aux miaous",
-    commentPh:"Miaulez une réponse…", send:"Envoyer",
-    loginHint:"Content de vous revoir, bel animal.",
-    registerHint:"Les nouveaux chats reçoivent 20 jetons 🐟.",
-    username:"Nom d'utilisateur", petName:"Nom de votre animal", email:"E-mail",
-    password:"Mot de passe", confirm:"Confirmer le mot de passe",
-    mismatch:"Les mots de passe ne correspondent pas.",
-    netErr:"Serveur injoignable.",
-    needLogin:"Connectez-vous d'abord."
-  },
-  it:{
-    tagline:"un muro per gatti, scritto dai gatti",
-    signIn:"Accedi", signUp:"Registrati", logOut:"Esci",
-    tokens:"gettoni",
-    camTitle:"Goose, in diretta",
-    dispense:"Lancia un premietto",
-    dispenseSub:"un gettone 🐟",
-    dispensing:"In caduta…",
-    waitSec:s=>`Aspetta ${s}s`,
-    ready:"Distributore pronto",
-    queueTitle:"Fila per il premietto",
-    queueEmpty:"Nessuno in fila. La ciotola tace.",
-    inLineFor:"è in fila per dare da mangiare a Goose",
-    feedingNow:"sta dando da mangiare a Goose",
-    thanks:n=>`Goose ringrazia ${n} per il premietto!`,
-    yourTurn:"Il tuo premietto sta cadendo…",
-    queuedSub:p=>`${p}° in fila`,
-    joined:"Sei in fila.",
-    alreadyQueued:"Sei già in fila — aspetta il tuo premietto.",
-    noTokens:"Gettoni 🐟 esauriti.",
-    sending:"Contatto il distributore…",
-    dropped:"Premietto lanciato. Goose ringrazia.",
-    offline:"Il distributore non risponde. Riprova.",
-    wallTitle:"Il muro",
-    feedNote:n=>`${n} ${n===1?"post":"post"}`,
-    composerPh:"Scrivi qualcosa. Uscirà comunque in miao.",
-    addPhoto:"Foto", post:"Pubblica",
-    lockedMsg:"Registra il tuo animale per pubblicare, mettere mi piace e commentare.",
-    loading:"Recupero dei miao…",
-    emptyTitle:"Il muro è vuoto.",
-    emptySub:"Sii il primo gatto a parlare.",
-    like:"Mi piace", showHuman:"Leggi in umano", hideHuman:"Torna ai miao",
-    commentPh:"Rispondi con un miao…", send:"Invia",
-    loginHint:"Bentornato, splendido animale.",
-    registerHint:"I gatti nuovi ricevono 20 gettoni 🐟.",
-    username:"Nome utente", petName:"Nome del tuo animale", email:"Email",
-    password:"Password", confirm:"Conferma password",
-    mismatch:"Le password non coincidono.",
-    netErr:"Server irraggiungibile.",
-    needLogin:"Prima accedi."
-  },
-  ru:{
-    tagline:"стена для котов, написанная котами",
-    signIn:"Войти", signUp:"Регистрация", logOut:"Выйти",
-    tokens:"жетонов",
-    camTitle:"Гусь в прямом эфире",
-    dispense:"Бросить лакомство",
-    dispenseSub:"один жетон 🐟",
-    dispensing:"Падает…",
-    waitSec:s=>`Подождите ${s} с`,
-    ready:"Кормушка готова",
-    queueTitle:"Очередь за лакомством",
-    queueEmpty:"Очереди нет. Миска молчит.",
-    inLineFor:"в очереди, чтобы покормить Гуся",
-    feedingNow:"кормит Гуся прямо сейчас",
-    thanks:n=>`Гусь благодарит ${n} за лакомство!`,
-    yourTurn:"Ваше лакомство падает…",
-    queuedSub:p=>`${p}-й в очереди`,
-    joined:"Вы в очереди.",
-    alreadyQueued:"Вы уже в очереди — дождитесь своего лакомства.",
-    noTokens:"Жетоны 🐟 закончились.",
-    sending:"Связь с кормушкой…",
-    dropped:"Лакомство упало. Гусь благодарит.",
-    offline:"Кормушка не отвечает. Попробуйте ещё раз.",
-    wallTitle:"Стена",
-    feedNote:n=>`Записей: ${n}`,
-    composerPh:"Напишите что угодно. Всё равно выйдет мяу.",
-    addPhoto:"Фото", post:"Опубликовать",
-    lockedMsg:"Зарегистрируйте питомца, чтобы писать, лайкать и комментировать.",
-    loading:"Загружаем мяу…",
-    emptyTitle:"Стена пуста.",
-    emptySub:"Станьте первым котом, который заговорит.",
-    like:"Нравится", showHuman:"По-человечески", hideHuman:"Обратно в мяу",
-    commentPh:"Мяукните в ответ…", send:"Отправить",
-    loginHint:"С возвращением, прекрасное животное.",
-    registerHint:"Новые коты получают 20 жетонов 🐟.",
-    username:"Имя пользователя", petName:"Имя питомца", email:"Почта",
-    password:"Пароль", confirm:"Повторите пароль",
-    mismatch:"Пароли не совпадают.",
-    netErr:"Сервер недоступен.",
-    needLogin:"Сначала войдите."
-  },
-  zh:{
-    tagline:"喵星人的留言墙",
-    signIn:"登录", signUp:"注册", logOut:"退出",
-    tokens:"代币",
-    camTitle:"Goose 直播中",
-    dispense:"投一颗零食",
-    dispenseSub:"消耗一枚 🐟",
-    dispensing:"投放中…",
-    waitSec:s=>`请等待 ${s} 秒`,
-    ready:"喂食器就绪",
-    queueTitle:"投喂排队",
-    queueEmpty:"暂时没人排队，饭碗很安静。",
-    inLineFor:"正在排队投喂 Goose",
-    feedingNow:"正在投喂 Goose",
-    thanks:n=>`Goose 谢谢 ${n} 的零食！`,
-    yourTurn:"你的零食正在投放…",
-    queuedSub:p=>`队列第 ${p} 位`,
-    joined:"已加入队列。",
-    alreadyQueued:"你已经在排队了，请等待零食投放。",
-    noTokens:"🐟 代币不足。",
-    sending:"正在连接喂食器…",
-    dropped:"零食已投放，Goose 谢谢你。",
-    offline:"喂食器没有回应，请重试。",
-    wallTitle:"留言墙",
-    feedNote:n=>`${n} 条动态`,
-    composerPh:"随便写点什么，反正发出来都是喵。",
-    addPhoto:"图片", post:"发布",
-    lockedMsg:"以宠物身份注册后即可发布、点赞和评论。",
-    loading:"正在加载喵…",
-    emptyTitle:"墙上还什么都没有。",
-    emptySub:"当第一只开口的猫吧。",
-    like:"赞", showHuman:"看人类语", hideHuman:"回到喵语",
-    commentPh:"喵一句…", send:"发送",
-    loginHint:"欢迎回来，可爱的小动物。",
-    registerHint:"新猫注册即得 20 枚 🐟 代币。",
-    username:"用户名", petName:"宠物的名字", email:"邮箱",
-    password:"密码", confirm:"确认密码",
-    mismatch:"两次密码不一致。",
-    netErr:"无法连接服务器。",
-    needLogin:"请先登录。"
-  },
-  ja:{
-    tagline:"猫による猫のための掲示板",
-    signIn:"ログイン", signUp:"新規登録", logOut:"ログアウト",
-    tokens:"トークン",
-    camTitle:"Goose、ライブ中",
-    dispense:"おやつを落とす",
-    dispenseSub:"🐟 トークン 1 枚",
-    dispensing:"落下中…",
-    waitSec:s=>`あと ${s} 秒`,
-    ready:"給餌器は準備OK",
-    queueTitle:"おやつの列",
-    queueEmpty:"待っている人はいません。お皿は静かです。",
-    inLineFor:"が Goose におやつをあげる順番を待っています",
-    feedingNow:"が Goose におやつをあげています",
-    thanks:n=>`Goose が ${n} さんにお礼を言っています！`,
-    yourTurn:"おやつが落ちています…",
-    queuedSub:p=>`列の ${p} 番目`,
-    joined:"列に並びました。",
-    alreadyQueued:"すでに列に並んでいます。おやつが落ちるまでお待ちください。",
-    noTokens:"🐟 トークンがありません。",
-    sending:"給餌器に接続中…",
-    dropped:"おやつが落ちました。Goose が喜んでいます。",
-    offline:"給餌器が応答しません。もう一度どうぞ。",
-    wallTitle:"みんなの壁",
-    feedNote:n=>`${n} 件の投稿`,
-    composerPh:"なんでもどうぞ。どうせ にゃー になります。",
-    addPhoto:"写真", post:"投稿",
-    lockedMsg:"ペットとして登録すると投稿・いいね・コメントができます。",
-    loading:"にゃーを読み込み中…",
-    emptyTitle:"まだ何もありません。",
-    emptySub:"最初に鳴く猫になりましょう。",
-    like:"いいね", showHuman:"人間語で読む", hideHuman:"にゃー に戻す",
-    commentPh:"にゃーで返信…", send:"送信",
-    loginHint:"おかえりなさい、すてきな動物さん。",
-    registerHint:"新入りの猫には 🐟 トークンを20枚。",
-    username:"ユーザー名", petName:"ペットの名前", email:"メール",
-    password:"パスワード", confirm:"パスワード（確認）",
-    mismatch:"パスワードが一致しません。",
-    netErr:"サーバーに接続できません。",
-    needLogin:"先にログインしてください。"
-  }
+const FURS = {
+  black:     {base:"#413c4c", dark:"#2c2836", light:"#565067", name:"Black"},
+  charcoal:  {base:"#5a5566", dark:"#433f4e", light:"#726c80", name:"Charcoal"},
+  grey:      {base:"#99a2ae", dark:"#7b838f", light:"#b4bcc7", name:"Grey"},
+  bluegrey:  {base:"#8d9cb2", dark:"#6f7d93", light:"#a9b6c9", name:"Blue"},
+  silver:    {base:"#c5cad0", dark:"#a3a9b1", light:"#dde1e6", name:"Silver"},
+  white:     {base:"#efeae1", dark:"#cfc8bb", light:"#fbf8f3", name:"White"},
+  cream:     {base:"#e8d5b0", dark:"#cbb489", light:"#f5e7cb", name:"Cream"},
+  ginger:    {base:"#e2913f", dark:"#bf742a", light:"#f2ac63", name:"Ginger"},
+  red:       {base:"#cd6a37", dark:"#a95324", light:"#e18855", name:"Red"},
+  brown:     {base:"#8f6b4d", dark:"#6e5139", light:"#a98462", name:"Brown"},
+  chocolate: {base:"#63473a", dark:"#4a342a", light:"#7d5d4c", name:"Chocolate"}
+};
+const PATTERNS = {
+  solid:   "Solid",
+  tabby:   "Tabby",
+  tuxedo:  "Tuxedo",
+  bicolor: "Bicolour",
+  point:   "Point",
+  calico:  "Patched"
+};
+const EYES = {
+  gold:   "#ffc84a",
+  green:  "#76d08a",
+  blue:   "#7fc4f5",
+  copper: "#d9884a"
 };
 
+let faceUid = 0;
+
+function catFace(id){
+  const parts = String(id || "ginger-tabby-gold").split("-");
+  const fur = FURS[parts[0]] || FURS.ginger;
+  const pat = parts[1] in PATTERNS ? parts[1] : "solid";
+  const eye = EYES[parts[2]] || EYES.gold;
+
+  const uid = "cf" + (faceUid++);
+  const WHITE = "#f6f3ec";
+  const earFill = pat === "point" ? fur.dark : fur.base;
+
+  let marks = "";
+
+  if(pat === "tabby"){
+    marks += `
+      <path d="M26 16 q1.6 6 0 11" stroke="${fur.dark}" stroke-width="2.6" fill="none" stroke-linecap="round"/>
+      <path d="M32 14 q0 6 0 12" stroke="${fur.dark}" stroke-width="2.8" fill="none" stroke-linecap="round"/>
+      <path d="M38 16 q-1.6 6 0 11" stroke="${fur.dark}" stroke-width="2.6" fill="none" stroke-linecap="round"/>
+      <path d="M12 33 h8 M12 39 h7 M52 33 h-8 M52 39 h-7"
+            stroke="${fur.dark}" stroke-width="2.2" stroke-linecap="round"/>`;
+  }
+  if(pat === "tuxedo"){
+    marks += `
+      <ellipse cx="32" cy="47" rx="14" ry="10" fill="${WHITE}"/>
+      <path d="M32 15 L27 33 L32 39 L37 33 Z" fill="${WHITE}"/>`;
+  }
+  if(pat === "bicolor"){
+    marks += `<path d="M0 0 H27 Q22 32 27 64 H0 Z" fill="${WHITE}"/>`;
+  }
+  if(pat === "point"){
+    marks += `<ellipse cx="32" cy="41" rx="15" ry="13" fill="${fur.dark}" opacity=".85"/>`;
+  }
+  if(pat === "calico"){
+    marks += `
+      <ellipse cx="32" cy="42" rx="20" ry="16" fill="${WHITE}"/>
+      <path d="M8 30 q10 -14 22 -6 q-6 10 -16 12 Z" fill="${fur.base}"/>
+      <ellipse cx="46" cy="30" rx="11" ry="9" fill="${fur.dark}"/>
+      <ellipse cx="38" cy="50" rx="8" ry="6" fill="${fur.light}"/>`;
+  }
+
+  return `<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" role="img">
+    <defs><clipPath id="${uid}"><ellipse cx="32" cy="36" rx="22" ry="19"/></clipPath></defs>
+    <path d="M10 32 L13 8 L30 20 Z" fill="${earFill}"/>
+    <path d="M54 32 L51 8 L34 20 Z" fill="${earFill}"/>
+    <path d="M14 27 L15.5 14 L25 21 Z" fill="#e79fae" opacity=".85"/>
+    <path d="M50 27 L48.5 14 L39 21 Z" fill="#e79fae" opacity=".85"/>
+    <ellipse cx="32" cy="36" rx="22" ry="19" fill="${fur.base}"/>
+    <g clip-path="url(#${uid})">${marks}</g>
+    <ellipse cx="32" cy="36" rx="22" ry="19" fill="none" stroke="rgba(0,0,0,.18)" stroke-width="1"/>
+    <ellipse cx="23.5" cy="35" rx="4.7" ry="5.2" fill="${eye}"/>
+    <ellipse cx="40.5" cy="35" rx="4.7" ry="5.2" fill="${eye}"/>
+    <ellipse cx="23.5" cy="35" rx="1.5" ry="4.2" fill="#241d2c"/>
+    <ellipse cx="40.5" cy="35" rx="1.5" ry="4.2" fill="#241d2c"/>
+    <circle cx="22" cy="33" r="1.1" fill="#fff" opacity=".85"/>
+    <circle cx="39" cy="33" r="1.1" fill="#fff" opacity=".85"/>
+    <path d="M29.6 43.4 h4.8 L32 46.2 Z" fill="#e8909f"/>
+    <path d="M32 46.2 v1.8 M32 48 q-2.4 2.4 -5.2 .6 M32 48 q2.4 2.4 5.2 .6"
+          stroke="${fur.dark}" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+    <path d="M6 40 l10 -1.6 M6 45 l10 -3 M58 40 l-10 -1.6 M58 45 l-10 -3"
+          stroke="rgba(255,255,255,.35)" stroke-width="1" stroke-linecap="round"/>
+  </svg>`;
+}
+
+// Every selectable face, built from fur × pattern (eye colour rotates for variety)
+const FACE_OPTIONS = (() => {
+  const out = [];
+  const furKeys = Object.keys(FURS);
+  const patKeys = Object.keys(PATTERNS);
+  const eyeKeys = Object.keys(EYES);
+  furKeys.forEach((f, fi) => {
+    patKeys.forEach((p, pi) => {
+      const e = eyeKeys[(fi + pi) % eyeKeys.length];
+      out.push({ id: `${f}-${p}-${e}`, label: `${FURS[f].name} ${PATTERNS[p]}` });
+    });
+  });
+  return out;
+})();
+
+/* ---------- breed + country lists ---------- */
+const BREEDS = ["Mixed / Moggy","Abyssinian","American Bobtail","American Curl","American Shorthair","American Wirehair","Balinese","Bengal","Birman","Bombay","British Longhair","British Shorthair","Burmese","Burmilla","Chartreux","Chausie","Cornish Rex","Cymric","Devon Rex","Donskoy","Egyptian Mau","European Shorthair","Exotic Shorthair","Havana Brown","Highlander","Himalayan","Japanese Bobtail","Javanese","Khao Manee","Korat","Kurilian Bobtail","LaPerm","Lykoi","Maine Coon","Manx","Munchkin","Nebelung","Norwegian Forest Cat","Ocicat","Oriental Shorthair","Persian","Peterbald","Pixie-bob","Ragamuffin","Ragdoll","Russian Blue","Savannah","Scottish Fold","Selkirk Rex","Siamese","Siberian","Singapura","Snowshoe","Sokoke","Somali","Sphynx","Tonkinese","Toyger","Turkish Angora","Turkish Van","Barn cat","Street cat","Unknown"];
+
+const COUNTRIES = ["Argentina","Australia","Austria","Bangladesh","Belgium","Brazil","Bulgaria","Canada","Chile","China","Colombia","Costa Rica","Croatia","Czechia","Denmark","Ecuador","Egypt","Estonia","Finland","France","Georgia","Germany","Greece","Hong Kong","Hungary","Iceland","India","Indonesia","Ireland","Israel","Italy","Japan","Jordan","Kenya","Latvia","Lebanon","Lithuania","Luxembourg","Malaysia","Malta","Mexico","Morocco","Netherlands","New Zealand","Nigeria","Norway","Pakistan","Peru","Philippines","Poland","Portugal","Qatar","Romania","Russia","Saudi Arabia","Serbia","Singapore","Slovakia","Slovenia","South Africa","South Korea","Spain","Sri Lanka","Sweden","Switzerland","Taiwan","Thailand","Tunisia","Turkey","Ukraine","United Arab Emirates","United Kingdom","United States","Uruguay","Vietnam","Elsewhere"];
+
 /* ============================================================
-   2. THE MEOW ENGINE
-   Every post is stored as the human wrote it. It is only ever
-   *displayed* as meows, re-rendered in the selected language.
-   The same post always produces the same meows (seeded hash),
-   so it doesn't reshuffle on every render.
+   2. LANGUAGES
    ============================================================ */
+const I18N = {
+en:{tagline:"a wall for cats, by cats",signIn:"Sign in",signUp:"Sign up",logOut:"Log out",
+camTitle:"Goose, live",dispense:"Drop a treat",dispenseSub:"one 🐟 token",ready:"Dispenser ready",
+offline:"Dispenser didn't answer. Try again.",wallTitle:"The wall",feedNote:n=>`${n} ${n===1?"post":"posts"}`,
+composerPh:"Say something. It comes out as meows anyway.",addPhoto:"Photo",post:"Post",
+lockedMsg:"Sign up as your pet to post, like and comment.",loading:"Fetching meows…",
+emptyTitle:"Nothing on the wall yet.",emptySub:"Be the first cat to say something.",
+like:"Like",showHuman:"Read in human",hideHuman:"Back to meows",commentPh:"Meow back…",send:"Send",
+loginHint:"Welcome back, you beautiful animal.",registerHint:"New cats get 20 🐟 tokens to spend on Goose.",
+username:"Username",petName:"Username (your pet's name)",email:"Email",password:"Password",confirm:"Confirm password",
+mismatch:"Passwords don't match.",netErr:"Can't reach the server.",needLogin:"Sign in first.",
+queueTitle:"Treat line",queueEmpty:"Nobody in line. The bowl is quiet.",inLineFor:"is in line to feed Goose",
+feedingNow:"is feeding Goose right now",thanks:n=>`Goose says thank you ${n} for the treat!`,
+yourTurn:"Your treat is dropping…",queuedSub:p=>`#${p} in line`,joined:"You're in line.",
+alreadyQueued:"You're already in line — wait for your treat to drop.",noTokens:"Out of 🐟 tokens.",
+next:"Next",back:"Back",createAccount:"Create account",
+aboutCat:"About your cat",aboutCatHint:"This shows up when someone hovers over your name.",
+catName:"Cat's real name",catNamePh:"e.g. Mittens",breed:"Breed",birthdayLabel:"Birthday",
+country:"Country",favFood:"Favourite food",favFoodPh:"e.g. tuna, or the houseplant",
+pickFace:"Pick a face",pickFaceHint:"Find the one that looks most like them.",
+chooseBreed:"Choose a breed…",chooseCountry:"Choose a country…",
+del:"Delete",confirmPost:"Delete this post for good?",confirmComment:"Delete this comment?",
+deleted:"Deleted.",notYours:"You can only delete your own posts.",
+pcBreed:"Breed",pcAge:"Age",pcCountry:"Country",pcFood:"Favourite",
+years:n=>n<1?"under a year":`${n} ${n===1?"year":"years"} old`,
+noProfile:"This cat kept their details private.",modTag:"MOD"},
+
+fr:{tagline:"un mur pour chats, par des chats",signIn:"Connexion",signUp:"S'inscrire",logOut:"Déconnexion",
+camTitle:"Goose, en direct",dispense:"Lâcher une friandise",dispenseSub:"un jeton 🐟",ready:"Distributeur prêt",
+offline:"Le distributeur ne répond pas. Réessayez.",wallTitle:"Le mur",feedNote:n=>`${n} ${n===1?"publication":"publications"}`,
+composerPh:"Dites quelque chose. Ça sortira en miaous.",addPhoto:"Photo",post:"Publier",
+lockedMsg:"Inscrivez votre animal pour publier, aimer et commenter.",loading:"Récupération des miaous…",
+emptyTitle:"Le mur est vide.",emptySub:"Soyez le premier chat à parler.",
+like:"J'aime",showHuman:"Lire en humain",hideHuman:"Retour aux miaous",commentPh:"Miaulez une réponse…",send:"Envoyer",
+loginHint:"Content de vous revoir, bel animal.",registerHint:"Les nouveaux chats reçoivent 20 jetons 🐟.",
+username:"Nom d'utilisateur",petName:"Pseudo (le nom de votre animal)",email:"E-mail",password:"Mot de passe",confirm:"Confirmer le mot de passe",
+mismatch:"Les mots de passe ne correspondent pas.",netErr:"Serveur injoignable.",needLogin:"Connectez-vous d'abord.",
+queueTitle:"File d'attente",queueEmpty:"Personne dans la file. La gamelle est calme.",inLineFor:"attend son tour pour nourrir Goose",
+feedingNow:"nourrit Goose en ce moment",thanks:n=>`Goose dit merci à ${n} pour la friandise !`,
+yourTurn:"Votre friandise tombe…",queuedSub:p=>`${p}ᵉ dans la file`,joined:"Vous êtes dans la file.",
+alreadyQueued:"Vous êtes déjà dans la file — attendez votre friandise.",noTokens:"Plus de jetons 🐟.",
+next:"Suivant",back:"Retour",createAccount:"Créer le compte",
+aboutCat:"À propos de votre chat",aboutCatHint:"Ces infos s'affichent au survol de votre nom.",
+catName:"Vrai nom du chat",catNamePh:"ex. Moustache",breed:"Race",birthdayLabel:"Date de naissance",
+country:"Pays",favFood:"Plat préféré",favFoodPh:"ex. le thon, ou la plante verte",
+pickFace:"Choisissez une frimousse",pickFaceHint:"Trouvez celle qui lui ressemble le plus.",
+chooseBreed:"Choisir une race…",chooseCountry:"Choisir un pays…",
+del:"Supprimer",confirmPost:"Supprimer définitivement cette publication ?",confirmComment:"Supprimer ce commentaire ?",
+deleted:"Supprimé.",notYours:"Vous ne pouvez supprimer que vos publications.",
+pcBreed:"Race",pcAge:"Âge",pcCountry:"Pays",pcFood:"Préféré",
+years:n=>n<1?"moins d'un an":`${n} ${n===1?"an":"ans"}`,
+noProfile:"Ce chat garde ses informations pour lui.",modTag:"MOD"},
+
+it:{tagline:"un muro per gatti, scritto dai gatti",signIn:"Accedi",signUp:"Registrati",logOut:"Esci",
+camTitle:"Goose, in diretta",dispense:"Lancia un premietto",dispenseSub:"un gettone 🐟",ready:"Distributore pronto",
+offline:"Il distributore non risponde. Riprova.",wallTitle:"Il muro",feedNote:n=>`${n} post`,
+composerPh:"Scrivi qualcosa. Uscirà comunque in miao.",addPhoto:"Foto",post:"Pubblica",
+lockedMsg:"Registra il tuo animale per pubblicare, mettere mi piace e commentare.",loading:"Recupero dei miao…",
+emptyTitle:"Il muro è vuoto.",emptySub:"Sii il primo gatto a parlare.",
+like:"Mi piace",showHuman:"Leggi in umano",hideHuman:"Torna ai miao",commentPh:"Rispondi con un miao…",send:"Invia",
+loginHint:"Bentornato, splendido animale.",registerHint:"I gatti nuovi ricevono 20 gettoni 🐟.",
+username:"Nome utente",petName:"Nome utente (il nome del tuo animale)",email:"Email",password:"Password",confirm:"Conferma password",
+mismatch:"Le password non coincidono.",netErr:"Server irraggiungibile.",needLogin:"Prima accedi.",
+queueTitle:"Fila per il premietto",queueEmpty:"Nessuno in fila. La ciotola tace.",inLineFor:"è in fila per dare da mangiare a Goose",
+feedingNow:"sta dando da mangiare a Goose",thanks:n=>`Goose ringrazia ${n} per il premietto!`,
+yourTurn:"Il tuo premietto sta cadendo…",queuedSub:p=>`${p}° in fila`,joined:"Sei in fila.",
+alreadyQueued:"Sei già in fila — aspetta il tuo premietto.",noTokens:"Gettoni 🐟 esauriti.",
+next:"Avanti",back:"Indietro",createAccount:"Crea account",
+aboutCat:"Il tuo gatto",aboutCatHint:"Appare quando qualcuno passa il mouse sul tuo nome.",
+catName:"Nome vero del gatto",catNamePh:"es. Briciola",breed:"Razza",birthdayLabel:"Data di nascita",
+country:"Paese",favFood:"Cibo preferito",favFoodPh:"es. tonno, o la pianta in salotto",
+pickFace:"Scegli un musetto",pickFaceHint:"Trova quello che gli somiglia di più.",
+chooseBreed:"Scegli una razza…",chooseCountry:"Scegli un paese…",
+del:"Elimina",confirmPost:"Eliminare definitivamente questo post?",confirmComment:"Eliminare questo commento?",
+deleted:"Eliminato.",notYours:"Puoi eliminare solo i tuoi post.",
+pcBreed:"Razza",pcAge:"Età",pcCountry:"Paese",pcFood:"Preferito",
+years:n=>n<1?"meno di un anno":`${n} ${n===1?"anno":"anni"}`,
+noProfile:"Questo gatto tiene per sé i suoi dati.",modTag:"MOD"},
+
+pt:{tagline:"um mural para gatos, feito por gatos",signIn:"Entrar",signUp:"Criar conta",logOut:"Sair",
+camTitle:"Goose, ao vivo",dispense:"Soltar um petisco",dispenseSub:"uma ficha 🐟",ready:"Alimentador pronto",
+offline:"O alimentador não respondeu. Tente de novo.",wallTitle:"O mural",feedNote:n=>`${n} ${n===1?"publicação":"publicações"}`,
+composerPh:"Escreva o que quiser. Sai em miados de qualquer forma.",addPhoto:"Foto",post:"Publicar",
+lockedMsg:"Cadastre o seu bichano para publicar, curtir e comentar.",loading:"Buscando miados…",
+emptyTitle:"O mural está vazio.",emptySub:"Seja o primeiro gato a falar.",
+like:"Curtir",showHuman:"Ler em humano",hideHuman:"Voltar aos miados",commentPh:"Responda com um miado…",send:"Enviar",
+loginHint:"Bem-vindo de volta, criatura linda.",registerHint:"Gatos novos ganham 20 fichas 🐟.",
+username:"Nome de usuário",petName:"Nome de usuário (o nome do seu gato)",email:"E-mail",password:"Senha",confirm:"Confirme a senha",
+mismatch:"As senhas não coincidem.",netErr:"Servidor inacessível.",needLogin:"Entre primeiro.",
+queueTitle:"Fila do petisco",queueEmpty:"Ninguém na fila. A tigela está quieta.",inLineFor:"está na fila para alimentar o Goose",
+feedingNow:"está alimentando o Goose agora",thanks:n=>`O Goose agradece a ${n} pelo petisco!`,
+yourTurn:"Seu petisco está caindo…",queuedSub:p=>`${p}º na fila`,joined:"Você entrou na fila.",
+alreadyQueued:"Você já está na fila — espere o seu petisco cair.",noTokens:"Sem fichas 🐟.",
+next:"Continuar",back:"Voltar",createAccount:"Criar conta",
+aboutCat:"Sobre o seu gato",aboutCatHint:"Isto aparece quando alguém passa o mouse no seu nome.",
+catName:"Nome verdadeiro do gato",catNamePh:"ex.: Frajola",breed:"Raça",birthdayLabel:"Data de nascimento",
+country:"País",favFood:"Comida favorita",favFoodPh:"ex.: atum, ou a samambaia",
+pickFace:"Escolha uma carinha",pickFaceHint:"Ache a que mais se parece com ele.",
+chooseBreed:"Escolha uma raça…",chooseCountry:"Escolha um país…",
+del:"Excluir",confirmPost:"Excluir esta publicação de vez?",confirmComment:"Excluir este comentário?",
+deleted:"Excluído.",notYours:"Você só pode excluir as suas publicações.",
+pcBreed:"Raça",pcAge:"Idade",pcCountry:"País",pcFood:"Favorito",
+years:n=>n<1?"menos de um ano":`${n} ${n===1?"ano":"anos"}`,
+noProfile:"Este gato guardou os detalhes para si.",modTag:"MOD"},
+
+pl:{tagline:"ściana dla kotów, pisana przez koty",signIn:"Zaloguj się",signUp:"Załóż konto",logOut:"Wyloguj",
+camTitle:"Goose na żywo",dispense:"Wrzuć przysmak",dispenseSub:"jeden żeton 🐟",ready:"Karmnik gotowy",
+offline:"Karmnik nie odpowiada. Spróbuj ponownie.",wallTitle:"Ściana",feedNote:n=>`Wpisy: ${n}`,
+composerPh:"Napisz cokolwiek. I tak wyjdzie miau.",addPhoto:"Zdjęcie",post:"Opublikuj",
+lockedMsg:"Załóż konto dla pupila, żeby pisać, lajkować i komentować.",loading:"Pobieram miauczenie…",
+emptyTitle:"Na ścianie jeszcze pusto.",emptySub:"Bądź pierwszym kotem, który się odezwie.",
+like:"Lubię to",showHuman:"Czytaj po ludzku",hideHuman:"Wróć do miau",commentPh:"Odmiaucz…",send:"Wyślij",
+loginHint:"Witaj z powrotem, piękne zwierzę.",registerHint:"Nowe koty dostają 20 żetonów 🐟.",
+username:"Nazwa użytkownika",petName:"Nazwa użytkownika (imię pupila)",email:"E-mail",password:"Hasło",confirm:"Powtórz hasło",
+mismatch:"Hasła się nie zgadzają.",netErr:"Brak połączenia z serwerem.",needLogin:"Najpierw się zaloguj.",
+queueTitle:"Kolejka po przysmak",queueEmpty:"Nikogo w kolejce. Miska milczy.",inLineFor:"czeka w kolejce, żeby nakarmić Goose'a",
+feedingNow:"właśnie karmi Goose'a",thanks:n=>`Goose dziękuje ${n} za przysmak!`,
+yourTurn:"Twój przysmak leci…",queuedSub:p=>`${p}. w kolejce`,joined:"Jesteś w kolejce.",
+alreadyQueued:"Już czekasz w kolejce — poczekaj na swój przysmak.",noTokens:"Brak żetonów 🐟.",
+next:"Dalej",back:"Wstecz",createAccount:"Załóż konto",
+aboutCat:"O twoim kocie",aboutCatHint:"To pokaże się po najechaniu na twoją nazwę.",
+catName:"Prawdziwe imię kota",catNamePh:"np. Filemon",breed:"Rasa",birthdayLabel:"Data urodzenia",
+country:"Kraj",favFood:"Ulubione jedzenie",favFoodPh:"np. tuńczyk albo kwiatek doniczkowy",
+pickFace:"Wybierz pyszczek",pickFaceHint:"Znajdź ten najbardziej podobny.",
+chooseBreed:"Wybierz rasę…",chooseCountry:"Wybierz kraj…",
+del:"Usuń",confirmPost:"Usunąć ten wpis na zawsze?",confirmComment:"Usunąć ten komentarz?",
+deleted:"Usunięto.",notYours:"Możesz usuwać tylko własne wpisy.",
+pcBreed:"Rasa",pcAge:"Wiek",pcCountry:"Kraj",pcFood:"Ulubione",
+years:n=>n<1?"mniej niż rok":`${n} lat`,
+noProfile:"Ten kot zachował szczegóły dla siebie.",modTag:"MOD"},
+
+sv:{tagline:"en vägg för katter, av katter",signIn:"Logga in",signUp:"Skapa konto",logOut:"Logga ut",
+camTitle:"Goose, live",dispense:"Släpp ett godis",dispenseSub:"en 🐟-pollett",ready:"Matautomaten är redo",
+offline:"Matautomaten svarar inte. Försök igen.",wallTitle:"Väggen",feedNote:n=>`${n} ${n===1?"inlägg":"inlägg"}`,
+composerPh:"Skriv vad du vill. Det blir jamanden ändå.",addPhoto:"Bild",post:"Publicera",
+lockedMsg:"Skapa ett konto åt ditt djur för att posta, gilla och kommentera.",loading:"Hämtar jamanden…",
+emptyTitle:"Väggen är tom.",emptySub:"Bli den första katten som säger något.",
+like:"Gilla",showHuman:"Läs på människa",hideHuman:"Tillbaka till jam",commentPh:"Jama tillbaka…",send:"Skicka",
+loginHint:"Välkommen tillbaka, ditt vackra djur.",registerHint:"Nya katter får 20 🐟-polletter.",
+username:"Användarnamn",petName:"Användarnamn (ditt djurs namn)",email:"E-post",password:"Lösenord",confirm:"Bekräfta lösenord",
+mismatch:"Lösenorden stämmer inte.",netErr:"Når inte servern.",needLogin:"Logga in först.",
+queueTitle:"Godiskön",queueEmpty:"Ingen i kön. Skålen är tyst.",inLineFor:"står i kö för att mata Goose",
+feedingNow:"matar Goose just nu",thanks:n=>`Goose tackar ${n} för godiset!`,
+yourTurn:"Ditt godis faller…",queuedSub:p=>`plats ${p} i kön`,joined:"Du står i kön.",
+alreadyQueued:"Du står redan i kön — vänta på ditt godis.",noTokens:"Slut på 🐟-polletter.",
+next:"Nästa",back:"Tillbaka",createAccount:"Skapa konto",
+aboutCat:"Om din katt",aboutCatHint:"Det här visas när någon hovrar över ditt namn.",
+catName:"Kattens riktiga namn",catNamePh:"t.ex. Måns",breed:"Ras",birthdayLabel:"Födelsedag",
+country:"Land",favFood:"Favoritmat",favFoodPh:"t.ex. tonfisk, eller krukväxten",
+pickFace:"Välj ett ansikte",pickFaceHint:"Hitta det som liknar mest.",
+chooseBreed:"Välj en ras…",chooseCountry:"Välj ett land…",
+del:"Radera",confirmPost:"Radera inlägget för gott?",confirmComment:"Radera kommentaren?",
+deleted:"Raderat.",notYours:"Du kan bara radera dina egna inlägg.",
+pcBreed:"Ras",pcAge:"Ålder",pcCountry:"Land",pcFood:"Favorit",
+years:n=>n<1?"under ett år":`${n} år`,
+noProfile:"Den här katten höll detaljerna för sig själv.",modTag:"MOD"},
+
+ru:{tagline:"стена для котов, написанная котами",signIn:"Войти",signUp:"Регистрация",logOut:"Выйти",
+camTitle:"Гусь в прямом эфире",dispense:"Бросить лакомство",dispenseSub:"один жетон 🐟",ready:"Кормушка готова",
+offline:"Кормушка не отвечает. Попробуйте ещё раз.",wallTitle:"Стена",feedNote:n=>`Записей: ${n}`,
+composerPh:"Напишите что угодно. Всё равно выйдет мяу.",addPhoto:"Фото",post:"Опубликовать",
+lockedMsg:"Зарегистрируйте питомца, чтобы писать, лайкать и комментировать.",loading:"Загружаем мяу…",
+emptyTitle:"Стена пуста.",emptySub:"Станьте первым котом, который заговорит.",
+like:"Нравится",showHuman:"По-человечески",hideHuman:"Обратно в мяу",commentPh:"Мяукните в ответ…",send:"Отправить",
+loginHint:"С возвращением, прекрасное животное.",registerHint:"Новые коты получают 20 жетонов 🐟.",
+username:"Имя пользователя",petName:"Имя пользователя (кличка питомца)",email:"Почта",password:"Пароль",confirm:"Повторите пароль",
+mismatch:"Пароли не совпадают.",netErr:"Сервер недоступен.",needLogin:"Сначала войдите.",
+queueTitle:"Очередь за лакомством",queueEmpty:"Очереди нет. Миска молчит.",inLineFor:"в очереди, чтобы покормить Гуся",
+feedingNow:"кормит Гуся прямо сейчас",thanks:n=>`Гусь благодарит ${n} за лакомство!`,
+yourTurn:"Ваше лакомство падает…",queuedSub:p=>`${p}-й в очереди`,joined:"Вы в очереди.",
+alreadyQueued:"Вы уже в очереди — дождитесь своего лакомства.",noTokens:"Жетоны 🐟 закончились.",
+next:"Далее",back:"Назад",createAccount:"Создать аккаунт",
+aboutCat:"О вашем коте",aboutCatHint:"Это увидят, наведя курсор на ваше имя.",
+catName:"Настоящая кличка",catNamePh:"напр. Барсик",breed:"Порода",birthdayLabel:"Дата рождения",
+country:"Страна",favFood:"Любимая еда",favFoodPh:"напр. тунец или фикус",
+pickFace:"Выберите мордочку",pickFaceHint:"Найдите самую похожую.",
+chooseBreed:"Выберите породу…",chooseCountry:"Выберите страну…",
+del:"Удалить",confirmPost:"Удалить эту запись навсегда?",confirmComment:"Удалить комментарий?",
+deleted:"Удалено.",notYours:"Можно удалять только свои записи.",
+pcBreed:"Порода",pcAge:"Возраст",pcCountry:"Страна",pcFood:"Любимое",
+years:n=>n<1?"меньше года":`${n} г.`,
+noProfile:"Этот кот не стал делиться подробностями.",modTag:"МОД"},
+
+zh:{tagline:"喵星人的留言墙",signIn:"登录",signUp:"注册",logOut:"退出",
+camTitle:"Goose 直播中",dispense:"投一颗零食",dispenseSub:"消耗一枚 🐟",ready:"喂食器就绪",
+offline:"喂食器没有回应，请重试。",wallTitle:"留言墙",feedNote:n=>`${n} 条动态`,
+composerPh:"随便写点什么，反正发出来都是喵。",addPhoto:"图片",post:"发布",
+lockedMsg:"以宠物身份注册后即可发布、点赞和评论。",loading:"正在加载喵…",
+emptyTitle:"墙上还什么都没有。",emptySub:"当第一只开口的猫吧。",
+like:"赞",showHuman:"看人类语",hideHuman:"回到喵语",commentPh:"喵一句…",send:"发送",
+loginHint:"欢迎回来，可爱的小动物。",registerHint:"新猫注册即得 20 枚 🐟 代币。",
+username:"用户名",petName:"用户名（宠物的名字）",email:"邮箱",password:"密码",confirm:"确认密码",
+mismatch:"两次密码不一致。",netErr:"无法连接服务器。",needLogin:"请先登录。",
+queueTitle:"投喂排队",queueEmpty:"暂时没人排队，饭碗很安静。",inLineFor:"正在排队投喂 Goose",
+feedingNow:"正在投喂 Goose",thanks:n=>`Goose 谢谢 ${n} 的零食！`,
+yourTurn:"你的零食正在投放…",queuedSub:p=>`队列第 ${p} 位`,joined:"已加入队列。",
+alreadyQueued:"你已经在排队了，请等待零食投放。",noTokens:"🐟 代币不足。",
+next:"下一步",back:"返回",createAccount:"创建账号",
+aboutCat:"关于你的猫",aboutCatHint:"别人把鼠标放到你的名字上时会看到这些。",
+catName:"猫的真名",catNamePh:"例如：小咪",breed:"品种",birthdayLabel:"出生日期",
+country:"国家",favFood:"最爱的食物",favFoodPh:"例如：金枪鱼，或者客厅那盆绿植",
+pickFace:"挑一张脸",pickFaceHint:"找一张最像它的。",
+chooseBreed:"选择品种…",chooseCountry:"选择国家…",
+del:"删除",confirmPost:"确定永久删除这条动态？",confirmComment:"删除这条评论？",
+deleted:"已删除。",notYours:"只能删除自己的内容。",
+pcBreed:"品种",pcAge:"年龄",pcCountry:"国家",pcFood:"最爱",
+years:n=>n<1?"不到一岁":`${n} 岁`,
+noProfile:"这只猫没有公开资料。",modTag:"管理员"},
+
+ja:{tagline:"猫による猫のための掲示板",signIn:"ログイン",signUp:"新規登録",logOut:"ログアウト",
+camTitle:"Goose、ライブ中",dispense:"おやつを落とす",dispenseSub:"🐟 トークン 1 枚",ready:"給餌器は準備OK",
+offline:"給餌器が応答しません。もう一度どうぞ。",wallTitle:"みんなの壁",feedNote:n=>`${n} 件の投稿`,
+composerPh:"なんでもどうぞ。どうせ にゃー になります。",addPhoto:"写真",post:"投稿",
+lockedMsg:"ペットとして登録すると投稿・いいね・コメントができます。",loading:"にゃーを読み込み中…",
+emptyTitle:"まだ何もありません。",emptySub:"最初に鳴く猫になりましょう。",
+like:"いいね",showHuman:"人間語で読む",hideHuman:"にゃー に戻す",commentPh:"にゃーで返信…",send:"送信",
+loginHint:"おかえりなさい、すてきな動物さん。",registerHint:"新入りの猫には 🐟 トークンを20枚。",
+username:"ユーザー名",petName:"ユーザー名（ペットの名前）",email:"メール",password:"パスワード",confirm:"パスワード（確認）",
+mismatch:"パスワードが一致しません。",netErr:"サーバーに接続できません。",needLogin:"先にログインしてください。",
+queueTitle:"おやつの列",queueEmpty:"待っている人はいません。お皿は静かです。",inLineFor:"が Goose におやつをあげる順番を待っています",
+feedingNow:"が Goose におやつをあげています",thanks:n=>`Goose が ${n} さんにお礼を言っています！`,
+yourTurn:"おやつが落ちています…",queuedSub:p=>`列の ${p} 番目`,joined:"列に並びました。",
+alreadyQueued:"すでに列に並んでいます。おやつが落ちるまでお待ちください。",noTokens:"🐟 トークンがありません。",
+next:"次へ",back:"戻る",createAccount:"アカウントを作成",
+aboutCat:"あなたの猫について",aboutCatHint:"名前にカーソルを合わせると表示されます。",
+catName:"猫の本名",catNamePh:"例：タマ",breed:"品種",birthdayLabel:"誕生日",
+country:"国",favFood:"好きな食べ物",favFoodPh:"例：まぐろ、または観葉植物",
+pickFace:"顔を選ぶ",pickFaceHint:"いちばん似ているものを探してください。",
+chooseBreed:"品種を選ぶ…",chooseCountry:"国を選ぶ…",
+del:"削除",confirmPost:"この投稿を完全に削除しますか？",confirmComment:"このコメントを削除しますか？",
+deleted:"削除しました。",notYours:"自分の投稿だけ削除できます。",
+pcBreed:"品種",pcAge:"年齢",pcCountry:"国",pcFood:"好物",
+years:n=>n<1?"1歳未満":`${n} 歳`,
+noProfile:"この猫は詳細を公開していません。",modTag:"管理"}
+};
+
+/* ---------- meow engine ---------- */
 const MEOWS = {
   en:["meow","mew","mrow","meoww","mrrp","purr"],
   fr:["miaou","miaw","mrou","miaou","miaaou"],
   it:["miao","miau","mia","miaoo"],
+  pt:["miau","miao","mianh","miauu"],
+  pl:["miau","miał","miau","miauu"],
+  sv:["mjau","mjao","mjau","jamm"],
   ru:["мяу","мяв","мур","мяуу"],
   zh:["喵","喵呜","喵喵","咪"],
   ja:["にゃー","にゃん","にゃあ","ニャー"]
 };
-const LOCALES = {en:"en-US",fr:"fr-FR",it:"it-IT",ru:"ru-RU",zh:"zh-CN",ja:"ja-JP"};
+const LOCALES = {en:"en-US",fr:"fr-FR",it:"it-IT",pt:"pt-BR",pl:"pl-PL",sv:"sv-SE",ru:"ru-RU",zh:"zh-CN",ja:"ja-JP"};
+const NO_PERIOD = ["zh","ja"];
 
 function hash(str){
   let h = 2166136261;
@@ -735,45 +782,37 @@ function meowify(text, lang, seed){
   const bank = MEOWS[lang] || MEOWS.en;
   const raw  = (text || "").trim();
   if(!raw) return bank[0];
-
-  // one meow per word, capped so nobody can write a novel
   const words = raw.split(/\s+/).filter(Boolean).slice(0, 45);
   const out = words.map((w,i) => bank[ hash(seed + "|" + i + "|" + w.length) % bank.length ]);
-
   let line = out.join(" ");
-
-  // keep the emotional punctuation the human ended on
   const tail = raw.match(/[!?！？…~]+$/);
-  line += tail ? tail[0] : (lang === "zh" || lang === "ja" ? "" : ".");
-
-  // capitalise for latin/cyrillic scripts
-  if(!["zh","ja"].includes(lang)) line = line.charAt(0).toUpperCase() + line.slice(1);
+  line += tail ? tail[0] : (NO_PERIOD.includes(lang) ? "" : ".");
+  if(!NO_PERIOD.includes(lang)) line = line.charAt(0).toUpperCase() + line.slice(1);
   return line;
 }
 
 /* ============================================================
-   3. STATE
+   3. STATE + HELPERS
    ============================================================ */
 const State = {
   lang: localStorage.getItem("goose_lang") || "en",
   me: null,
   posts: [],
-  human: new Set(),      // ids of posts currently shown in human
-  queue: [],             // people waiting to feed Goose
-  serving: null,         // whose treat is dropping right now
-  lastTicket: 0          // highest drop we've already announced
+  profiles: {},
+  human: new Set(),
+  queue: [],
+  serving: null,
+  lastTicket: 0,
+  draft: {},              // sign-up wizard answers
+  avatar: "ginger-tabby-gold"
 };
 const t = () => I18N[State.lang];
 
-/* ============================================================
-   4. HELPERS
-   ============================================================ */
 function esc(s){
   return String(s ?? "").replace(/[&<>'"]/g, c => (
     {"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"}[c]
   ));
 }
-
 function toast(msg, kind=""){
   const el = document.createElement("div");
   el.className = "toast " + kind;
@@ -781,22 +820,30 @@ function toast(msg, kind=""){
   document.getElementById("toasts").appendChild(el);
   setTimeout(() => el.remove(), 3600);
 }
-
 function when(ts){
   const d = new Date(ts.includes("Z") || ts.includes("T") ? ts : ts.replace(" ", "T") + "Z");
   if(isNaN(d)) return "";
-  return new Intl.DateTimeFormat(LOCALES[State.lang], {
-    day:"numeric", month:"short", hour:"2-digit", minute:"2-digit"
-  }).format(d);
+  return new Intl.DateTimeFormat(LOCALES[State.lang], {day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"}).format(d);
 }
-
-function pawFor(name){
-  const paws = ["🐈","🐈‍⬛","🐱","🐾","😼","🙀","😻","🐕","🐹","🦜"];
-  return paws[hash(name || "anon") % paws.length];
+function avatarOf(username, fallback){
+  const p = State.profiles[username];
+  return (p && p.avatar) || fallback || "ginger-tabby-gold";
 }
+function ageOf(birthday){
+  if(!birthday) return null;
+  const b = new Date(birthday);
+  if(isNaN(b)) return null;
+  const now = new Date();
+  let y = now.getFullYear() - b.getFullYear();
+  const m = now.getMonth() - b.getMonth();
+  if(m < 0 || (m === 0 && now.getDate() < b.getDate())) y--;
+  return Math.max(0, y);
+}
+const isMine = username => State.me && State.me.loggedIn && State.me.username === username;
+const canModerate = () => State.me && State.me.isAdmin;
 
 /* ============================================================
-   5. RENDER
+   4. RENDER
    ============================================================ */
 function applyLanguage(){
   document.documentElement.lang = State.lang;
@@ -804,10 +851,9 @@ function applyLanguage(){
     const v = t()[el.dataset.i18n];
     if(typeof v === "string") el.textContent = v;
   });
-  document.querySelectorAll("[data-ph]").forEach(el => {
-    el.placeholder = t()[el.dataset.ph] || "";
-  });
+  document.querySelectorAll("[data-ph]").forEach(el => { el.placeholder = t()[el.dataset.ph] || ""; });
   document.getElementById("treatSub").textContent = t().dispenseSub;
+  fillDropdowns();
   renderComposer();
   renderFeed();
   renderSession();
@@ -817,12 +863,9 @@ function applyLanguage(){
 
 function renderComposer(){
   const box = document.getElementById("composer");
-  if(!State.me){
-    box.innerHTML = `
-      <div class="locked">
-        <span>${esc(t().lockedMsg)}</span>
-        <button class="btn btn-primary btn-sm" onclick="openModal('register')">${esc(t().signUp)}</button>
-      </div>`;
+  if(!State.me || !State.me.loggedIn){
+    box.innerHTML = `<div class="locked"><span>${esc(t().lockedMsg)}</span>
+      <button class="btn btn-primary btn-sm" onclick="openRegister()">${esc(t().signUp)}</button></div>`;
     return;
   }
   box.innerHTML = `
@@ -842,8 +885,7 @@ function renderComposer(){
 
 function renderFeed(){
   const feed = document.getElementById("feed");
-  const note = document.getElementById("feedNote");
-  note.textContent = t().feedNote(State.posts.length);
+  document.getElementById("feedNote").textContent = t().feedNote(State.posts.length);
 
   if(!State.posts.length){
     feed.innerHTML = `<div class="empty"><span class="big">🐾</span>
@@ -853,42 +895,43 @@ function renderFeed(){
 
   feed.innerHTML = State.posts.map(p => {
     const showHuman = State.human.has(p.id);
-    const body = showHuman
-      ? `<div class="meows">${esc(meowify(p.content, State.lang, "post" + p.id))}</div>
-         <div class="human">${esc(p.content)}</div>`
-      : `<div class="meows">${esc(meowify(p.content, State.lang, "post" + p.id))}</div>`;
+    const canDelPost = isMine(p.username) || canModerate();
 
-    const comments = (p.comments || []).map(c => `
-      <div class="comment">
-        <span class="c-avatar">${pawFor(c.username)}</span>
+    const comments = (p.comments || []).map(c => {
+      const canDelC = isMine(c.username) || canModerate();
+      return `
+      <div class="comment" id="comment-${c.id}">
+        <span class="c-avatar">${catFace(avatarOf(c.username, c.avatar))}</span>
         <div class="c-body">
-          <div class="c-name">${esc(c.username)}</div>
+          <div class="c-name" data-user="${esc(c.username)}">${esc(c.username)}</div>
           <div class="c-text">${esc(meowify(c.content, State.lang, "c" + c.id))}</div>
         </div>
-      </div>`).join("");
+        ${canDelC ? `<button class="c-del" onclick="deleteComment(${c.id})" title="${esc(t().del)}">🗑</button>` : ""}
+      </div>`;
+    }).join("");
 
     return `
-      <article class="post">
+      <article class="post" id="post-${p.id}">
         <div class="post-top">
-          <span class="avatar">${pawFor(p.username)}</span>
+          <span class="avatar">${catFace(avatarOf(p.username, p.avatar))}</span>
           <div class="post-who">
-            <div class="post-author">${esc(p.username)}</div>
+            <div class="post-author" data-user="${esc(p.username)}">${esc(p.username)}</div>
             <div class="post-time">${esc(when(p.timestamp))}</div>
           </div>
         </div>
-        ${body}
+        <div class="meows">${esc(meowify(p.content, State.lang, "post" + p.id))}</div>
+        ${showHuman ? `<div class="human">${esc(p.content)}</div>` : ""}
         ${p.image_url ? `<img class="post-img" src="${esc(p.image_url)}" alt="" loading="lazy">` : ""}
         <div class="post-bar">
           <button class="act ${p.user_has_liked ? "on" : ""}" onclick="like(${p.id})">
             ${p.user_has_liked ? "❤️" : "🤍"} ${esc(t().like)} ${p.total_likes ? "· " + p.total_likes : ""}
           </button>
-          <button class="act subtle" onclick="toggleHuman(${p.id})">
-            ${esc(showHuman ? t().hideHuman : t().showHuman)}
-          </button>
+          ${canDelPost ? `<button class="act danger" onclick="deletePost(${p.id})">🗑 ${esc(t().del)}</button>` : ""}
+          <button class="act subtle" onclick="toggleHuman(${p.id})">${esc(showHuman ? t().hideHuman : t().showHuman)}</button>
         </div>
         <div class="comments">
           ${comments}
-          ${State.me ? `
+          ${State.me && State.me.loggedIn ? `
           <form class="c-form" onsubmit="submitComment(event, ${p.id})">
             <input name="content" placeholder="${esc(t().commentPh)}" required>
             <button type="submit" class="btn btn-ghost btn-sm">${esc(t().send)}</button>
@@ -905,7 +948,9 @@ function renderSession(){
     out.style.display = "none";
     inn.style.display = "inline-flex";
     document.getElementById("userBadge").innerHTML =
-      `${pawFor(State.me.username)} ${esc(State.me.username)} <span class="fish">🐟 ${State.me.tokens}</span>`;
+      `<span class="mini">${catFace(State.me.avatar)}</span>${esc(State.me.username)}
+       ${State.me.isAdmin ? `<span class="mod-tag">${esc(t().modTag)}</span>` : ""}
+       <span class="fish">🐟 ${State.me.tokens}</span>`;
   }else{
     out.style.display = "inline-flex";
     inn.style.display = "none";
@@ -918,26 +963,85 @@ function setStatus(text, kind=""){
   el.innerHTML = `<span class="sdot"></span><span></span>`;
   el.lastElementChild.textContent = text;
 }
-
 function toggleHuman(id){
   State.human.has(id) ? State.human.delete(id) : State.human.add(id);
   renderFeed();
 }
 
 /* ============================================================
+   5. HOVER PROFILE CARD
+   ============================================================ */
+const card = () => document.getElementById("profileCard");
+
+function showProfileCard(username, anchor){
+  const p = State.profiles[username];
+  const box = card();
+
+  const rows = [];
+  if(p){
+    if(p.breed)    rows.push([t().pcBreed, p.breed]);
+    const age = ageOf(p.birthday);
+    if(age !== null) rows.push([t().pcAge, t().years(age)]);
+    if(p.country)  rows.push([t().pcCountry, p.country]);
+    if(p.fav_food) rows.push([t().pcFood, p.fav_food]);
+  }
+
+  box.innerHTML = `
+    <div class="pc-top">
+      <span class="big-face">${catFace(p ? p.avatar : "ginger-tabby-gold")}</span>
+      <span>
+        <div class="pc-name">${esc((p && p.cat_name) || username)}</div>
+        <div class="pc-handle">@${esc(username)}${p && p.is_admin ? " · " + esc(t().modTag) : ""}</div>
+      </span>
+    </div>
+    ${rows.length
+      ? `<div class="pc-rows">${rows.map(([k,v]) =>
+          `<div class="pc-row"><span class="k">${esc(k)}</span><span class="v">${esc(v)}</span></div>`).join("")}</div>`
+      : `<div class="pc-empty">${esc(t().noProfile)}</div>`}`;
+
+  const r = anchor.getBoundingClientRect();
+  box.classList.add("show");
+  const w = box.offsetWidth, h = box.offsetHeight;
+  let left = r.left;
+  let top  = r.bottom + 9;
+  if(left + w > window.innerWidth - 12) left = window.innerWidth - w - 12;
+  if(top + h > window.innerHeight - 12) top = r.top - h - 9;
+  box.style.left = Math.max(12, left) + "px";
+  box.style.top  = Math.max(12, top) + "px";
+}
+function hideProfileCard(){ card().classList.remove("show"); }
+
+document.addEventListener("mouseover", e => {
+  const el = e.target.closest("[data-user]");
+  if(el) showProfileCard(el.dataset.user, el);
+});
+document.addEventListener("mouseout", e => {
+  if(e.target.closest("[data-user]")) hideProfileCard();
+});
+document.addEventListener("click", e => {
+  const el = e.target.closest("[data-user]");   // tap works on touch screens
+  if(el){ showProfileCard(el.dataset.user, el); setTimeout(hideProfileCard, 4000); }
+});
+window.addEventListener("scroll", hideProfileCard, {passive:true});
+
+/* ============================================================
    6. SERVER CALLS
    ============================================================ */
+async function loadProfiles(){
+  try{
+    const r = await fetch("/api/profiles");
+    const d = await r.json();
+    if(d.status === "Success") State.profiles = d.profiles || {};
+  }catch(e){}
+}
 async function loadWall(){
   try{
     const r = await fetch("/api/posts");
     const d = await r.json();
     State.posts = d.status === "Success" ? d.posts : [];
-  }catch(e){
-    State.posts = [];
-  }
+  }catch(e){ State.posts = []; }
   renderFeed();
 }
-
 async function checkSession(){
   try{
     const r = await fetch("/api/me");
@@ -947,27 +1051,18 @@ async function checkSession(){
   renderComposer();
 }
 
-async function auth(event, endpoint){
+async function doLogin(event){
   event.preventDefault();
   const data = Object.fromEntries(new FormData(event.target));
-
-  if(endpoint === "/register" &&
-     document.getElementById("regPass").value !== document.getElementById("regConfirm").value){
-    return toast(t().mismatch, "bad");
-  }
-
   try{
-    const r = await fetch(endpoint, {
-      method:"POST",
-      headers:{"Content-Type":"application/json"},
-      body:JSON.stringify(data)
-    });
+    const r = await fetch("/login", {method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify(data)});
     const d = await r.json();
     toast(d.message || "…", r.ok ? "good" : "bad");
     if(r.ok){
       event.target.reset();
       closeModals();
       await checkSession();
+      await loadProfiles();
       loadWall();
     }
   }catch(e){ toast(t().netErr, "bad"); }
@@ -993,9 +1088,8 @@ async function submitPost(event){
     if(!r.ok) throw new Error(d.message);
     form.reset();
     loadWall();
-  }catch(e){
-    toast(e.message || t().netErr, "bad");
-  }finally{ btn.disabled = false; }
+  }catch(e){ toast(e.message || t().netErr, "bad"); }
+  finally{ btn.disabled = false; }
 }
 
 async function like(postId){
@@ -1013,8 +1107,7 @@ async function submitComment(event, postId){
   const input = form.querySelector("input[name=content]");
   try{
     const r = await fetch(`/api/posts/${postId}/comments`, {
-      method:"POST",
-      headers:{"Content-Type":"application/json"},
+      method:"POST", headers:{"Content-Type":"application/json"},
       body:JSON.stringify({content: input.value})
     });
     const d = await r.json();
@@ -1024,11 +1117,124 @@ async function submitComment(event, postId){
   }catch(e){ toast(e.message || t().netErr, "bad"); }
 }
 
-/* ---------- the treat line ---------- */
-const MOTOR_MS = 3000;      // matches MOTOR_DELAY in server.js
-const POLL_MS  = 1200;      // how often we refresh the line
+async function deletePost(id){
+  if(!confirm(t().confirmPost)) return;
+  try{
+    const r = await fetch(`/api/posts/${id}`, {method:"DELETE"});
+    const d = await r.json();
+    if(!r.ok){
+      return toast(d.code === "not_yours" ? t().notYours : (d.message || t().netErr), "bad");
+    }
+    const el = document.getElementById("post-" + id);
+    if(el) el.classList.add("leaving");
+    toast(t().deleted, "good");
+    setTimeout(loadWall, 200);
+  }catch(e){ toast(t().netErr, "bad"); }
+}
 
-// Neon-ish names, picked from the username so everyone keeps their colour
+async function deleteComment(id){
+  if(!confirm(t().confirmComment)) return;
+  try{
+    const r = await fetch(`/api/comments/${id}`, {method:"DELETE"});
+    const d = await r.json();
+    if(!r.ok){
+      return toast(d.code === "not_yours" ? t().notYours : (d.message || t().netErr), "bad");
+    }
+    toast(t().deleted, "good");
+    loadWall();
+  }catch(e){ toast(t().netErr, "bad"); }
+}
+
+/* ============================================================
+   7. SIGN-UP WIZARD
+   ============================================================ */
+function fillDropdowns(){
+  const breed = document.getElementById("regBreed");
+  const country = document.getElementById("regCountry");
+  if(!breed || !country) return;
+  const keepB = breed.value, keepC = country.value;
+  breed.innerHTML = `<option value="" disabled selected>${esc(t().chooseBreed)}</option>` +
+    BREEDS.map(b => `<option value="${esc(b)}">${esc(b)}</option>`).join("");
+  country.innerHTML = `<option value="" disabled selected>${esc(t().chooseCountry)}</option>` +
+    COUNTRIES.map(c => `<option value="${esc(c)}">${esc(c)}</option>`).join("");
+  if(keepB) breed.value = keepB;
+  if(keepC) country.value = keepC;
+}
+
+function buildFaceGrid(){
+  const grid = document.getElementById("faceGrid");
+  grid.innerHTML = FACE_OPTIONS.map(o => `
+    <button type="button" class="face-opt${o.id === State.avatar ? " sel" : ""}"
+            data-face="${o.id}" title="${esc(o.label)}" onclick="pickFace('${o.id}')">
+      ${catFace(o.id)}
+    </button>`).join("");
+  paintPicked();
+}
+function pickFace(id){
+  State.avatar = id;
+  document.querySelectorAll(".face-opt").forEach(b => b.classList.toggle("sel", b.dataset.face === id));
+  paintPicked();
+}
+function paintPicked(){
+  const opt = FACE_OPTIONS.find(o => o.id === State.avatar);
+  document.getElementById("pickedFace").innerHTML = catFace(State.avatar);
+  document.getElementById("pickedLabel").textContent = opt ? opt.label : "";
+}
+
+function showStep(n){
+  [1,2,3].forEach(i => {
+    document.getElementById("step" + i).style.display = (i === n) ? "" : "none";
+    document.getElementById("pip" + i).classList.toggle("on", i <= n);
+  });
+}
+function openRegister(){
+  showStep(1);
+  fillDropdowns();
+  buildFaceGrid();
+  openModal("register");
+}
+function goStep2(event){
+  event.preventDefault();
+  const pass = document.getElementById("regPass").value;
+  if(pass !== document.getElementById("regConfirm").value) return toast(t().mismatch, "bad");
+  State.draft.username = document.getElementById("regUser").value.trim();
+  State.draft.email    = document.getElementById("regEmail").value.trim();
+  State.draft.password = pass;
+  showStep(2);
+}
+function goStep3(event){
+  event.preventDefault();
+  State.draft.cat_name = document.getElementById("regCatName").value.trim();
+  State.draft.breed    = document.getElementById("regBreed").value;
+  State.draft.birthday = document.getElementById("regBirthday").value;
+  State.draft.country  = document.getElementById("regCountry").value;
+  State.draft.fav_food = document.getElementById("regFood").value.trim();
+  showStep(3);
+}
+async function finishRegister(){
+  const payload = Object.assign({}, State.draft, { avatar: State.avatar });
+  try{
+    const r = await fetch("/register", {
+      method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify(payload)
+    });
+    const d = await r.json();
+    toast(d.message || "…", r.ok ? "good" : "bad");
+    if(r.ok){
+      State.draft = {};
+      closeModals();
+      document.querySelectorAll("#modal-register input").forEach(i => i.value = "");
+      await checkSession();
+      await loadProfiles();
+      loadWall();
+    }
+  }catch(e){ toast(t().netErr, "bad"); }
+}
+
+/* ============================================================
+   8. TREAT LINE
+   ============================================================ */
+const MOTOR_MS = 3000;
+const POLL_MS  = 1200;
 const NEON = ["#ffb454","#6ef0c0","#7cc7ff","#ff8fd0","#c79bff","#ffe066","#5ef2d0","#ff9a6b"];
 const colourFor = name => NEON[hash(name || "anon") % NEON.length];
 
@@ -1045,52 +1251,34 @@ function fillBar(ms){
 }
 
 function renderQueue(){
-  const list  = document.getElementById("queueList");
-  const count = document.getElementById("queueCount");
-  const rows  = [];
-
+  const list = document.getElementById("queueList");
+  const rows = [];
   if(State.serving){
-    rows.push(`
-      <div class="q-row serving">
-        <span class="who" style="color:${colourFor(State.serving.username)};text-shadow:0 0 12px ${colourFor(State.serving.username)}66">${esc(State.serving.username)}</span>
-        <span class="said">${esc(t().feedingNow)}</span>
-        <span class="motor">🐟</span>
-      </div>`);
+    const c = colourFor(State.serving.username);
+    rows.push(`<div class="q-row serving">
+      <span class="who" data-user="${esc(State.serving.username)}" style="color:${c};text-shadow:0 0 12px ${c}66">${esc(State.serving.username)}</span>
+      <span class="said">${esc(t().feedingNow)}</span><span class="motor">🐟</span></div>`);
   }
-
   State.queue.forEach(entry => {
     const c = colourFor(entry.username);
-    rows.push(`
-      <div class="q-row">
-        <span class="who" style="color:${c};text-shadow:0 0 12px ${c}66">${esc(entry.username)}</span>
-        <span class="said">${esc(t().inLineFor)}</span>
-        <span class="pos">${entry.position}</span>
-      </div>`);
+    rows.push(`<div class="q-row">
+      <span class="who" data-user="${esc(entry.username)}" style="color:${c};text-shadow:0 0 12px ${c}66">${esc(entry.username)}</span>
+      <span class="said">${esc(t().inLineFor)}</span><span class="pos">${entry.position}</span></div>`);
   });
-
-  count.textContent = State.queue.length + (State.serving ? 1 : 0);
-  list.innerHTML = rows.length
-    ? rows.join("")
-    : `<div class="queue-empty">${esc(t().queueEmpty)}</div>`;
+  document.getElementById("queueCount").textContent = State.queue.length + (State.serving ? 1 : 0);
+  list.innerHTML = rows.length ? rows.join("") : `<div class="queue-empty">${esc(t().queueEmpty)}</div>`;
 }
 
 function refreshTreatButton(){
   const btn = document.getElementById("treatBtn");
   const sub = document.getElementById("treatSub");
-  const signedIn = State.me && State.me.loggedIn;
-  const me = signedIn ? State.me.username : null;
+  const me = (State.me && State.me.loggedIn) ? State.me.username : null;
 
   if(State.serving && me && State.serving.username === me){
-    btn.disabled = true;
-    sub.textContent = t().yourTurn;
-    return;
+    btn.disabled = true; sub.textContent = t().yourTurn; return;
   }
   const mine = State.queue.find(e => e.username === me);
-  if(mine){
-    btn.disabled = true;
-    sub.textContent = t().queuedSub(mine.position);
-    return;
-  }
+  if(mine){ btn.disabled = true; sub.textContent = t().queuedSub(mine.position); return; }
   btn.disabled = false;
   sub.textContent = t().dispenseSub;
 }
@@ -1099,16 +1287,13 @@ async function pollQueue(){
   try{
     const r = await fetch("/api/queue");
     const d = await r.json();
-
     const wasServingMe = State.serving && State.me && State.serving.username === State.me.username;
 
     State.serving = d.serving;
-    State.queue   = d.queue || [];
+    State.queue = d.queue || [];
 
-    // Announce any drops we haven't announced yet
     const drops = (d.recent || []).filter(x => x.ticket > State.lastTicket);
     if(State.lastTicket === 0){
-      // first poll of the session — don't replay history
       State.lastTicket = (d.recent && d.recent.length) ? d.recent[0].ticket : 0;
     }else if(drops.length){
       drops.sort((a,b) => a.ticket - b.ticket).forEach(drop => {
@@ -1119,48 +1304,31 @@ async function pollQueue(){
       checkSession();
     }
 
-    // Motor animation when it becomes your turn
     const servingMe = State.serving && State.me && State.serving.username === State.me.username;
-    if(servingMe && !wasServingMe){
-      fillBar(MOTOR_MS);
-      setStatus(t().yourTurn, "warn");
-    }
+    if(servingMe && !wasServingMe){ fillBar(MOTOR_MS); setStatus(t().yourTurn, "warn"); }
 
     renderQueue();
     refreshTreatButton();
-  }catch(e){ /* server asleep; try again next tick */ }
+  }catch(e){}
 }
 
 async function dispense(){
-  if(!State.me || !State.me.loggedIn){
-    openModal("login");
-    return toast(t().needLogin, "bad");
-  }
-  const btn = document.getElementById("treatBtn");
-  btn.disabled = true;
-
+  if(!State.me || !State.me.loggedIn){ openModal("login"); return toast(t().needLogin, "bad"); }
+  document.getElementById("treatBtn").disabled = true;
   try{
     const r = await fetch("/dispense");
     const d = await r.json();
-
     if(d.status === "Success"){
-      if(typeof d.remainingTokens === "number"){
-        State.me.tokens = d.remainingTokens;
-        renderSession();
-      }
+      if(typeof d.remainingTokens === "number"){ State.me.tokens = d.remainingTokens; renderSession(); }
       toast(t().joined, "good");
       setStatus(t().joined, "warn");
     }else{
       const msg = d.code === "already_queued" ? t().alreadyQueued
                 : d.code === "no_tokens"      ? t().noTokens
                 : (d.message || t().offline);
-      toast(msg, "bad");
-      setStatus(msg, "err");
+      toast(msg, "bad"); setStatus(msg, "err");
     }
-  }catch(e){
-    toast(t().offline, "bad");
-    setStatus(t().offline, "err");
-  }
+  }catch(e){ toast(t().offline, "bad"); setStatus(t().offline, "err"); }
   pollQueue();
 }
 
@@ -1170,7 +1338,7 @@ function closeModals(){ document.querySelectorAll(".overlay").forEach(o => o.cla
 document.addEventListener("keydown", e => { if(e.key === "Escape") closeModals(); });
 
 /* ============================================================
-   7. BOOT
+   9. BOOT
    ============================================================ */
 document.getElementById("langSelect").addEventListener("change", e => {
   State.lang = e.target.value;
@@ -1181,11 +1349,13 @@ document.getElementById("langSelect").addEventListener("change", e => {
 window.addEventListener("DOMContentLoaded", async () => {
   document.getElementById("langSelect").value = State.lang;
   applyLanguage();
+  buildFaceGrid();
   await checkSession();
+  await loadProfiles();
   loadWall();
   pollQueue();
-  setInterval(pollQueue, POLL_MS);  // live treat line
-  setInterval(loadWall, 30000);     // gentle auto-refresh of the wall
+  setInterval(pollQueue, POLL_MS);
+  setInterval(async () => { await loadProfiles(); loadWall(); }, 30000);
 });
 </script>
 </body>
