@@ -53,6 +53,22 @@ button,input,textarea,select{font:inherit;color:inherit}
 .brand-mark{width:36px;height:36px;flex:none;border-radius:12px;background:linear-gradient(150deg,var(--accent),#ff8a6b);display:grid;place-items:center;font-size:19px;box-shadow:0 6px 18px rgba(255,180,84,.22)}
 .brand-name{font-family:"Bricolage Grotesque",sans-serif;font-weight:800;font-size:1.12rem;letter-spacing:-.03em}
 .brand-sub{display:block;font-size:.74rem;color:var(--muted);font-weight:500;letter-spacing:0}
+.nav-icons{display:flex;align-items:center;gap:8px}
+.icon-btn{
+  position:relative;display:grid;place-items:center;
+  width:36px;height:36px;border-radius:999px;
+  background:var(--surface-2);border:1px solid var(--line);color:var(--text);
+  text-decoration:none;transition:background .15s ease,border-color .15s ease;
+}
+.icon-btn:hover{background:#32293e;border-color:#4a3d5d}
+.icon-tip{
+  position:absolute;top:calc(100% + 8px);left:50%;transform:translateX(-50%) translateY(-4px);
+  background:var(--surface-2);border:1px solid var(--line);color:var(--text);
+  font-size:.74rem;font-weight:600;white-space:nowrap;
+  padding:5px 10px;border-radius:8px;
+  opacity:0;pointer-events:none;transition:opacity .14s ease,transform .14s ease;
+}
+.icon-btn:hover .icon-tip{opacity:1;transform:translateX(-50%) translateY(0)}
 .lang-wrap{position:relative;display:flex;align-items:center}
 .lang-wrap svg{position:absolute;right:11px;pointer-events:none;opacity:.6}
 select.lang{appearance:none;-webkit-appearance:none;background:var(--surface-2);border:1px solid var(--line);border-radius:999px;padding:8px 30px 8px 14px;font-size:.86rem;font-weight:600;cursor:pointer}
@@ -240,6 +256,14 @@ select.lang:hover{border-color:#4a3d5d}
         <span class="brand-sub" data-i18n="tagline"></span>
       </span>
     </div>
+
+    <nav class="nav-icons">
+      <a href="index.html" class="icon-btn" id="homeBtn" aria-label="Home">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M4 11.5 12 4l8 7.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M6.5 10v9.5a1 1 0 0 0 1 1H10a1 1 0 0 0 1-1V15h2v4.5a1 1 0 0 0 1 1h2.5a1 1 0 0 0 1-1V10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span class="icon-tip" data-i18n="home"></span>
+      </a>
+      <a href="about.html" class="btn btn-ghost btn-sm" data-i18n="about"></a>
+    </nav>
 
     <div class="lang-wrap">
       <select class="lang" id="langSelect" aria-label="Language">
@@ -522,7 +546,7 @@ const COUNTRIES = ["Argentina","Australia","Austria","Bangladesh","Belgium","Bra
    2. LANGUAGES
    ============================================================ */
 const I18N = {
-en:{tagline:"a wall for cats, by cats",signIn:"Sign in",signUp:"Sign up",logOut:"Log out",
+en:{tagline:"a wall for cats, by cats",signIn:"Sign in",signUp:"Sign up",logOut:"Log out",home:"Home",about:"About",
 camTitle:"Goose, live",dispense:"Drop a treat",dispenseSub:"one 🐟 token",ready:"Dispenser ready",
 offline:"Dispenser didn't answer. Try again.",wallTitle:"The wall",feedNote:n=>`${n} ${n===1?"post":"posts"}`,
 composerPh:"Say something. It comes out as meows anyway.",addPhoto:"Photo",post:"Post",
@@ -548,7 +572,7 @@ pcBreed:"Breed",pcAge:"Age",pcCountry:"Country",pcFood:"Favourite",
 years:n=>n<1?"under a year":`${n} ${n===1?"year":"years"} old`,
 noProfile:"This cat kept their details private.",modTag:"MOD"},
 
-fr:{tagline:"un mur pour chats, par des chats",signIn:"Connexion",signUp:"S'inscrire",logOut:"Déconnexion",
+fr:{tagline:"un mur pour chats, par des chats",signIn:"Connexion",signUp:"S'inscrire",logOut:"Déconnexion",home:"Accueil",about:"À propos",
 camTitle:"Goose, en direct",dispense:"Lâcher une friandise",dispenseSub:"un jeton 🐟",ready:"Distributeur prêt",
 offline:"Le distributeur ne répond pas. Réessayez.",wallTitle:"Le mur",feedNote:n=>`${n} ${n===1?"publication":"publications"}`,
 composerPh:"Dites quelque chose. Ça sortira en miaous.",addPhoto:"Photo",post:"Publier",
@@ -574,7 +598,7 @@ pcBreed:"Race",pcAge:"Âge",pcCountry:"Pays",pcFood:"Préféré",
 years:n=>n<1?"moins d'un an":`${n} ${n===1?"an":"ans"}`,
 noProfile:"Ce chat garde ses informations pour lui.",modTag:"MOD"},
 
-it:{tagline:"un muro per gatti, scritto dai gatti",signIn:"Accedi",signUp:"Registrati",logOut:"Esci",
+it:{tagline:"un muro per gatti, scritto dai gatti",signIn:"Accedi",signUp:"Registrati",logOut:"Esci",home:"Home",about:"Informazioni",
 camTitle:"Goose, in diretta",dispense:"Lancia un premietto",dispenseSub:"un gettone 🐟",ready:"Distributore pronto",
 offline:"Il distributore non risponde. Riprova.",wallTitle:"Il muro",feedNote:n=>`${n} post`,
 composerPh:"Scrivi qualcosa. Uscirà comunque in miao.",addPhoto:"Foto",post:"Pubblica",
@@ -600,7 +624,7 @@ pcBreed:"Razza",pcAge:"Età",pcCountry:"Paese",pcFood:"Preferito",
 years:n=>n<1?"meno di un anno":`${n} ${n===1?"anno":"anni"}`,
 noProfile:"Questo gatto tiene per sé i suoi dati.",modTag:"MOD"},
 
-pt:{tagline:"um mural para gatos, feito por gatos",signIn:"Entrar",signUp:"Criar conta",logOut:"Sair",
+pt:{tagline:"um mural para gatos, feito por gatos",signIn:"Entrar",signUp:"Criar conta",logOut:"Sair",home:"Início",about:"Sobre",
 camTitle:"Goose, ao vivo",dispense:"Soltar um petisco",dispenseSub:"uma ficha 🐟",ready:"Alimentador pronto",
 offline:"O alimentador não respondeu. Tente de novo.",wallTitle:"O mural",feedNote:n=>`${n} ${n===1?"publicação":"publicações"}`,
 composerPh:"Escreva o que quiser. Sai em miados de qualquer forma.",addPhoto:"Foto",post:"Publicar",
@@ -626,7 +650,7 @@ pcBreed:"Raça",pcAge:"Idade",pcCountry:"País",pcFood:"Favorito",
 years:n=>n<1?"menos de um ano":`${n} ${n===1?"ano":"anos"}`,
 noProfile:"Este gato guardou os detalhes para si.",modTag:"MOD"},
 
-pl:{tagline:"ściana dla kotów, pisana przez koty",signIn:"Zaloguj się",signUp:"Załóż konto",logOut:"Wyloguj",
+pl:{tagline:"ściana dla kotów, pisana przez koty",signIn:"Zaloguj się",signUp:"Załóż konto",logOut:"Wyloguj",home:"Strona główna",about:"O nas",
 camTitle:"Goose na żywo",dispense:"Wrzuć przysmak",dispenseSub:"jeden żeton 🐟",ready:"Karmnik gotowy",
 offline:"Karmnik nie odpowiada. Spróbuj ponownie.",wallTitle:"Ściana",feedNote:n=>`Wpisy: ${n}`,
 composerPh:"Napisz cokolwiek. I tak wyjdzie miau.",addPhoto:"Zdjęcie",post:"Opublikuj",
@@ -652,7 +676,7 @@ pcBreed:"Rasa",pcAge:"Wiek",pcCountry:"Kraj",pcFood:"Ulubione",
 years:n=>n<1?"mniej niż rok":`${n} lat`,
 noProfile:"Ten kot zachował szczegóły dla siebie.",modTag:"MOD"},
 
-sv:{tagline:"en vägg för katter, av katter",signIn:"Logga in",signUp:"Skapa konto",logOut:"Logga ut",
+sv:{tagline:"en vägg för katter, av katter",signIn:"Logga in",signUp:"Skapa konto",logOut:"Logga ut",home:"Hem",about:"Om",
 camTitle:"Goose, live",dispense:"Släpp ett godis",dispenseSub:"en 🐟-pollett",ready:"Matautomaten är redo",
 offline:"Matautomaten svarar inte. Försök igen.",wallTitle:"Väggen",feedNote:n=>`${n} ${n===1?"inlägg":"inlägg"}`,
 composerPh:"Skriv vad du vill. Det blir jamanden ändå.",addPhoto:"Bild",post:"Publicera",
@@ -678,7 +702,7 @@ pcBreed:"Ras",pcAge:"Ålder",pcCountry:"Land",pcFood:"Favorit",
 years:n=>n<1?"under ett år":`${n} år`,
 noProfile:"Den här katten höll detaljerna för sig själv.",modTag:"MOD"},
 
-ru:{tagline:"стена для котов, написанная котами",signIn:"Войти",signUp:"Регистрация",logOut:"Выйти",
+ru:{tagline:"стена для котов, написанная котами",signIn:"Войти",signUp:"Регистрация",logOut:"Выйти",home:"Главная",about:"О сайте",
 camTitle:"Гусь в прямом эфире",dispense:"Бросить лакомство",dispenseSub:"один жетон 🐟",ready:"Кормушка готова",
 offline:"Кормушка не отвечает. Попробуйте ещё раз.",wallTitle:"Стена",feedNote:n=>`Записей: ${n}`,
 composerPh:"Напишите что угодно. Всё равно выйдет мяу.",addPhoto:"Фото",post:"Опубликовать",
@@ -704,7 +728,7 @@ pcBreed:"Порода",pcAge:"Возраст",pcCountry:"Страна",pcFood:"�
 years:n=>n<1?"меньше года":`${n} г.`,
 noProfile:"Этот кот не стал делиться подробностями.",modTag:"МОД"},
 
-zh:{tagline:"喵星人的留言墙",signIn:"登录",signUp:"注册",logOut:"退出",
+zh:{tagline:"喵星人的留言墙",signIn:"登录",signUp:"注册",logOut:"退出",home:"首页",about:"关于",
 camTitle:"Goose 直播中",dispense:"投一颗零食",dispenseSub:"消耗一枚 🐟",ready:"喂食器就绪",
 offline:"喂食器没有回应，请重试。",wallTitle:"留言墙",feedNote:n=>`${n} 条动态`,
 composerPh:"随便写点什么，反正发出来都是喵。",addPhoto:"图片",post:"发布",
@@ -730,7 +754,7 @@ pcBreed:"品种",pcAge:"年龄",pcCountry:"国家",pcFood:"最爱",
 years:n=>n<1?"不到一岁":`${n} 岁`,
 noProfile:"这只猫没有公开资料。",modTag:"管理员"},
 
-ja:{tagline:"猫による猫のための掲示板",signIn:"ログイン",signUp:"新規登録",logOut:"ログアウト",
+ja:{tagline:"猫による猫のための掲示板",signIn:"ログイン",signUp:"新規登録",logOut:"ログアウト",home:"ホーム",about:"サイトについて",
 camTitle:"Goose、ライブ中",dispense:"おやつを落とす",dispenseSub:"🐟 トークン 1 枚",ready:"給餌器は準備OK",
 offline:"給餌器が応答しません。もう一度どうぞ。",wallTitle:"みんなの壁",feedNote:n=>`${n} 件の投稿`,
 composerPh:"なんでもどうぞ。どうせ にゃー になります。",addPhoto:"写真",post:"投稿",
