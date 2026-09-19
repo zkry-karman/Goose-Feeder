@@ -242,6 +242,65 @@ select.lang:hover{border-color:#4a3d5d}
 .toast.good{border-color:rgba(102,217,160,.4)}
 .toast.bad{border-color:rgba(255,92,114,.4)}
 
+/* ---------- cat of the week ---------- */
+.cotw{margin-top:22px;position:relative;overflow:hidden;background:
+  radial-gradient(120% 140% at 15% 0%, rgba(255,180,84,.12), transparent 55%),
+  radial-gradient(120% 140% at 100% 100%, rgba(199,155,255,.1), transparent 55%),
+  var(--surface);
+}
+.cotw-head{display:flex;justify-content:center;margin-bottom:12px;position:relative;z-index:2}
+.cotw-title{font-family:"Bricolage Grotesque",sans-serif;font-weight:800;font-size:1.02rem;letter-spacing:-.01em}
+.cotw-body{position:relative;z-index:2}
+
+.cotw-empty{text-align:center;color:var(--muted);font-size:.86rem;padding:10px 6px 4px}
+.cotw-empty a{color:var(--accent);font-weight:600;text-decoration:none}
+.cotw-empty a:hover{text-decoration:underline}
+
+.cotw-card{position:relative}
+.cotw-frame{
+  position:relative;border-radius:18px;overflow:hidden;
+  border:1px solid rgba(255,180,84,.35);
+  box-shadow:0 0 0 1px rgba(255,180,84,.08), 0 14px 30px rgba(0,0,0,.35);
+}
+.cotw-photo{width:100%;aspect-ratio:1/1;object-fit:cover;display:block;background:var(--surface-2)}
+.cotw-ribbon{
+  position:absolute;top:10px;left:10px;
+  background:linear-gradient(135deg,var(--accent),#ff8a6b);color:var(--accent-ink);
+  font-family:"Bricolage Grotesque",sans-serif;font-weight:800;font-size:.72rem;
+  padding:5px 11px;border-radius:999px;box-shadow:0 6px 14px rgba(255,148,99,.35);
+}
+.cotw-info{padding:13px 3px 2px}
+.cotw-name{font-family:"Bricolage Grotesque",sans-serif;font-weight:800;font-size:1.18rem;letter-spacing:-.01em}
+.cotw-meta{font-size:.78rem;color:var(--muted);margin-top:2px}
+.cotw-desc{font-size:.87rem;color:var(--text);margin-top:9px;line-height:1.5}
+.cotw-by{font-size:.74rem;color:#6f6584;margin-top:10px}
+
+/* twinkling stars/sparkles scattered around the panel */
+.sparkle{
+  position:absolute;pointer-events:none;z-index:1;
+  color:var(--accent);opacity:.85;
+  animation:twinkle 3.6s ease-in-out infinite;
+}
+.sparkle svg{display:block;filter:drop-shadow(0 0 4px rgba(255,180,84,.55))}
+@keyframes twinkle{
+  0%,100%{opacity:.25;transform:scale(.75) rotate(0deg)}
+  50%{opacity:1;transform:scale(1.15) rotate(14deg)}
+}
+
+/* ---------- cat-of-the-week review modal (admin) ---------- */
+.review-list{display:flex;flex-direction:column;gap:12px;max-height:60vh;overflow-y:auto;padding-right:4px}
+.review-list::-webkit-scrollbar{width:6px}
+.review-list::-webkit-scrollbar-thumb{background:#3d3350;border-radius:99px}
+.review-row{display:flex;gap:13px;background:var(--surface-2);border:1px solid var(--line);border-radius:16px;padding:12px}
+.review-row.is-featured{border-color:rgba(255,180,84,.4)}
+.review-thumb{width:76px;height:76px;border-radius:12px;object-fit:cover;flex:none;background:var(--ink)}
+.review-info{min-width:0;flex:1}
+.review-name{font-weight:700;font-size:.95rem}
+.review-sub{font-size:.76rem;color:var(--muted);margin:2px 0 6px}
+.review-desc{font-size:.83rem;color:var(--text);max-height:54px;overflow:hidden;text-overflow:ellipsis}
+.review-actions{display:flex;gap:8px;margin-top:9px;flex-wrap:wrap}
+.review-status{font-size:.68rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--accent)}
+
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
@@ -263,6 +322,7 @@ select.lang:hover{border-color:#4a3d5d}
         <span class="icon-tip" data-i18n="home"></span>
       </a>
       <a href="about.html" class="btn btn-ghost btn-sm" data-i18n="about"></a>
+      <a href="catapply.html" class="btn btn-primary btn-sm" data-i18n="featureCat"></a>
     </nav>
 
     <div class="lang-wrap">
@@ -287,6 +347,7 @@ select.lang:hover{border-color:#4a3d5d}
 
     <span id="zoneIn" style="display:none;align-items:center;gap:10px">
       <span class="badge" id="userBadge"></span>
+      <button class="btn btn-ghost btn-sm" id="reviewBtn" style="display:none" onclick="openReview()" data-i18n="reviewSubs"></button>
       <button class="btn btn-ghost" onclick="logout()" data-i18n="logOut"></button>
     </span>
   </div>
@@ -323,6 +384,13 @@ select.lang:hover{border-color:#4a3d5d}
             <div class="queue-list" id="queueList"></div>
           </div>
         </div>
+      </section>
+
+      <section class="panel cotw" id="cotwPanel">
+        <div class="cotw-head">
+          <span class="cotw-title">✨ <span data-i18n="cotwTitle"></span> ✨</span>
+        </div>
+        <div class="cotw-body" id="cotwBody"></div>
       </section>
     </div>
 
@@ -418,6 +486,16 @@ select.lang:hover{border-color:#4a3d5d}
         <button type="button" class="btn btn-primary" onclick="finishRegister()" data-i18n="createAccount"></button>
       </div>
     </div>
+  </div>
+</div>
+
+<!-- CAT OF THE WEEK — MODERATOR REVIEW -->
+<div class="overlay" id="modal-review" onclick="if(event.target===this)closeModals()">
+  <div class="modal" style="max-width:520px">
+    <button class="x" onclick="closeModals()" aria-label="Close">&times;</button>
+    <h3 data-i18n="reviewTitle"></h3>
+    <p class="hint" data-i18n="reviewHint"></p>
+    <div class="review-list" id="reviewList"></div>
   </div>
 </div>
 
@@ -547,6 +625,21 @@ const COUNTRIES = ["Argentina","Australia","Austria","Bangladesh","Belgium","Bra
    ============================================================ */
 const I18N = {
 en:{tagline:"a wall for cats, by cats",signIn:"Sign in",signUp:"Sign up",logOut:"Log out",home:"Home",about:"About",
+featureCat:"Feature your cat",cotwTitle:"Cat of the Week",
+cotwEmptyBoth:'No cat has been crowned yet. <a href="catapply.html">Submit yours</a>!',
+cotwEmptyView:"No cat has been crowned yet. Check back soon!",
+cotwCrown:"👑 Crowned",cotwSubmittedBy:n=>`Submitted by ${n}`,
+reviewSubs:"🐾 Review submissions",reviewTitle:"Cat of the Week submissions",
+reviewHint:"Pick one to crown — it replaces whoever's featured now.",
+reviewEmpty:"No submissions yet.",feature:"Feature this cat",reject:"Reject",
+featured:"Currently featured",crowned:d=>`Crowned ${d}`,
+applyTitle:"Feature your cat",applyHint:"One photo, a few details — the moderator picks a winner each week.",
+applyCatName:"Cat's name",applyBreed:"Breed (optional)",applyAge:"Age (optional)",
+applyDesc:"Tell us about them",applyDescPh:"What makes them special?",
+applyPhoto:"Photo",applySubmit:"Submit for consideration",
+applySignInFirst:'Sign in on <a href="index.html">the wall</a> first to submit your cat.',
+applySuccess:"Submitted! Check back to see if your cat gets crowned.",
+applyNeedPhoto:"Please attach a photo.",backToWall:"← Back to the wall",
 camTitle:"Goose, live",dispense:"Drop a treat",dispenseSub:"one 🐟 token",ready:"Dispenser ready",
 offline:"Dispenser didn't answer. Try again.",wallTitle:"The wall",feedNote:n=>`${n} ${n===1?"post":"posts"}`,
 composerPh:"Say something. It comes out as meows anyway.",addPhoto:"Photo",post:"Post",
@@ -573,6 +666,21 @@ years:n=>n<1?"under a year":`${n} ${n===1?"year":"years"} old`,
 noProfile:"This cat kept their details private.",modTag:"MOD"},
 
 fr:{tagline:"un mur pour chats, par des chats",signIn:"Connexion",signUp:"S'inscrire",logOut:"Déconnexion",home:"Accueil",about:"À propos",
+featureCat:"Présentez votre chat",cotwTitle:"Chat de la semaine",
+cotwEmptyBoth:'Aucun chat couronné pour l\'instant. <a href="catapply.html">Proposez le vôtre</a> !',
+cotwEmptyView:"Aucun chat couronné pour l'instant. Revenez bientôt !",
+cotwCrown:"👑 Couronné",cotwSubmittedBy:n=>`Proposé par ${n}`,
+reviewSubs:"🐾 Examiner les candidatures",reviewTitle:"Candidatures Chat de la semaine",
+reviewHint:"Choisissez-en un à couronner — cela remplace le chat actuellement à l'honneur.",
+reviewEmpty:"Aucune candidature pour l'instant.",feature:"Couronner ce chat",reject:"Rejeter",
+featured:"Actuellement à l'honneur",crowned:d=>`Couronné le ${d}`,
+applyTitle:"Présentez votre chat",applyHint:"Une photo, quelques détails — le modérateur choisit un gagnant chaque semaine.",
+applyCatName:"Nom du chat",applyBreed:"Race (facultatif)",applyAge:"Âge (facultatif)",
+applyDesc:"Parlez-nous de lui",applyDescPh:"Qu'est-ce qui le rend spécial ?",
+applyPhoto:"Photo",applySubmit:"Soumettre la candidature",
+applySignInFirst:'Connectez-vous sur <a href="index.html">le mur</a> pour proposer votre chat.',
+applySuccess:"Envoyé ! Revenez voir si votre chat est couronné.",
+applyNeedPhoto:"Veuillez joindre une photo.",backToWall:"← Retour au mur",
 camTitle:"Goose, en direct",dispense:"Lâcher une friandise",dispenseSub:"un jeton 🐟",ready:"Distributeur prêt",
 offline:"Le distributeur ne répond pas. Réessayez.",wallTitle:"Le mur",feedNote:n=>`${n} ${n===1?"publication":"publications"}`,
 composerPh:"Dites quelque chose. Ça sortira en miaous.",addPhoto:"Photo",post:"Publier",
@@ -599,6 +707,21 @@ years:n=>n<1?"moins d'un an":`${n} ${n===1?"an":"ans"}`,
 noProfile:"Ce chat garde ses informations pour lui.",modTag:"MOD"},
 
 it:{tagline:"un muro per gatti, scritto dai gatti",signIn:"Accedi",signUp:"Registrati",logOut:"Esci",home:"Home",about:"Informazioni",
+featureCat:"Presenta il tuo gatto",cotwTitle:"Gatto della settimana",
+cotwEmptyBoth:'Nessun gatto incoronato ancora. <a href="catapply.html">Proponi il tuo</a>!',
+cotwEmptyView:"Nessun gatto incoronato ancora. Torna presto!",
+cotwCrown:"👑 Incoronato",cotwSubmittedBy:n=>`Proposto da ${n}`,
+reviewSubs:"🐾 Rivedi le candidature",reviewTitle:"Candidature Gatto della settimana",
+reviewHint:"Scegline uno da incoronare — sostituirà quello attuale.",
+reviewEmpty:"Nessuna candidatura ancora.",feature:"Incorona questo gatto",reject:"Rifiuta",
+featured:"Attualmente in evidenza",crowned:d=>`Incoronato il ${d}`,
+applyTitle:"Presenta il tuo gatto",applyHint:"Una foto, qualche dettaglio — il moderatore sceglie un vincitore ogni settimana.",
+applyCatName:"Nome del gatto",applyBreed:"Razza (facoltativo)",applyAge:"Età (facoltativo)",
+applyDesc:"Raccontacelo",applyDescPh:"Cosa lo rende speciale?",
+applyPhoto:"Foto",applySubmit:"Invia candidatura",
+applySignInFirst:'Accedi da <a href="index.html">il muro</a> prima di proporre il tuo gatto.',
+applySuccess:"Inviato! Torna a controllare se il tuo gatto viene incoronato.",
+applyNeedPhoto:"Allega una foto.",backToWall:"← Torna al muro",
 camTitle:"Goose, in diretta",dispense:"Lancia un premietto",dispenseSub:"un gettone 🐟",ready:"Distributore pronto",
 offline:"Il distributore non risponde. Riprova.",wallTitle:"Il muro",feedNote:n=>`${n} post`,
 composerPh:"Scrivi qualcosa. Uscirà comunque in miao.",addPhoto:"Foto",post:"Pubblica",
@@ -625,6 +748,21 @@ years:n=>n<1?"meno di un anno":`${n} ${n===1?"anno":"anni"}`,
 noProfile:"Questo gatto tiene per sé i suoi dati.",modTag:"MOD"},
 
 pt:{tagline:"um mural para gatos, feito por gatos",signIn:"Entrar",signUp:"Criar conta",logOut:"Sair",home:"Início",about:"Sobre",
+featureCat:"Destaque seu gato",cotwTitle:"Gato da Semana",
+cotwEmptyBoth:'Nenhum gato coroado ainda. <a href="catapply.html">Envie o seu</a>!',
+cotwEmptyView:"Nenhum gato coroado ainda. Volte em breve!",
+cotwCrown:"👑 Coroado",cotwSubmittedBy:n=>`Enviado por ${n}`,
+reviewSubs:"🐾 Revisar inscrições",reviewTitle:"Inscrições do Gato da Semana",
+reviewHint:"Escolha um para coroar — substitui quem está em destaque agora.",
+reviewEmpty:"Nenhuma inscrição ainda.",feature:"Coroar este gato",reject:"Rejeitar",
+featured:"Em destaque atualmente",crowned:d=>`Coroado em ${d}`,
+applyTitle:"Destaque seu gato",applyHint:"Uma foto, alguns detalhes — o moderador escolhe um vencedor toda semana.",
+applyCatName:"Nome do gato",applyBreed:"Raça (opcional)",applyAge:"Idade (opcional)",
+applyDesc:"Conte sobre ele",applyDescPh:"O que o torna especial?",
+applyPhoto:"Foto",applySubmit:"Enviar inscrição",
+applySignInFirst:'Entre em <a href="index.html">o mural</a> primeiro para inscrever seu gato.',
+applySuccess:"Enviado! Volte para ver se seu gato foi coroado.",
+applyNeedPhoto:"Anexe uma foto.",backToWall:"← Voltar ao mural",
 camTitle:"Goose, ao vivo",dispense:"Soltar um petisco",dispenseSub:"uma ficha 🐟",ready:"Alimentador pronto",
 offline:"O alimentador não respondeu. Tente de novo.",wallTitle:"O mural",feedNote:n=>`${n} ${n===1?"publicação":"publicações"}`,
 composerPh:"Escreva o que quiser. Sai em miados de qualquer forma.",addPhoto:"Foto",post:"Publicar",
@@ -651,6 +789,21 @@ years:n=>n<1?"menos de um ano":`${n} ${n===1?"ano":"anos"}`,
 noProfile:"Este gato guardou os detalhes para si.",modTag:"MOD"},
 
 pl:{tagline:"ściana dla kotów, pisana przez koty",signIn:"Zaloguj się",signUp:"Załóż konto",logOut:"Wyloguj",home:"Strona główna",about:"O nas",
+featureCat:"Pokaż swojego kota",cotwTitle:"Kot Tygodnia",
+cotwEmptyBoth:'Nikt jeszcze nie został koronowany. <a href="catapply.html">Zgłoś swojego</a>!',
+cotwEmptyView:"Nikt jeszcze nie został koronowany. Zajrzyj tu wkrótce!",
+cotwCrown:"👑 Koronowany",cotwSubmittedBy:n=>`Zgłosił(a) ${n}`,
+reviewSubs:"🐾 Przejrzyj zgłoszenia",reviewTitle:"Zgłoszenia Kota Tygodnia",
+reviewHint:"Wybierz jedno do koronacji — zastąpi aktualnie wyróżnione.",
+reviewEmpty:"Brak zgłoszeń.",feature:"Koronuj tego kota",reject:"Odrzuć",
+featured:"Obecnie wyróżniony",crowned:d=>`Koronowany ${d}`,
+applyTitle:"Pokaż swojego kota",applyHint:"Jedno zdjęcie, kilka szczegółów — moderator co tydzień wybiera zwycięzcę.",
+applyCatName:"Imię kota",applyBreed:"Rasa (opcjonalnie)",applyAge:"Wiek (opcjonalnie)",
+applyDesc:"Opowiedz o nim",applyDescPh:"Co czyni go wyjątkowym?",
+applyPhoto:"Zdjęcie",applySubmit:"Wyślij zgłoszenie",
+applySignInFirst:'Zaloguj się na <a href="index.html">ścianie</a>, żeby zgłosić kota.',
+applySuccess:"Wysłano! Sprawdź później, czy twój kot został koronowany.",
+applyNeedPhoto:"Dołącz zdjęcie.",backToWall:"← Powrót do ściany",
 camTitle:"Goose na żywo",dispense:"Wrzuć przysmak",dispenseSub:"jeden żeton 🐟",ready:"Karmnik gotowy",
 offline:"Karmnik nie odpowiada. Spróbuj ponownie.",wallTitle:"Ściana",feedNote:n=>`Wpisy: ${n}`,
 composerPh:"Napisz cokolwiek. I tak wyjdzie miau.",addPhoto:"Zdjęcie",post:"Opublikuj",
@@ -677,6 +830,21 @@ years:n=>n<1?"mniej niż rok":`${n} lat`,
 noProfile:"Ten kot zachował szczegóły dla siebie.",modTag:"MOD"},
 
 sv:{tagline:"en vägg för katter, av katter",signIn:"Logga in",signUp:"Skapa konto",logOut:"Logga ut",home:"Hem",about:"Om",
+featureCat:"Visa upp din katt",cotwTitle:"Veckans katt",
+cotwEmptyBoth:'Ingen katt krönt än. <a href="catapply.html">Skicka in din</a>!',
+cotwEmptyView:"Ingen katt krönt än. Kom tillbaka snart!",
+cotwCrown:"👑 Krönt",cotwSubmittedBy:n=>`Inskickad av ${n}`,
+reviewSubs:"🐾 Granska bidrag",reviewTitle:"Bidrag till Veckans katt",
+reviewHint:"Välj en att kröna — den ersätter den som visas nu.",
+reviewEmpty:"Inga bidrag än.",feature:"Kröna den här katten",reject:"Avvisa",
+featured:"Visas just nu",crowned:d=>`Krönt ${d}`,
+applyTitle:"Visa upp din katt",applyHint:"En bild, några detaljer — moderatorn väljer en vinnare varje vecka.",
+applyCatName:"Kattens namn",applyBreed:"Ras (valfritt)",applyAge:"Ålder (valfritt)",
+applyDesc:"Berätta om hen",applyDescPh:"Vad gör hen speciell?",
+applyPhoto:"Bild",applySubmit:"Skicka in bidrag",
+applySignInFirst:'Logga in på <a href="index.html">väggen</a> först för att skicka in din katt.',
+applySuccess:"Skickat! Kom tillbaka och se om din katt blir krönt.",
+applyNeedPhoto:"Bifoga en bild.",backToWall:"← Tillbaka till väggen",
 camTitle:"Goose, live",dispense:"Släpp ett godis",dispenseSub:"en 🐟-pollett",ready:"Matautomaten är redo",
 offline:"Matautomaten svarar inte. Försök igen.",wallTitle:"Väggen",feedNote:n=>`${n} ${n===1?"inlägg":"inlägg"}`,
 composerPh:"Skriv vad du vill. Det blir jamanden ändå.",addPhoto:"Bild",post:"Publicera",
@@ -703,6 +871,21 @@ years:n=>n<1?"under ett år":`${n} år`,
 noProfile:"Den här katten höll detaljerna för sig själv.",modTag:"MOD"},
 
 ru:{tagline:"стена для котов, написанная котами",signIn:"Войти",signUp:"Регистрация",logOut:"Выйти",home:"Главная",about:"О сайте",
+featureCat:"Показать кота",cotwTitle:"Кот недели",
+cotwEmptyBoth:'Пока никого не короновали. <a href="catapply.html">Предложите своего</a>!',
+cotwEmptyView:"Пока никого не короновали. Загляните позже!",
+cotwCrown:"👑 Коронован",cotwSubmittedBy:n=>`Прислал(а) ${n}`,
+reviewSubs:"🐾 Заявки на рассмотрение",reviewTitle:"Заявки «Кот недели»",
+reviewHint:"Выберите одну для коронации — она заменит текущего кота недели.",
+reviewEmpty:"Заявок пока нет.",feature:"Короновать этого кота",reject:"Отклонить",
+featured:"Сейчас в топе",crowned:d=>`Коронован ${d}`,
+applyTitle:"Показать кота",applyHint:"Одно фото, немного деталей — модератор каждую неделю выбирает победителя.",
+applyCatName:"Кличка кота",applyBreed:"Порода (необязательно)",applyAge:"Возраст (необязательно)",
+applyDesc:"Расскажите о нём",applyDescPh:"Чем он особенный?",
+applyPhoto:"Фото",applySubmit:"Отправить заявку",
+applySignInFirst:'Сначала войдите <a href="index.html">на стену</a>, чтобы отправить заявку.',
+applySuccess:"Отправлено! Загляните позже — вдруг вашего кота коронуют.",
+applyNeedPhoto:"Прикрепите фото.",backToWall:"← Назад к стене",
 camTitle:"Гусь в прямом эфире",dispense:"Бросить лакомство",dispenseSub:"один жетон 🐟",ready:"Кормушка готова",
 offline:"Кормушка не отвечает. Попробуйте ещё раз.",wallTitle:"Стена",feedNote:n=>`Записей: ${n}`,
 composerPh:"Напишите что угодно. Всё равно выйдет мяу.",addPhoto:"Фото",post:"Опубликовать",
@@ -729,6 +912,21 @@ years:n=>n<1?"меньше года":`${n} г.`,
 noProfile:"Этот кот не стал делиться подробностями.",modTag:"МОД"},
 
 zh:{tagline:"喵星人的留言墙",signIn:"登录",signUp:"注册",logOut:"退出",home:"首页",about:"关于",
+featureCat:"展示你的猫",cotwTitle:"本周之猫",
+cotwEmptyBoth:'目前还没有加冕的猫。<a href="catapply.html">来提交你的猫吧</a>！',
+cotwEmptyView:"目前还没有加冕的猫，稍后再来看看！",
+cotwCrown:"👑 已加冕",cotwSubmittedBy:n=>`由 ${n} 提交`,
+reviewSubs:"🐾 查看投稿",reviewTitle:"本周之猫投稿",
+reviewHint:"选一只加冕——会替换当前展示的猫。",
+reviewEmpty:"暂无投稿。",feature:"加冕这只猫",reject:"拒绝",
+featured:"当前展示中",crowned:d=>`加冕于 ${d}`,
+applyTitle:"展示你的猫",applyHint:"一张照片，一些信息——管理员每周选出一位。",
+applyCatName:"猫的名字",applyBreed:"品种（可选）",applyAge:"年龄（可选）",
+applyDesc:"介绍一下它",applyDescPh:"它有什么特别之处？",
+applyPhoto:"照片",applySubmit:"提交申请",
+applySignInFirst:'请先在<a href="index.html">留言墙</a>登录，再提交你的猫。',
+applySuccess:"已提交！之后回来看看你的猫有没有被加冕。",
+applyNeedPhoto:"请附上一张照片。",backToWall:"← 返回留言墙",
 camTitle:"Goose 直播中",dispense:"投一颗零食",dispenseSub:"消耗一枚 🐟",ready:"喂食器就绪",
 offline:"喂食器没有回应，请重试。",wallTitle:"留言墙",feedNote:n=>`${n} 条动态`,
 composerPh:"随便写点什么，反正发出来都是喵。",addPhoto:"图片",post:"发布",
@@ -755,6 +953,21 @@ years:n=>n<1?"不到一岁":`${n} 岁`,
 noProfile:"这只猫没有公开资料。",modTag:"管理员"},
 
 ja:{tagline:"猫による猫のための掲示板",signIn:"ログイン",signUp:"新規登録",logOut:"ログアウト",home:"ホーム",about:"サイトについて",
+featureCat:"愛猫を紹介する",cotwTitle:"今週の猫",
+cotwEmptyBoth:'まだ選ばれた猫はいません。<a href="catapply.html">あなたの猫を応募してみましょう</a>！',
+cotwEmptyView:"まだ選ばれた猫はいません。また後で見に来てください！",
+cotwCrown:"👑 選出されました",cotwSubmittedBy:n=>`${n} さんの応募`,
+reviewSubs:"🐾 応募を確認",reviewTitle:"今週の猫 応募一覧",
+reviewHint:"選出する猫を1匹選んでください。現在の猫と入れ替わります。",
+reviewEmpty:"まだ応募はありません。",feature:"この猫を選出",reject:"却下",
+featured:"現在紹介中",crowned:d=>`${d} に選出`,
+applyTitle:"愛猫を紹介する",applyHint:"写真1枚と簡単な情報を。毎週モデレーターが1匹選びます。",
+applyCatName:"猫の名前",applyBreed:"品種（任意）",applyAge:"年齢（任意）",
+applyDesc:"猫について教えてください",applyDescPh:"どんなところが自慢ですか？",
+applyPhoto:"写真",applySubmit:"応募する",
+applySignInFirst:'応募するには先に<a href="index.html">壁</a>でログインしてください。',
+applySuccess:"送信しました！選ばれたかどうか、また見に来てください。",
+applyNeedPhoto:"写真を添付してください。",backToWall:"← 壁に戻る",
 camTitle:"Goose、ライブ中",dispense:"おやつを落とす",dispenseSub:"🐟 トークン 1 枚",ready:"給餌器は準備OK",
 offline:"給餌器が応答しません。もう一度どうぞ。",wallTitle:"みんなの壁",feedNote:n=>`${n} 件の投稿`,
 composerPh:"なんでもどうぞ。どうせ にゃー になります。",addPhoto:"写真",post:"投稿",
@@ -828,7 +1041,8 @@ const State = {
   serving: null,
   lastTicket: 0,
   draft: {},              // sign-up wizard answers
-  avatar: "ginger-tabby-gold"
+  avatar: "ginger-tabby-gold",
+  cotw: null
 };
 const t = () => I18N[State.lang];
 
@@ -883,6 +1097,7 @@ function applyLanguage(){
   renderSession();
   renderQueue();
   refreshTreatButton();
+  renderCotw(State.cotw);
 }
 
 function renderComposer(){
@@ -975,9 +1190,11 @@ function renderSession(){
       `<span class="mini">${catFace(State.me.avatar)}</span>${esc(State.me.username)}
        ${State.me.isAdmin ? `<span class="mod-tag">${esc(t().modTag)}</span>` : ""}
        <span class="fish">🐟 ${State.me.tokens}</span>`;
+    document.getElementById("reviewBtn").style.display = State.me.isAdmin ? "inline-flex" : "none";
   }else{
     out.style.display = "inline-flex";
     inn.style.display = "none";
+    document.getElementById("reviewBtn").style.display = "none";
   }
 }
 
@@ -1356,6 +1573,125 @@ async function dispense(){
   pollQueue();
 }
 
+/* ============================================================
+   CAT OF THE WEEK
+   ============================================================ */
+// A handful of stable-but-scattered sparkle positions around the panel
+const SPARKLE_SPOTS = [
+  {top:"6%", left:"8%",  size:14, delay:"0s"},
+  {top:"14%",left:"88%", size:10, delay:".6s"},
+  {top:"46%",left:"4%",  size:9,  delay:"1.3s"},
+  {top:"78%",left:"92%", size:13, delay:"1.9s"},
+  {top:"90%",left:"12%", size:10, delay:"2.4s"},
+  {top:"58%",left:"95%", size:8,  delay:".2s"}
+];
+function sparkleSvg(size){
+  return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="currentColor">
+    <path d="M12 0 L14.2 9.8 24 12 14.2 14.2 12 24 9.8 14.2 0 12 9.8 9.8 Z"/></svg>`;
+}
+function sparkleLayer(){
+  return SPARKLE_SPOTS.map(s =>
+    `<span class="sparkle" style="top:${s.top};left:${s.left};animation-delay:${s.delay}">${sparkleSvg(s.size)}</span>`
+  ).join("");
+}
+
+async function loadCotw(){
+  try{
+    const r = await fetch("/api/cat-of-week/current");
+    const d = await r.json();
+    State.cotw = d.status === "Success" ? d.cat : null;
+  }catch(e){ State.cotw = null; }
+  renderCotw(State.cotw);
+}
+
+function renderCotw(cat){
+  const box = document.getElementById("cotwBody");
+  if(!cat){
+    box.innerHTML = `<div class="cotw-empty">${State.me && State.me.loggedIn ? t().cotwEmptyView : t().cotwEmptyBoth}</div>` + sparkleLayer();
+    return;
+  }
+  const meta = [cat.breed, cat.age].filter(Boolean).join(" · ");
+  box.innerHTML = `
+    ${sparkleLayer()}
+    <div class="cotw-card">
+      <div class="cotw-frame">
+        <img class="cotw-photo" src="${esc(cat.photo_url)}" alt="${esc(cat.cat_name)}" loading="lazy">
+        <span class="cotw-ribbon">${esc(t().cotwCrown)}</span>
+      </div>
+      <div class="cotw-info">
+        <div class="cotw-name">${esc(cat.cat_name)}</div>
+        ${meta ? `<div class="cotw-meta">${esc(meta)}</div>` : ""}
+        <div class="cotw-desc">${esc(cat.description)}</div>
+        <div class="cotw-by">${esc(t().cotwSubmittedBy(cat.username))}</div>
+      </div>
+    </div>`;
+}
+
+/* ---------- admin review modal ---------- */
+async function openReview(){
+  openModal("review");
+  const list = document.getElementById("reviewList");
+  list.innerHTML = `<div class="cotw-empty">${esc(t().loading)}</div>`;
+  try{
+    const r = await fetch("/api/admin/cat-of-week");
+    const d = await r.json();
+    if(d.status !== "Success") throw new Error(d.message);
+    renderReviewList(d.submissions || []);
+  }catch(e){
+    list.innerHTML = `<div class="cotw-empty">${esc(t().netErr)}</div>`;
+  }
+}
+
+function renderReviewList(subs){
+  const list = document.getElementById("reviewList");
+  if(!subs.length){
+    list.innerHTML = `<div class="cotw-empty">${esc(t().reviewEmpty)}</div>`;
+    return;
+  }
+  list.innerHTML = subs.map(s => {
+    const meta = [s.breed, s.age].filter(Boolean).join(" · ");
+    const isFeatured = s.status === "featured";
+    return `
+    <div class="review-row ${isFeatured ? "is-featured" : ""}">
+      <img class="review-thumb" src="${esc(s.photo_url)}" alt="${esc(s.cat_name)}">
+      <div class="review-info">
+        ${isFeatured ? `<div class="review-status">${esc(t().featured)}</div>` : ""}
+        <div class="review-name">${esc(s.cat_name)}${meta ? " · " + esc(meta) : ""}</div>
+        <div class="review-sub">${esc(t().cotwSubmittedBy(s.username))}${s.featured_at ? " · " + esc(t().crowned(when(s.featured_at))) : ""}</div>
+        <div class="review-desc">${esc(s.description)}</div>
+        <div class="review-actions">
+          ${!isFeatured ? `<button class="btn btn-primary btn-sm" onclick="featureSubmission(${s.id})">${esc(t().feature)}</button>` : ""}
+          <button class="btn btn-ghost btn-sm" onclick="rejectSubmission(${s.id})">${esc(t().reject)}</button>
+        </div>
+      </div>
+    </div>`;
+  }).join("");
+}
+
+async function featureSubmission(id){
+  try{
+    const r = await fetch(`/api/admin/cat-of-week/${id}/feature`, {method:"POST"});
+    const d = await r.json();
+    if(!r.ok) throw new Error(d.message);
+    toast(d.message, "good");
+    openReview();
+    loadCotw();
+  }catch(e){ toast(e.message || t().netErr, "bad"); }
+}
+
+async function rejectSubmission(id){
+  if(!confirm(t().confirmPost)) return;
+  try{
+    const r = await fetch(`/api/admin/cat-of-week/${id}`, {method:"DELETE"});
+    const d = await r.json();
+    if(!r.ok) throw new Error(d.message);
+    toast(d.message, "good");
+    openReview();
+    loadCotw();
+  }catch(e){ toast(e.message || t().netErr, "bad"); }
+}
+
+
 /* ---------- modals ---------- */
 function openModal(which){ document.getElementById("modal-" + which).classList.add("open"); }
 function closeModals(){ document.querySelectorAll(".overlay").forEach(o => o.classList.remove("open")); }
@@ -1377,9 +1713,11 @@ window.addEventListener("DOMContentLoaded", async () => {
   await checkSession();
   await loadProfiles();
   loadWall();
+  loadCotw();
   pollQueue();
   setInterval(pollQueue, POLL_MS);
   setInterval(async () => { await loadProfiles(); loadWall(); }, 30000);
+  setInterval(loadCotw, 60000);
 });
 </script>
 </body>

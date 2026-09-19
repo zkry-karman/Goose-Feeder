@@ -37,6 +37,19 @@ const upload = multer({
     limits: { fileSize: 5 * 1024 * 1024 }
 });
 
+// --- SEPARATE UPLOAD PATH FOR CAT-OF-THE-WEEK SUBMISSIONS ---
+const catweekStorage = multer.diskStorage({
+    destination: './uploads/catweek/',
+    filename: (req, file, cb) => {
+        cb(null, 'catweek-' + Date.now() + path.extname(file.originalname));
+    }
+});
+const uploadCatweek = multer({
+    storage: catweekStorage,
+    fileFilter: imageFilter,
+    limits: { fileSize: 5 * 1024 * 1024 }
+});
+
 // --- MIDDLEWARE LAYERS ---
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -75,6 +88,8 @@ async function requireAdmin(req, res, next) {
 
 let db;
 (async () => {
+    fs.mkdirSync('./uploads/catweek', { recursive: true });
+
     db = await open({
         filename: './community_wall.db',
         driver: sqlite3.Database
@@ -123,6 +138,21 @@ let db;
             user_id INTEGER,
             PRIMARY KEY (post_id, user_id),
             FOREIGN KEY(post_id) REFERENCES posts(id),
+            FOREIGN KEY(user_id) REFERENCES users(id)
+        );
+
+        CREATE TABLE IF NOT EXISTS cat_features (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id INTEGER,
+            username TEXT,
+            cat_name TEXT,
+            breed TEXT,
+            age TEXT,
+            description TEXT,
+            photo_url TEXT,
+            status TEXT DEFAULT 'pending',   -- pending | featured | archived | rejected
+            submitted_at TEXT,
+            featured_at TEXT,
             FOREIGN KEY(user_id) REFERENCES users(id)
         );
     `);
@@ -524,6 +554,100 @@ async function processDispenserQueue() {
     isProcessingQueue = false;
     processDispenserQueue();
 }
+
+// --- CAT OF THE WEEK ---
+
+// Submit an application (any signed-in user, one photo required)
+app.post('/api/cat-of-week/apply', requireAuth, uploadCatweek.single('photo'), async (req, res) => {
+    try {
+        const { cat_name, breed, age, description } = req.body;
+
+        if (!cat_name || !description) {
+            return res.status(400).json({ status: "Error", message: "Cat's name and a description are required." });
+        }
+        if (!req.file) {
+            return res.status(400).json({ status: "Error", message: "Please attach one photo." });
+        }
+        if (filter.check(description) || filter.check(cat_name)) {
+            return res.status(400).json({ status: "Error", message: "Please keep the submission friendly." });
+        }
+
+        await db.run(
+            `INSERT INTO cat_features (user_id, username, cat_name, breed, age, description, photo_url, status, submitted_at)
+             VALUES (?, ?, ?, ?, ?, ?, ?, 'pending', ?)`,
+            [
+                req.session.userId, req.session.username,
+                cat_name, breed || null, age || null, description,
+                `/uploads/catweek/${req.file.filename}`,
+                new Date().toISOString()
+            ]
+        );
+
+        res.json({ status: "Success", message: "Submitted! The moderator will pick a Cat of the Week soon." });
+    } catch (err) {
+        res.status(500).json({ status: "Error", message: "Could not submit your cat." });
+    }
+});
+
+// The currently featured cat (public, shown on the wall)
+app.get('/api/cat-of-week/current', async (req, res) => {
+    try {
+        const cat = await db.get(
+            `SELECT id, username, cat_name, breed, age, description, photo_url, featured_at
+             FROM cat_features WHERE status = 'featured' ORDER BY featured_at DESC LIMIT 1`
+        );
+        res.json({ status: "Success", cat: cat || null });
+    } catch (err) {
+        res.status(500).json({ status: "Error", message: "Could not load Cat of the Week." });
+    }
+});
+
+// All submissions, for moderators only
+app.get('/api/admin/cat-of-week', requireAdmin, async (req, res) => {
+    try {
+        const submissions = await db.all(
+            `SELECT * FROM cat_features ORDER BY
+             CASE status WHEN 'featured' THEN 0 WHEN 'pending' THEN 1 ELSE 2 END,
+             submitted_at DESC`
+        );
+        res.json({ status: "Success", submissions });
+    } catch (err) {
+        res.status(500).json({ status: "Error", message: "Could not load submissions." });
+    }
+});
+
+// Crown a submission as this week's cat (retires whichever was featured before)
+app.post('/api/admin/cat-of-week/:id/feature', requireAdmin, async (req, res) => {
+    try {
+        const sub = await db.get(`SELECT * FROM cat_features WHERE id = ?`, [req.params.id]);
+        if (!sub) return res.status(404).json({ status: "Error", message: "Submission not found." });
+
+        await db.run(`UPDATE cat_features SET status = 'archived' WHERE status = 'featured'`);
+        await db.run(
+            `UPDATE cat_features SET status = 'featured', featured_at = ? WHERE id = ?`,
+            [new Date().toISOString(), sub.id]
+        );
+
+        res.json({ status: "Success", message: `${sub.cat_name} is the new Cat of the Week!` });
+    } catch (err) {
+        res.status(500).json({ status: "Error", message: "Could not feature that cat." });
+    }
+});
+
+// Reject / remove a submission
+app.delete('/api/admin/cat-of-week/:id', requireAdmin, async (req, res) => {
+    try {
+        const sub = await db.get(`SELECT * FROM cat_features WHERE id = ?`, [req.params.id]);
+        if (!sub) return res.status(404).json({ status: "Error", message: "Submission not found." });
+
+        await db.run(`DELETE FROM cat_features WHERE id = ?`, [sub.id]);
+        if (sub.photo_url) fs.unlink(path.join(__dirname, sub.photo_url), () => {});
+
+        res.json({ status: "Success", message: "Submission removed." });
+    } catch (err) {
+        res.status(500).json({ status: "Error", message: "Could not remove that submission." });
+    }
+});
 
 // --- MODERATOR ENDPOINT (used by the site when logged in as an admin) ---
 app.get('/api/admin/users', requireAdmin, async (req, res) => {

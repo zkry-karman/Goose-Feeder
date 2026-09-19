@@ -26,6 +26,12 @@
 
    Passwords are never printed — they're stored as bcrypt hashes and
    can't be read back, only reset.
+
+   SECURITY: once a moderator account exists, every command here asks
+   you to sign in as one first (same account you'd use on the website).
+   The very first time — before any moderator exists — "promote" is
+   the one command that's allowed to run without logging in, so you
+   can bootstrap your own account into the moderator role.
    ===================================================================== */
 
 const { open } = require('sqlite');
@@ -33,6 +39,7 @@ const sqlite3 = require('sqlite3');
 const bcrypt = require('bcryptjs');
 const fs = require('fs');
 const path = require('path');
+const readline = require('readline');
 
 const DB_FILE = './community_wall.db';
 const SALT_ROUNDS = 10;
@@ -41,6 +48,82 @@ const [, , cmd, ...args] = process.argv;
 
 function pad(s, n) { return String(s ?? '').padEnd(n).slice(0, n); }
 function line(n = 92) { console.log('─'.repeat(n)); }
+
+/* ---------- small terminal prompts (no extra dependencies) ---------- */
+function promptText(query) {
+    const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
+    return new Promise(resolve => rl.question(query, answer => { rl.close(); resolve(answer.trim()); }));
+}
+
+function promptPassword(query) {
+    return new Promise((resolve, reject) => {
+        if (!process.stdin.isTTY) {
+            return reject(new Error('This needs an interactive terminal to enter a password.'));
+        }
+        process.stdout.write(query);
+        let password = '';
+        process.stdin.resume();
+        process.stdin.setRawMode(true);
+        process.stdin.setEncoding('utf8');
+
+        const onData = char => {
+            switch (char) {
+                case '\n': case '\r': case '\u0004':
+                    process.stdin.setRawMode(false);
+                    process.stdin.pause();
+                    process.stdin.removeListener('data', onData);
+                    process.stdout.write('\n');
+                    resolve(password);
+                    break;
+                case '\u0003': // Ctrl+C
+                    process.stdout.write('\n');
+                    process.exit(1);
+                    break;
+                case '\u007f': case '\b': // backspace
+                    if (password.length > 0) {
+                        password = password.slice(0, -1);
+                        process.stdout.write('\b \b');
+                    }
+                    break;
+                default:
+                    password += char;
+                    process.stdout.write('*');
+            }
+        };
+        process.stdin.on('data', onData);
+    });
+}
+
+/* ---------- verify a login against the real users table ---------- */
+async function verifyLogin(db, username, password) {
+    const user = await db.get(`SELECT * FROM users WHERE username = ?`, [username]);
+    if (!user || !user.is_admin) return null;
+
+    let ok = false;
+    if (String(user.password).startsWith('$2')) {
+        ok = await bcrypt.compare(password, user.password);
+    } else {
+        // legacy plaintext account — verify once, then upgrade in place
+        ok = user.password === password;
+        if (ok) {
+            const upgraded = await bcrypt.hash(password, SALT_ROUNDS);
+            await db.run(`UPDATE users SET password = ? WHERE id = ?`, [upgraded, user.id]);
+        }
+    }
+    return ok ? user : null;
+}
+
+async function requireModeratorLogin(db) {
+    console.log('🔒 Moderator sign-in required.');
+    const username = await promptText('  username: ');
+    const password = await promptPassword('  password: ');
+    const user = await verifyLogin(db, username, password);
+    if (!user) {
+        console.log('✗ Access denied.');
+        process.exit(1);
+    }
+    console.log(`✓ Welcome, ${user.username}.\n`);
+}
 
 function ageFrom(birthday) {
     if (!birthday) return '—';
@@ -55,6 +138,21 @@ function ageFrom(birthday) {
 
 async function main() {
     const db = await open({ filename: DB_FILE, driver: sqlite3.Database });
+
+    // --- ACCESS GATE ---
+    const { c: adminCount } = await db.get(`SELECT COUNT(*) AS c FROM users WHERE is_admin = 1`);
+
+    if (adminCount === 0) {
+        if ((cmd || '').toLowerCase() !== 'promote') {
+            console.log('✗ No moderator account exists yet.');
+            console.log('  Run this once to bootstrap access (no login needed this first time):');
+            console.log('    node admin.js promote <your-username>\n');
+            process.exit(1);
+        }
+        console.log('⚠ No moderators exist yet — allowing this one "promote" without a login.\n');
+    } else {
+        await requireModeratorLogin(db);
+    }
 
     const findUser = async (name) => {
         const u = await db.get(`SELECT * FROM users WHERE username = ?`, [name]);
