@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 const express = require('express');
 const session = require('express-session');
 const { open } = require('sqlite');
@@ -5,6 +7,7 @@ const sqlite3 = require('sqlite3');
 const multer = require('multer');
 const filter = require('leo-profanity');
 const bcrypt = require('bcryptjs');
+const nodemailer = require('nodemailer');
 const path = require('path');
 const fs = require('fs');
 
@@ -84,6 +87,97 @@ async function requireAdmin(req, res, next) {
         return res.status(403).json({ status: "Error", message: "Moderators only." });
     }
     next();
+}
+
+// --- EMAIL FORMAT CHECK ---
+// Not a guarantee the address exists — just that it's shaped like one.
+// Good enough to catch typos and junk without needing a verification flow.
+function isValidEmail(email) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(email || '').trim());
+}
+
+// --- MAILER ---
+// Configure with environment variables so swapping providers later (Gmail →
+// Resend/Brevo/SendGrid) never means touching code, only the .env file.
+//
+//   EMAIL_USER   the address you're sending from (e.g. feedagoose.help@gmail.com)
+//   EMAIL_PASS   a Gmail "App Password" (Google Account → Security → App
+//                passwords) — NOT your normal Gmail password
+//   EMAIL_FROM   optional, defaults to EMAIL_USER — what shows in "From"
+//   EMAIL_HOST / EMAIL_PORT   optional, only needed for a non-Gmail SMTP
+//                provider later (falls back to Gmail's own SMTP settings)
+//
+// If these aren't set, the site still runs fine — emails are just skipped
+// with a console warning instead of crashing anything.
+const EMAIL_ENABLED = !!(process.env.EMAIL_USER && process.env.EMAIL_PASS);
+
+const mailer = EMAIL_ENABLED
+    ? nodemailer.createTransport({
+        host: process.env.EMAIL_HOST || 'smtp.gmail.com',
+        port: Number(process.env.EMAIL_PORT) || 465,
+        secure: true,
+        auth: { user: process.env.EMAIL_USER, pass: process.env.EMAIL_PASS }
+      })
+    : null;
+
+const EMAIL_FROM = process.env.EMAIL_FROM || process.env.EMAIL_USER;
+
+// Fire-and-forget: emails never block or fail the request that triggered them.
+async function sendMail({ to, subject, html }) {
+    if (!EMAIL_ENABLED) {
+        console.log(`✉️  (email disabled — would have sent "${subject}" to ${to})`);
+        return;
+    }
+    try {
+        await mailer.sendMail({ from: `"Feed a Goose" <${EMAIL_FROM}>`, to, subject, html });
+    } catch (err) {
+        console.error(`✉️  Failed to send "${subject}" to ${to}:`, err.message);
+    }
+}
+
+function emailShell(bodyHtml) {
+    return `
+    <div style="background:#141019;padding:32px 20px;font-family:sans-serif">
+      <div style="max-width:480px;margin:0 auto;background:#1d1825;border-radius:20px;padding:28px;color:#f1ecf6">
+        <div style="font-size:1.3rem;font-weight:800;margin-bottom:18px">🐈‍⬛ Feed a Goose</div>
+        ${bodyHtml}
+      </div>
+    </div>`;
+}
+
+function escapeHtml(s) {
+    return String(s ?? '').replace(/[&<>"']/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
+}
+
+function sendWelcomeEmail(to, username) {
+    const safeName = escapeHtml(username);
+    return sendMail({
+        to,
+        subject: 'Welcome to Feed a Goose 🐟',
+        html: emailShell(`
+            <p>Hey ${safeName},</p>
+            <p>You're in! Your account comes with <strong>20 free 🐟 tokens</strong> — head back
+            to the wall any time to say hello, post, and drop a treat for Goose.</p>
+            <p style="color:#a196b3;font-size:.85rem;margin-top:24px">
+            If you didn't sign up for this, you can safely ignore this email.</p>
+        `)
+    });
+}
+
+function sendFeaturedEmail(to, username, catName) {
+    const safeName = escapeHtml(username);
+    const safeCat = escapeHtml(catName);
+    return sendMail({
+        to,
+        subject: `${safeCat} is Cat of the Week! 👑`,
+        html: emailShell(`
+            <p>Hey ${safeName},</p>
+            <p><strong>${safeCat}</strong> has been crowned this week's Cat of the Week! 🎉
+            Head over to the wall to see the feature.</p>
+            <p style="color:#a196b3;font-size:.85rem;margin-top:24px">
+            Thanks for sharing your cat with everyone.</p>
+        `)
+    });
 }
 
 let db;
@@ -385,6 +479,9 @@ app.post('/register', async (req, res) => {
     if (!username || !email || !password) {
         return res.status(400).json({ status: "Error", message: "Username, email and password are required!" });
     }
+    if (!isValidEmail(email)) {
+        return res.status(400).json({ status: "Error", message: "That doesn't look like a valid email address." });
+    }
     if (String(password).length < 6) {
         return res.status(400).json({ status: "Error", message: "Password must be at least 6 characters." });
     }
@@ -411,6 +508,8 @@ app.post('/register', async (req, res) => {
         // Log them straight in — no second trip through the sign-in form
         req.session.userId = result.lastID;
         req.session.username = username;
+
+        sendWelcomeEmail(email, username);   // fire-and-forget, never blocks the response
 
         res.json({ status: "Success", loggedIn: true, message: "You're in! Enjoy your 20 free 🐟 tokens." });
     } catch (err) {
@@ -627,6 +726,12 @@ app.post('/api/admin/cat-of-week/:id/feature', requireAdmin, async (req, res) =>
             `UPDATE cat_features SET status = 'featured', featured_at = ? WHERE id = ?`,
             [new Date().toISOString(), sub.id]
         );
+
+        // Let the winner know — look their email up fresh in case it's changed since they applied
+        const owner = await db.get(`SELECT email FROM users WHERE id = ?`, [sub.user_id]);
+        if (owner && owner.email) {
+            sendFeaturedEmail(owner.email, sub.username, sub.cat_name);   // fire-and-forget
+        }
 
         res.json({ status: "Success", message: `${sub.cat_name} is the new Cat of the Week!` });
     } catch (err) {
