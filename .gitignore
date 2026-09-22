@@ -1,0 +1,22 @@
+# --- Database (this is data, not code — never belongs in git) ---
+community_wall.db
+community_wall.db-journal
+community_wall.db-wal
+community_wall.db-shm
+*.db
+*.db-journal
+*.db-wal
+*.db-shm
+
+# --- User-uploaded content (post photos, Cat of the Week photos) ---
+uploads/
+
+# --- Dependencies (reinstalled from package.json, never committed) ---
+node_modules/
+
+# --- Secrets — never commit real credentials ---
+.env
+
+# --- OS/editor noise ---
+.DS_Store
+Thumbs.db
