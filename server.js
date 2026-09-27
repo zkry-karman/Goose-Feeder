@@ -262,7 +262,8 @@ let db;
         country:       `TEXT`,
         fav_food:      `TEXT`,
         is_admin:      `INTEGER DEFAULT 0`,
-        created_at:    `TEXT`
+        created_at:    `TEXT`,
+        catnake_salmon: `INTEGER DEFAULT 0`
     };
     for (const [col, def] of Object.entries(wanted)) {
         if (!have.has(col)) {
@@ -751,6 +752,39 @@ app.delete('/api/admin/cat-of-week/:id', requireAdmin, async (req, res) => {
         res.json({ status: "Success", message: "Submission removed." });
     } catch (err) {
         res.status(500).json({ status: "Error", message: "Could not remove that submission." });
+    }
+});
+
+// --- CATNAKE (the game) ---
+// Every 3rd salmon eaten, lifetime, earns 1 treat token. Kept server-side so
+// the count can't just be set from the browser console — the client only
+// ever reports "one more salmon was eaten," never a specific total.
+const lastCatnakeEat = new Map(); // userId -> timestamp, a light throttle against scripted spam
+
+app.post('/api/games/catnake/eat', requireAuth, async (req, res) => {
+    const userId = req.session.userId;
+    const now = Date.now();
+
+    // Faster than the game itself could possibly produce eats — blocks naive
+    // "call this in a loop" abuse without punishing normal fast play.
+    if (now - (lastCatnakeEat.get(userId) || 0) < 150) {
+        return res.status(429).json({ status: "Error", message: "Too fast." });
+    }
+    lastCatnakeEat.set(userId, now);
+
+    try {
+        const user = await db.get(`SELECT catnake_salmon, token_balance FROM users WHERE id = ?`, [userId]);
+        if (!user) return res.status(404).json({ status: "Error", message: "User not found." });
+
+        const salmonEaten = (user.catnake_salmon || 0) + 1;
+        const earnedTreat = salmonEaten % 3 === 0;
+        const tokens = earnedTreat ? user.token_balance + 1 : user.token_balance;
+
+        await db.run(`UPDATE users SET catnake_salmon = ?, token_balance = ? WHERE id = ?`, [salmonEaten, tokens, userId]);
+
+        res.json({ status: "Success", salmonEaten, tokens, earnedTreat });
+    } catch (err) {
+        res.status(500).json({ status: "Error", message: "Could not record that." });
     }
 });
 
