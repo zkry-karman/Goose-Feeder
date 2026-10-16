@@ -21,11 +21,11 @@ const CATnake = (function () {
   ---------------------------------------------------------------- */
 
   const GRID = 8;
-  const CELL = 64;                 // canvas px per cell (416x416 board) — big enough the cat fits comfortably
+  const CELL = 52;                 // canvas px per cell (416x416 board) — big enough the cat fits comfortably
   const START_SPEED_MS = 260;      // starting tick interval
   const MIN_SPEED_MS = 130;        // fastest it's allowed to get
   const SPEED_STEP_MS = 6;         // gets a little faster per salmon eaten
-  const COUNTDOWN_FROM = 3;        // seconds shown before a round actually starts
+  const COUNTDOWN_FROM = 5;        // seconds shown before a round actually starts
 
   let canvas, ctx;
   let snake, dir, pendingDir, salmon, score, salmonThisRound, tickMs;
@@ -130,6 +130,7 @@ const CATnake = (function () {
 
     canvas = document.getElementById('catnakeCanvas');
     ctx = canvas.getContext('2d');
+    readBoardColours();
 
     body().querySelector('.up').addEventListener('click', () => turn(0, -1));
     body().querySelector('.down').addEventListener('click', () => turn(0, 1));
@@ -225,8 +226,27 @@ const CATnake = (function () {
   // cat still looks right if CELL is ever changed again
   const f = frac => frac * CELL;
 
+  // Board colours come from theme.css (--board-a / --board-b) so the game
+  // follows the site's palette. Fallbacks match the current theme.
+  let boardA = '#F3FCFF', boardB = '#D6F2FA';
+  function readBoardColours() {
+    const cs = getComputedStyle(document.documentElement);
+    boardA = cs.getPropertyValue('--board-a').trim() || boardA;
+    boardB = cs.getPropertyValue('--board-b').trim() || boardB;
+  }
+
+  function drawBoard() {
+    for (let x = 0; x < GRID; x++) {
+      for (let y = 0; y < GRID; y++) {
+        ctx.fillStyle = (x + y) % 2 === 0 ? boardA : boardB;
+        ctx.fillRect(x * CELL, y * CELL, CELL, CELL);   // one square = exactly one cell
+      }
+    }
+  }
+
   function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+    drawBoard();
 
     ctx.font = `${CELL * 0.7}px serif`;
     ctx.textAlign = 'center';

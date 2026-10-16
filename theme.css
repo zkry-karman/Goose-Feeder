@@ -1,0 +1,53 @@
+/* ============================================================
+   FEED A GOOSE — THEME
+   Every colour on the site comes from this one file.
+   Want a different vibe later? Change values here and every
+   page (wall, about, feature-your-cat, earn treats, the games)
+   updates together.
+   ============================================================ */
+:root{
+  /* ---- the two brand colours ---- */
+  --ink:#C8F3FF;              /* page background — ice cream blue   */
+  --accent:#FF5C23;           /* atomic orange                      */
+
+  /* ---- surfaces ---- */
+  --surface:#FFFFFF;          /* panels, cards, modals              */
+  --surface-2:#E6F9FF;        /* inputs, chips, secondary buttons   */
+  --hover:#D4F4FD;            /* hover fill on surface-2 things     */
+  --line:#9FD8EA;             /* borders                            */
+  --line-strong:#5FB5CF;      /* hovered / focused borders          */
+
+  /* ---- text ---- */
+  --text:#0F2233;             /* main text   (13.7:1 on the page)   */
+  --muted:#456073;            /* secondary   (5.6:1 on the page)    */
+  --dim:#4E687A;              /* tertiary    (4.9:1 on the page)    */
+
+  /* ---- accent helpers ----
+     Orange is too light to read as small TEXT on white/ice
+     (3.1:1), and white text on orange fails too, so:
+       - text ON an orange button  -> --accent-ink (dark navy, 5.3:1)
+       - orange USED AS text       -> --accent-text (burnt orange, 5.7:1) */
+  --accent-hover:#FF7440;
+  --accent-2:#FF8A4D;         /* second stop for orange gradients   */
+  --accent-ink:#0F2233;
+  --accent-text:#B93A08;
+  --accent-soft:rgba(255,92,35,.12);
+  --accent-line:rgba(255,92,35,.40);
+
+  /* ---- status ---- */
+  --live:#D81E45;
+  --live-soft:rgba(216,30,69,.10);
+  --live-line:rgba(216,30,69,.35);
+  --ok:#1FA971;
+  --ok-line:rgba(31,169,113,.45);
+
+  /* ---- effects ---- */
+  --glass:rgba(200,243,255,.82);     /* translucent top bar        */
+  --overlay:rgba(15,34,51,.55);      /* behind modals              */
+  --shadow:0 12px 30px rgba(15,34,51,.16);
+  --video-bg:#0B1A26;                /* video letterboxing stays dark */
+
+  /* ---- CATnake board (read by games/catnake.js) ---- */
+  --board-a:#F3FCFF;
+  --board-b:#D6F2FA;
+}
